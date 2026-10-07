@@ -17,6 +17,10 @@ export const users = mysqlTable("users", {
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  appRole: mysqlEnum("appRole", ["super_admin", "executive", "business_development", "quality", "branch_manager", "branch_employee"]).default("branch_employee").notNull(),
+  assignedBranchId: int("assignedBranchId"),
+  employeeId: int("employeeId"),
+  isActive: int("isActive").default(1).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
@@ -26,3 +30,5 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
 // TODO: Add your tables here
+
+export * from "./business";

@@ -6,6 +6,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { publicPlatformScript } from "./publicConfig";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
+import { ensureDemoSeed } from "../demoSeed";
 import { serveStatic, setupVite } from "./vite";
 
 async function startServer() {
@@ -19,6 +20,12 @@ async function startServer() {
     res.set("Cache-Control", "no-store").type("application/javascript").send(publicPlatformScript());
   });
   registerOAuthRoutes(app);
+  try {
+    await ensureDemoSeed();
+    console.log("[Seed] Demo data is ready.");
+  } catch (error) {
+    console.warn("[Seed] Demo data initialization was skipped:", error instanceof Error ? error.message : "unknown error");
+  }
   // tRPC API
   app.use(
     "/api/trpc",

@@ -1,3 +1,11 @@
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/noto-sans-arabic/400.css";
+@import "@fontsource/noto-sans-arabic/500.css";
+@import "@fontsource/noto-sans-arabic/600.css";
+@import "@fontsource/noto-sans-arabic/700.css";
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -43,18 +51,18 @@
 }
 
 :root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
+  --primary: #0f766e;
+  --primary-foreground: #ffffff;
+  --sidebar-primary: #0f766e;
+  --sidebar-primary-foreground: #ffffff;
+  --chart-1: #0f766e;
+  --chart-2: #2563eb;
+  --chart-3: #d4a72c;
+  --chart-4: #e11d48;
+  --chart-5: #7c3aed;
   --radius: 0.65rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
+  --background: #f4f6f8;
+  --foreground: #17212f;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.235 0.015 65);
   --popover: oklch(1 0 0);
@@ -69,13 +77,13 @@
   --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
+  --ring: #0f766e;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.235 0.015 65);
   --sidebar-accent: oklch(0.967 0.001 286.375);
   --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
   --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  --sidebar-ring: #0f766e;
 }
 
 .dark {
@@ -111,6 +119,18 @@
   --sidebar-accent-foreground:  oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.488 0.243 264.376);
+}
+
+html, body, #root { min-height: 100%; }
+body { font-family: Inter, "Noto Sans Arabic", "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif; }
+.leaflet-container { font-family: Inter, "Noto Sans Arabic", "Segoe UI", sans-serif; }
+
+@media print {
+  .no-print, aside, header, nav, button, [role="button"] { display: none !important; }
+  body { background: #fff !important; color: #111827 !important; }
+  main { margin: 0 !important; padding: 0 !important; max-width: none !important; }
+  section, article, table { break-inside: avoid; }
+  table { font-size: 9pt !important; }
 }
 
 @layer base {
