@@ -2,10 +2,10 @@
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
 @import "@fontsource/inter/700.css";
-@import "@fontsource/noto-sans-arabic/400.css";
-@import "@fontsource/noto-sans-arabic/500.css";
-@import "@fontsource/noto-sans-arabic/600.css";
-@import "@fontsource/noto-sans-arabic/700.css";
+@import "@fontsource/ibm-plex-sans-arabic/400.css";
+@import "@fontsource/ibm-plex-sans-arabic/500.css";
+@import "@fontsource/ibm-plex-sans-arabic/600.css";
+@import "@fontsource/ibm-plex-sans-arabic/700.css";
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -51,46 +51,46 @@
 }
 
 :root {
-  --primary: #0f766e;
+  --primary: #125b53;
   --primary-foreground: #ffffff;
-  --sidebar-primary: #0f766e;
-  --sidebar-primary-foreground: #ffffff;
-  --chart-1: #0f766e;
-  --chart-2: #2563eb;
-  --chart-3: #d4a72c;
-  --chart-4: #e11d48;
-  --chart-5: #7c3aed;
-  --radius: 0.65rem;
-  --background: #f4f6f8;
-  --foreground: #17212f;
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: #0f766e;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: #0f766e;
+  --sidebar-primary: #d9bd7e;
+  --sidebar-primary-foreground: #173b3c;
+  --chart-1: #125b53;
+  --chart-2: #496e83;
+  --chart-3: #c39a4e;
+  --chart-4: #b65e51;
+  --chart-5: #766292;
+  --radius: 0.8rem;
+  --background: #f3f6f1;
+  --foreground: #193037;
+  --card: #ffffff;
+  --card-foreground: #1b3035;
+  --popover: #ffffff;
+  --popover-foreground: #1b3035;
+  --secondary: #edf3ee;
+  --secondary-foreground: #344b4d;
+  --muted: #edf2ed;
+  --muted-foreground: #61716e;
+  --accent: #e7f0ea;
+  --accent-foreground: #153f3b;
+  --destructive: #b54748;
+  --destructive-foreground: #ffffff;
+  --border: #dbe4de;
+  --input: #d7e0da;
+  --ring: #c39a4e;
+  --sidebar: #103b42;
+  --sidebar-foreground: #f4f7f4;
+  --sidebar-accent: #1b5054;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #28545a;
+  --sidebar-ring: #d9bd7e;
 }
 
 .dark {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-500);
-  --sidebar-primary-foreground: var(--color-blue-50);
+  --primary: #54b5a7;
+  --primary-foreground: #092c2f;
+  --sidebar-primary: #d9bd7e;
+  --sidebar-primary-foreground: #173b3c;
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.85 0.005 65);
   --card: oklch(0.21 0.006 285.885);
@@ -107,12 +107,12 @@
   --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
+  --ring: #d9bd7e;
+  --chart-1: #54b5a7;
+  --chart-2: #7aabc1;
+  --chart-3: #d9bd7e;
+  --chart-4: #e17f72;
+  --chart-5: #a28bb9;
   --sidebar: oklch(0.21 0.006 285.885);
   --sidebar-foreground: oklch(0.85 0.005 65);
   --sidebar-accent: oklch(0.274 0.006 286.033);
@@ -122,8 +122,12 @@
 }
 
 html, body, #root { min-height: 100%; }
-body { font-family: Inter, "Noto Sans Arabic", "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif; }
-.leaflet-container { font-family: Inter, "Noto Sans Arabic", "Segoe UI", sans-serif; }
+body { font-family: "IBM Plex Sans Arabic", Inter, "Segoe UI", Tahoma, sans-serif; font-feature-settings: "kern" 1; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; }
+.leaflet-container { font-family: "IBM Plex Sans Arabic", Inter, "Segoe UI", sans-serif; }
+.dashboard-hero { background-color: #103b42; box-shadow: 0 16px 48px -28px rgba(16, 59, 66, .44); }
+.dashboard-hero-overlay { background: linear-gradient(270deg, rgba(13, 48, 54, .97) 0%, rgba(16, 59, 66, .88) 46%, rgba(16, 59, 66, .2) 100%); }
+.brand-eyebrow { position: relative; padding-right: .8rem; }
+.brand-eyebrow::before { position: absolute; right: 0; top: 50%; width: .35rem; height: .35rem; border-radius: 9999px; background: #d9bd7e; content: ""; transform: translateY(-50%); }
 
 @media print {
   .no-print, aside, header, nav, button, [role="button"] { display: none !important; }
@@ -131,6 +135,10 @@ body { font-family: Inter, "Noto Sans Arabic", "IBM Plex Sans Arabic", "Segoe UI
   main { margin: 0 !important; padding: 0 !important; max-width: none !important; }
   section, article, table { break-inside: avoid; }
   table { font-size: 9pt !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 
 @layer base {
