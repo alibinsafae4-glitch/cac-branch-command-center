@@ -3,7 +3,7 @@ import { startLogin } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { formatNumber } from "@/lib/domain";
 import { AppButton } from "@/components/Blocks";
-import { Activity, Bell, BrainCircuit, Building2, ChevronDown, FileBarChart2, Gauge, Landmark, LayoutDashboard, LogOut, MapPinned, Menu, Search, Settings, ShieldCheck, Target, UsersRound, X, type LucideIcon } from "lucide-react";
+import { Activity, Bell, BrainCircuit, Building2, ChevronDown, Database, FileBarChart2, Gauge, Landmark, LayoutDashboard, LogOut, MapPinned, Menu, Search, Settings, ShieldCheck, Target, UsersRound, X, type LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { BUSINESS_TIME_ZONE } from "../../../shared/date";
@@ -20,6 +20,7 @@ const navItems: Array<{ label: string; path: string; icon: LucideIcon; roles?: s
   { label: "ذكاء الأعمال", path: "/intelligence", icon: BrainCircuit, roles: ["super_admin", "executive", "business_development"] },
   { label: "التنبيهات", path: "/alerts", icon: Bell },
   { label: "الإعدادات", path: "/settings", icon: Settings, roles: ["super_admin"] },
+  { label: "قاموس قاعدة البيانات", path: "/database-guide", icon: Database },
 ];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {

@@ -19,6 +19,7 @@ const ReportsPage = lazy(() => import("./pages/Reports"));
 const IntelligencePage = lazy(() => import("./pages/Intelligence"));
 const AlertsPage = lazy(() => import("./pages/Alerts"));
 const SettingsPage = lazy(() => import("./pages/Settings"));
+const DatabaseGuidePage = lazy(() => import("./pages/DatabaseGuide"));
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -35,6 +36,7 @@ function Router() {
     <Route path="/intelligence" component={IntelligencePage} />
     <Route path="/alerts" component={AlertsPage} />
     <Route path="/settings" component={SettingsPage} />
+    <Route path="/database-guide" component={DatabaseGuidePage} />
     <Route path="/404" component={NotFound} />
     <Route component={NotFound} />
   </Switch></Suspense></AppShell>;
