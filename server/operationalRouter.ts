@@ -25,7 +25,7 @@ const dbOrThrow = async () => {
   if (!db) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "قاعدة البيانات غير متاحة حالياً." });
   return db;
 };
-const audit = async (db: Awaited<ReturnType<typeof dbOrThrow>>, actorUserId: number, action: "create" | "update" | "delete" | "role_change", entity: string, entityId: string | number | undefined, previousValue?: unknown, newValue?: unknown) => {
+const audit = async (db: Awaited<ReturnType<typeof dbOrThrow>>, actorUserId: number, action: "إنشاء" | "تعديل" | "حذف" | "تغيير_الدور", entity: string, entityId: string | number | undefined, previousValue?: unknown, newValue?: unknown) => {
   await db.insert(auditLogs).values({ actorUserId, action, entity, entityId: entityId == null ? null : String(entityId), previousValue: previousValue as Record<string, unknown> | undefined, newValue: newValue as Record<string, unknown> | undefined });
 };
 const effectiveBranchId = (user: typeof users.$inferSelect, requested?: number) => {
@@ -50,7 +50,7 @@ const recordPerformance = async (db: Awaited<ReturnType<typeof dbOrThrow>>, bran
   }
 };
 
-const prospectStatus = z.enum(["new", "contacted", "visited", "following_up", "negotiation", "converted", "not_interested", "deferred"]);
+const prospectStatus = z.enum(["جديد", "تم_التواصل", "تمت_الزيارة", "قيد_المتابعة", "قيد_التفاوض", "تم_الاستقطاب", "غير_مهتم", "مؤجل"]);
 const dateInput = z.string().refine(isValidISODate, "أدخل تاريخاً تقويمياً صحيحاً بصيغة YYYY-MM-DD.");
 const monthInput = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/).refine(value => isValidISODate(`${value}-01`), "اختر شهراً تقويمياً صحيحاً.");
 const visitAttachmentSchema = z.object({
@@ -77,32 +77,32 @@ export const operationalRoutes = {
       if (!branch) throw new TRPCError({ code: "NOT_FOUND", message: "الفرع غير موجود أو خارج نطاق صلاحيتك." });
       return branch;
     }),
-    save: protectedProcedure.input(z.object({ code: z.string().trim().min(2).max(32).regex(/^[A-Za-z0-9_-]+$/), nameAr: z.string().trim().min(2).max(160), nameEn: z.string().trim().min(2).max(160), managerName: z.string().max(160).optional(), branchType: z.enum(["branch", "suboffice", "islamic"]), parentBranchCode: z.string().max(32).optional(), headcount: z.number().int().min(0).max(5000) })).mutation(async ({ ctx, input }) => {
-      requireRoles(ctx.user, ["super_admin"]);
+    save: protectedProcedure.input(z.object({ code: z.string().trim().min(2).max(32).regex(/^[A-Za-z0-9_-]+$/), nameAr: z.string().trim().min(2).max(160), nameEn: z.string().trim().min(2).max(160), managerName: z.string().max(160).optional(), branchType: z.enum(["فرع", "مكتب_فرعي", "إسلامي"]), parentBranchCode: z.string().max(32).optional(), headcount: z.number().int().min(0).max(5000) })).mutation(async ({ ctx, input }) => {
+      requireRoles(ctx.user, ["مدير_النظام"]);
       const db = await dbOrThrow();
-      if (input.branchType === "suboffice" && !input.parentBranchCode) throw new TRPCError({ code: "BAD_REQUEST", message: "يجب ربط المكتب التابع بفرع رئيسي." });
+      if (input.branchType === "مكتب_فرعي" && !input.parentBranchCode) throw new TRPCError({ code: "BAD_REQUEST", message: "يجب ربط المكتب التابع بفرع رئيسي." });
       if (input.parentBranchCode) {
         const [parent] = await db.select().from(branches).where(eq(branches.code, input.parentBranchCode.toUpperCase())).limit(1);
-        if (!parent || parent.branchType === "suboffice") throw new TRPCError({ code: "BAD_REQUEST", message: "اختر فرعاً رئيسياً صالحاً للمكتب التابع." });
+        if (!parent || parent.branchType === "مكتب_فرعي") throw new TRPCError({ code: "BAD_REQUEST", message: "اختر فرعاً رئيسياً صالحاً للمكتب التابع." });
       }
       const payload = { ...input, code: input.code.toUpperCase(), managerName: input.managerName || null, parentBranchCode: input.parentBranchCode || null };
       const [result] = await db.insert(branches).values(payload);
       const id = Number((result as { insertId?: number }).insertId);
-      await audit(db, ctx.user.id, "create", "branch", id, undefined, payload);
+      await audit(db, ctx.user.id, "إنشاء", "فرع", id, undefined, payload);
       return { id };
     }),
-    update: protectedProcedure.input(z.object({ id: z.number().int().positive(), code: z.string().trim().min(2).max(32).regex(/^[A-Za-z0-9_-]+$/).optional(), nameAr: z.string().trim().min(2).max(160).optional(), nameEn: z.string().trim().min(2).max(160).optional(), managerName: z.string().max(160).optional(), branchType: z.enum(["branch", "suboffice", "islamic"]).optional(), parentBranchCode: z.string().max(32).optional(), headcount: z.number().int().min(0).max(5000).optional(), status: z.enum(["active", "inactive"]).optional() })).mutation(async ({ ctx, input }) => {
+    update: protectedProcedure.input(z.object({ id: z.number().int().positive(), code: z.string().trim().min(2).max(32).regex(/^[A-Za-z0-9_-]+$/).optional(), nameAr: z.string().trim().min(2).max(160).optional(), nameEn: z.string().trim().min(2).max(160).optional(), managerName: z.string().max(160).optional(), branchType: z.enum(["فرع", "مكتب_فرعي", "إسلامي"]).optional(), parentBranchCode: z.string().max(32).optional(), headcount: z.number().int().min(0).max(5000).optional(), status: z.enum(["نشط", "غير_نشط"]).optional() })).mutation(async ({ ctx, input }) => {
       const role = roleOf(ctx.user);
-      if (!["super_admin", "branch_manager"].includes(role)) throw new TRPCError({ code: "FORBIDDEN", message: "لا تملك صلاحية تعديل بيانات الفروع." });
-      if (role === "branch_manager" && branchScope(ctx.user) !== input.id) throw new TRPCError({ code: "FORBIDDEN", message: "يمكنك تعديل بيانات فرعك فقط." });
-      if (role === "branch_manager" && [input.code, input.nameAr, input.nameEn, input.branchType, input.parentBranchCode, input.status].some(value => value !== undefined)) throw new TRPCError({ code: "FORBIDDEN", message: "يمكن لمدير الفرع تعديل اسم المسؤول وعدد الموظفين فقط." });
+      if (!["مدير_النظام", "مدير_الفرع"].includes(role)) throw new TRPCError({ code: "FORBIDDEN", message: "لا تملك صلاحية تعديل بيانات الفروع." });
+      if (role === "مدير_الفرع" && branchScope(ctx.user) !== input.id) throw new TRPCError({ code: "FORBIDDEN", message: "يمكنك تعديل بيانات فرعك فقط." });
+      if (role === "مدير_الفرع" && [input.code, input.nameAr, input.nameEn, input.branchType, input.parentBranchCode, input.status].some(value => value !== undefined)) throw new TRPCError({ code: "FORBIDDEN", message: "يمكن لمدير الفرع تعديل اسم المسؤول وعدد الموظفين فقط." });
       const db = await dbOrThrow();
       const [branch] = await db.select().from(branches).where(eq(branches.id, input.id)).limit(1);
       if (!branch) throw new TRPCError({ code: "NOT_FOUND", message: "الفرع غير موجود." });
-      if (input.branchType === "suboffice" && !(input.parentBranchCode ?? branch.parentBranchCode)) throw new TRPCError({ code: "BAD_REQUEST", message: "يجب ربط المكتب التابع بفرع رئيسي." });
+      if (input.branchType === "مكتب_فرعي" && !(input.parentBranchCode ?? branch.parentBranchCode)) throw new TRPCError({ code: "BAD_REQUEST", message: "يجب ربط المكتب التابع بفرع رئيسي." });
       if (input.parentBranchCode) {
         const [parent] = await db.select().from(branches).where(eq(branches.code, input.parentBranchCode.toUpperCase())).limit(1);
-        if (!parent || parent.id === input.id || parent.branchType === "suboffice") throw new TRPCError({ code: "BAD_REQUEST", message: "اختر فرعاً رئيسياً صالحاً للمكتب التابع." });
+        if (!parent || parent.id === input.id || parent.branchType === "مكتب_فرعي") throw new TRPCError({ code: "BAD_REQUEST", message: "اختر فرعاً رئيسياً صالحاً للمكتب التابع." });
       }
       const payload = {
         ...(input.code !== undefined ? { code: input.code.toUpperCase() } : {}),
@@ -116,7 +116,7 @@ export const operationalRoutes = {
       };
       if (!Object.keys(payload).length) throw new TRPCError({ code: "BAD_REQUEST", message: "لم تُرسل بيانات لتحديثها." });
       await db.update(branches).set(payload).where(eq(branches.id, input.id));
-      await audit(db, ctx.user.id, "update", "branch", input.id, { code: branch.code, nameAr: branch.nameAr, managerName: branch.managerName, headcount: branch.headcount, status: branch.status }, payload);
+      await audit(db, ctx.user.id, "تعديل", "فرع", input.id, { code: branch.code, nameAr: branch.nameAr, managerName: branch.managerName, headcount: branch.headcount, status: branch.status }, payload);
       return { success: true };
     }),
   }),
@@ -133,40 +133,40 @@ export const operationalRoutes = {
         const assignments = allowedAssignments.filter(item => item.squareId === square.id).map(item => ({ ...item, branch: branchRows.find(branch => branch.id === item.branchId)?.nameAr ?? "فرع", branchType: branchRows.find(branch => branch.id === item.branchId)?.branchType, employee: employeeRows.find(employee => employee.id === item.employeeId)?.name ?? null }));
         const prospectsCount = prospectRows.filter(item => item.squareId === square.id && (branchScope(ctx.user) === undefined || item.branchId === branchScope(ctx.user))).length;
         const visitsCount = visitRows.filter(item => item.squareId === square.id && (branchScope(ctx.user) === undefined || item.branchId === branchScope(ctx.user))).length;
-        const converted = prospectRows.filter(item => item.squareId === square.id && item.status === "converted" && (branchScope(ctx.user) === undefined || item.branchId === branchScope(ctx.user))).length;
+        const converted = prospectRows.filter(item => item.squareId === square.id && item.status === "تم_الاستقطاب" && (branchScope(ctx.user) === undefined || item.branchId === branchScope(ctx.user))).length;
         return { ...square, assignments, prospectsCount, visitsCount, achievement: square.targetValue > 0 ? Math.round(converted / square.targetValue * 1000) / 10 : 0 };
       });
     }),
     create: protectedProcedure.input(z.object({ squareNumber: z.number().int().positive().max(999), name: z.string().trim().min(2).max(120), region: z.string().trim().min(2).max(120), centerLatitude: z.number().min(-90).max(90), centerLongitude: z.number().min(-180).max(180), halfSize: z.number().min(0.001).max(0.05), branchId: z.number().int().positive().optional() })).mutation(async ({ ctx, input }) => {
-      requireRoles(ctx.user, ["super_admin"]);
+      requireRoles(ctx.user, ["مدير_النظام"]);
       const db = await dbOrThrow();
       const branchRows = await db.select().from(branches);
       const primaryBranch = input.branchId ? branchRows.find(branch => branch.id === input.branchId) : undefined;
-      if (input.branchId && (!primaryBranch || primaryBranch.branchType === "islamic")) throw new TRPCError({ code: "BAD_REQUEST", message: "اختر فرعاً أساسياً صالحاً؛ يمكن إسناد كاك الإسلامي تلقائياً." });
+      if (input.branchId && (!primaryBranch || primaryBranch.branchType === "إسلامي")) throw new TRPCError({ code: "BAD_REQUEST", message: "اختر فرعاً أساسياً صالحاً؛ يمكن إسناد كاك الإسلامي تلقائياً." });
       if (input.centerLatitude - input.halfSize < -90 || input.centerLatitude + input.halfSize > 90 || input.centerLongitude - input.halfSize < -180 || input.centerLongitude + input.halfSize > 180) throw new TRPCError({ code: "BAD_REQUEST", message: "المضلع يتجاوز الحدود الجغرافية الصحيحة." });
       const polygon: Array<[number, number]> = [[input.centerLatitude - input.halfSize, input.centerLongitude - input.halfSize], [input.centerLatitude - input.halfSize, input.centerLongitude + input.halfSize], [input.centerLatitude + input.halfSize, input.centerLongitude + input.halfSize], [input.centerLatitude + input.halfSize, input.centerLongitude - input.halfSize]];
       const [result] = await db.insert(squares).values({ squareNumber: input.squareNumber, name: input.name, region: input.region, polygon, entitiesCount: 0, companiesCount: 0, organizationsCount: 0, merchantsCount: 0, targetValue: 0 });
       const id = Number((result as { insertId?: number }).insertId);
-      const islamicBranches = branchRows.filter(branch => branch.branchType === "islamic");
+      const islamicBranches = branchRows.filter(branch => branch.branchType === "إسلامي");
       if (islamicBranches.length) await db.insert(squareAssignments).values(islamicBranches.map(branch => ({ squareId: id, branchId: branch.id, isPrimary: false })));
       if (primaryBranch) await db.insert(squareAssignments).values({ squareId: id, branchId: primaryBranch.id, isPrimary: true });
-      await audit(db, ctx.user.id, "create", "square", id, undefined, { squareNumber: input.squareNumber, name: input.name, region: input.region, branchId: input.branchId ?? null });
+      await audit(db, ctx.user.id, "إنشاء", "square", id, undefined, { squareNumber: input.squareNumber, name: input.name, region: input.region, branchId: input.branchId ?? null });
       return { id };
     }),
     saveAssignment: protectedProcedure.input(z.object({ squareId: z.number().int().positive(), branchId: z.number().int().positive(), employeeId: z.number().int().positive().optional().nullable(), isPrimary: z.boolean().default(false) })).mutation(async ({ ctx, input }) => {
-      requireRoles(ctx.user, ["super_admin"]);
+      requireRoles(ctx.user, ["مدير_النظام"]);
       const db = await dbOrThrow();
       const [square] = await db.select().from(squares).where(eq(squares.id, input.squareId)).limit(1);
       const [branch] = await db.select().from(branches).where(eq(branches.id, input.branchId)).limit(1);
       if (!square || !branch) throw new TRPCError({ code: "NOT_FOUND", message: "المربع أو الفرع غير موجود." });
       if (input.employeeId) {
         const [employee] = await db.select().from(employees).where(eq(employees.id, input.employeeId)).limit(1);
-        if (!employee || employee.branchId !== input.branchId || employee.status !== "active") throw new TRPCError({ code: "BAD_REQUEST", message: "اختر موظفاً نشطاً تابعاً للفرع المحدد." });
+        if (!employee || employee.branchId !== input.branchId || employee.status !== "نشط") throw new TRPCError({ code: "BAD_REQUEST", message: "اختر موظفاً نشطاً تابعاً للفرع المحدد." });
       }
-      if (branch.branchType !== "islamic") await db.delete(squareAssignments).where(and(eq(squareAssignments.squareId, input.squareId), eq(squareAssignments.isPrimary, true)));
-      const isPrimary = branch.branchType === "islamic" ? false : input.isPrimary;
+      if (branch.branchType !== "إسلامي") await db.delete(squareAssignments).where(and(eq(squareAssignments.squareId, input.squareId), eq(squareAssignments.isPrimary, true)));
+      const isPrimary = branch.branchType === "إسلامي" ? false : input.isPrimary;
       await db.insert(squareAssignments).values({ squareId: input.squareId, branchId: input.branchId, employeeId: input.employeeId ?? null, isPrimary }).onDuplicateKeyUpdate({ set: { employeeId: input.employeeId ?? null, isPrimary } });
-      await audit(db, ctx.user.id, "update", "square_assignment", `${input.squareId}:${input.branchId}`, undefined, { branchId: input.branchId, employeeId: input.employeeId ?? null, isPrimary });
+      await audit(db, ctx.user.id, "تعديل", "square_assignment", `${input.squareId}:${input.branchId}`, undefined, { branchId: input.branchId, employeeId: input.employeeId ?? null, isPrimary });
       return { success: true };
     }),
   }),
@@ -175,7 +175,7 @@ export const operationalRoutes = {
     list: protectedProcedure.query(async ({ ctx }) => {
       const scope = branchScope(ctx.user);
       const rows = await (await dbOrThrow()).select().from(employees);
-      return rows.filter(employee => employee.status === "active" && (scope === undefined || employee.branchId === scope)).map(({ id, branchId, employeeCode, name, title }) => ({ id, branchId, employeeCode, name, title }));
+      return rows.filter(employee => employee.status === "نشط" && (scope === undefined || employee.branchId === scope)).map(({ id, branchId, employeeCode, name, title }) => ({ id, branchId, employeeCode, name, title }));
     }),
   }),
 
@@ -184,7 +184,7 @@ export const operationalRoutes = {
       requireRoles(ctx.user, prospectReadRoles);
       const db = await dbOrThrow();
       let rows = scoped(ctx.user, await db.select().from(prospects).orderBy(desc(prospects.updatedAt)));
-      if (roleOf(ctx.user) === "branch_employee") rows = rows.filter(item => ctx.user.employeeId ? item.employeeId === ctx.user.employeeId : item.createdBy === ctx.user.id);
+      if (roleOf(ctx.user) === "موظف_الفرع") rows = rows.filter(item => ctx.user.employeeId ? item.employeeId === ctx.user.employeeId : item.createdBy === ctx.user.id);
       if (input?.status) rows = rows.filter(item => item.status === input.status);
       if (input?.search) {
         const needle = input.search.toLowerCase();
@@ -197,18 +197,18 @@ export const operationalRoutes = {
       const db = await dbOrThrow();
       await assertBranchExists(db, input.branchId);
       const { id, firstContactDate, lastFollowupAt, nextFollowupAt, ...rest } = input;
-      const employeeId = roleOf(ctx.user) === "branch_employee" ? (ctx.user.employeeId ?? null) : (rest.employeeId ?? null);
-      if (roleOf(ctx.user) === "branch_employee" && input.employeeId !== employeeId) throw new TRPCError({ code: "FORBIDDEN", message: "يمكنك إسناد العميل إلى حسابك فقط." });
+      const employeeId = roleOf(ctx.user) === "موظف_الفرع" ? (ctx.user.employeeId ?? null) : (rest.employeeId ?? null);
+      if (roleOf(ctx.user) === "موظف_الفرع" && input.employeeId !== employeeId) throw new TRPCError({ code: "FORBIDDEN", message: "يمكنك إسناد العميل إلى حسابك فقط." });
       if (employeeId) {
         const [employee] = await db.select().from(employees).where(eq(employees.id, employeeId)).limit(1);
-        if (!employee || employee.branchId !== input.branchId || employee.status !== "active") throw new TRPCError({ code: "BAD_REQUEST", message: "الموظف المحدد غير نشط أو لا يتبع الفرع." });
+        if (!employee || employee.branchId !== input.branchId || employee.status !== "نشط") throw new TRPCError({ code: "BAD_REQUEST", message: "الموظف المحدد غير نشط أو لا يتبع الفرع." });
       }
       if (input.squareId) {
         const [square] = await db.select({ id: squares.id }).from(squares).where(eq(squares.id, input.squareId)).limit(1);
         if (!square) throw new TRPCError({ code: "BAD_REQUEST", message: "المربع الجغرافي المحدد غير موجود." });
         const [branch] = await db.select().from(branches).where(eq(branches.id, input.branchId)).limit(1);
         const assignmentRows = await db.select().from(squareAssignments).where(eq(squareAssignments.squareId, input.squareId));
-        if (!assignmentRows.some(item => item.branchId === input.branchId) && branch?.branchType !== "islamic") throw new TRPCError({ code: "BAD_REQUEST", message: "المربع غير مسند إلى الفرع المحدد." });
+        if (!assignmentRows.some(item => item.branchId === input.branchId) && branch?.branchType !== "إسلامي") throw new TRPCError({ code: "BAD_REQUEST", message: "المربع غير مسند إلى الفرع المحدد." });
       }
       const payload = { ...rest, employeeId, firstContactDate: firstContactDate ? asDate(firstContactDate) : null, lastFollowupAt: lastFollowupAt ? asDate(lastFollowupAt) : null, nextFollowupAt: nextFollowupAt ? asDate(nextFollowupAt) : null, expectedValue: String(input.expectedValue) };
       let idValue = id;
@@ -219,37 +219,37 @@ export const operationalRoutes = {
         if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "العميل المحتمل غير موجود." });
         assertBranchWrite(ctx.user, row.branchId, "prospect");
         if (row.branchId !== input.branchId) throw new TRPCError({ code: "BAD_REQUEST", message: "لا يمكن نقل سجل العميل المحتمل إلى فرع آخر من نموذج التعديل." });
-        if (roleOf(ctx.user) === "branch_employee" && !(ctx.user.employeeId ? row.employeeId === ctx.user.employeeId : row.createdBy === ctx.user.id)) throw new TRPCError({ code: "FORBIDDEN", message: "لا يمكنك تعديل سجل غير مسند إليك." });
+        if (roleOf(ctx.user) === "موظف_الفرع" && !(ctx.user.employeeId ? row.employeeId === ctx.user.employeeId : row.createdBy === ctx.user.id)) throw new TRPCError({ code: "FORBIDDEN", message: "لا يمكنك تعديل سجل غير مسند إليك." });
         await db.update(prospects).set(payload).where(eq(prospects.id, id));
       } else {
         const [result] = await db.insert(prospects).values({ ...payload, createdBy: ctx.user.id });
         idValue = Number((result as { insertId?: number }).insertId);
         await recordPerformance(db, input.branchId, "prospects", 1, ctx.user.id);
       }
-      const wasConverted = previous?.status === "converted";
-      const isConverted = input.status === "converted";
+      const wasConverted = previous?.status === "تم_الاستقطاب";
+      const isConverted = input.status === "تم_الاستقطاب";
       if (wasConverted !== isConverted) {
         const delta = isConverted ? 1 : -1;
-        await recordPerformance(db, input.branchId, "converted", delta, ctx.user.id);
+        await recordPerformance(db, input.branchId, "تم_الاستقطاب", delta, ctx.user.id);
         await recordPerformance(db, input.branchId, "new_customers", delta, ctx.user.id);
       }
       const cleanAudit = { status: input.status, sector: input.sector, branchId: input.branchId, squareId: input.squareId ?? null, employeeId, expectedValue: input.expectedValue };
-      await audit(db, ctx.user.id, id ? "update" : "create", "prospect", idValue, previous ? { status: previous.status, sector: previous.sector, branchId: previous.branchId, squareId: previous.squareId } : undefined, cleanAudit);
+      await audit(db, ctx.user.id, id ? "تعديل" : "إنشاء", "prospect", idValue, previous ? { status: previous.status, sector: previous.sector, branchId: previous.branchId, squareId: previous.squareId } : undefined, cleanAudit);
       return { id: idValue };
     }),
     delete: protectedProcedure.input(z.object({ id: z.number().int().positive() })).mutation(async ({ ctx, input }) => {
-      requireRoles(ctx.user, ["super_admin", "business_development", "branch_manager"]);
+      requireRoles(ctx.user, ["مدير_النظام", "تطوير_الأعمال", "مدير_الفرع"]);
       const db = await dbOrThrow();
       const [row] = await db.select().from(prospects).where(eq(prospects.id, input.id)).limit(1);
       if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "العميل المحتمل غير موجود." });
       assertBranchWrite(ctx.user, row.branchId, "prospect");
       await db.delete(prospects).where(eq(prospects.id, input.id));
       await recordPerformance(db, row.branchId, "prospects", -1, ctx.user.id, dateLabel(row.createdAt));
-      if (row.status === "converted") {
-        await recordPerformance(db, row.branchId, "converted", -1, ctx.user.id);
+      if (row.status === "تم_الاستقطاب") {
+        await recordPerformance(db, row.branchId, "تم_الاستقطاب", -1, ctx.user.id);
         await recordPerformance(db, row.branchId, "new_customers", -1, ctx.user.id);
       }
-      await audit(db, ctx.user.id, "delete", "prospect", row.id, { status: row.status, branchId: row.branchId }, undefined);
+      await audit(db, ctx.user.id, "حذف", "prospect", row.id, { status: row.status, branchId: row.branchId }, undefined);
       return { success: true };
     }),
   }),
@@ -258,7 +258,7 @@ export const operationalRoutes = {
     list: protectedProcedure.query(async ({ ctx }) => {
       requireRoles(ctx.user, visitReadRoles);
       let rows = scoped(ctx.user, await (await dbOrThrow()).select().from(visits).orderBy(desc(visits.visitAt)));
-      if (roleOf(ctx.user) === "branch_employee") rows = rows.filter(item => ctx.user.employeeId ? item.employeeId === ctx.user.employeeId : item.createdBy === ctx.user.id);
+      if (roleOf(ctx.user) === "موظف_الفرع") rows = rows.filter(item => ctx.user.employeeId ? item.employeeId === ctx.user.employeeId : item.createdBy === ctx.user.id);
       return rows.map(item => ({ ...item, attachments: (item.attachments ?? []).map(file => ({ name: file.name, size: file.size, url: "" })) }));
     }),
     upload: protectedProcedure.input(z.object({ branchId: z.number().int().positive(), fileName: z.string().min(1).max(180), contentType: z.string().refine(value => ["image/jpeg", "image/png", "image/webp", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].includes(value), "نوع الملف غير مدعوم."), dataBase64: z.string().min(1).max(11_200_000) })).mutation(async ({ ctx, input }) => {
@@ -291,7 +291,7 @@ export const operationalRoutes = {
       const [row] = await db.select().from(visits).where(eq(visits.id, input.visitId)).limit(1);
       if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "الزيارة أو المرفق غير موجود." });
       assertBranchRead(ctx.user, row.branchId);
-      if (roleOf(ctx.user) === "branch_employee" && !(ctx.user.employeeId ? row.employeeId === ctx.user.employeeId : row.createdBy === ctx.user.id)) throw new TRPCError({ code: "FORBIDDEN", message: "لا يمكنك تنزيل مرفق زيارة غير مسندة إليك." });
+      if (roleOf(ctx.user) === "موظف_الفرع" && !(ctx.user.employeeId ? row.employeeId === ctx.user.employeeId : row.createdBy === ctx.user.id)) throw new TRPCError({ code: "FORBIDDEN", message: "لا يمكنك تنزيل مرفق زيارة غير مسندة إليك." });
       const file = row.attachments?.[input.index];
       if (!file || !/^cbcc\/visit-attachments\/[A-Za-z0-9_-]+\.[A-Za-z0-9]{1,8}$/.test(file.url)) throw new TRPCError({ code: "NOT_FOUND", message: "المرفق غير متاح." });
       if (!ENV.forgeApiUrl || !ENV.forgeApiKey) throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "خدمة التخزين الدائم غير مهيأة لهذا المشروع." });
@@ -312,39 +312,39 @@ export const operationalRoutes = {
         const scope = { userId: ctx.user.id, branchId: input.branchId, key: file.url, name: file.name, size: file.size, issuedAt: file.issuedAt };
         if (!ENV.cookieSecret || !verifyAttachmentScope(ENV.cookieSecret, scope, file.proof)) throw new TRPCError({ code: "FORBIDDEN", message: "المرفق غير مرتبط بحسابك أو بالفرع المحدد." });
       }
-      if (roleOf(ctx.user) === "branch_employee" && input.employeeId !== (ctx.user.employeeId ?? null)) throw new TRPCError({ code: "FORBIDDEN", message: "يمكنك تسجيل زيارة باسمك فقط." });
-      const selectedEmployee = roleOf(ctx.user) === "branch_employee" ? ctx.user.employeeId : input.employeeId;
+      if (roleOf(ctx.user) === "موظف_الفرع" && input.employeeId !== (ctx.user.employeeId ?? null)) throw new TRPCError({ code: "FORBIDDEN", message: "يمكنك تسجيل زيارة باسمك فقط." });
+      const selectedEmployee = roleOf(ctx.user) === "موظف_الفرع" ? ctx.user.employeeId : input.employeeId;
       if (selectedEmployee) {
         const [employee] = await db.select().from(employees).where(eq(employees.id, selectedEmployee)).limit(1);
-        if (!employee || employee.branchId !== input.branchId || employee.status !== "active") throw new TRPCError({ code: "BAD_REQUEST", message: "الموظف المحدد غير نشط أو لا يتبع الفرع." });
+        if (!employee || employee.branchId !== input.branchId || employee.status !== "نشط") throw new TRPCError({ code: "BAD_REQUEST", message: "الموظف المحدد غير نشط أو لا يتبع الفرع." });
       }
       if (input.prospectId) {
         const [prospect] = await db.select().from(prospects).where(eq(prospects.id, input.prospectId)).limit(1);
         if (!prospect || prospect.branchId !== input.branchId) throw new TRPCError({ code: "BAD_REQUEST", message: "العميل المحتمل غير مرتبط بالفرع المحدد." });
-        if (roleOf(ctx.user) === "branch_employee" && !(ctx.user.employeeId ? prospect.employeeId === ctx.user.employeeId : prospect.createdBy === ctx.user.id)) throw new TRPCError({ code: "FORBIDDEN", message: "العميل المحتمل غير مسند إليك." });
+        if (roleOf(ctx.user) === "موظف_الفرع" && !(ctx.user.employeeId ? prospect.employeeId === ctx.user.employeeId : prospect.createdBy === ctx.user.id)) throw new TRPCError({ code: "FORBIDDEN", message: "العميل المحتمل غير مسند إليك." });
       }
       if (input.squareId) {
         const [square] = await db.select({ id: squares.id }).from(squares).where(eq(squares.id, input.squareId)).limit(1);
         if (!square) throw new TRPCError({ code: "BAD_REQUEST", message: "المربع الجغرافي المحدد غير موجود." });
         const [branch] = await db.select().from(branches).where(eq(branches.id, input.branchId)).limit(1);
         const assignmentRows = await db.select().from(squareAssignments).where(eq(squareAssignments.squareId, input.squareId));
-        if (!assignmentRows.some(item => item.branchId === input.branchId) && branch?.branchType !== "islamic") throw new TRPCError({ code: "BAD_REQUEST", message: "المربع غير مسند إلى الفرع المحدد." });
+        if (!assignmentRows.some(item => item.branchId === input.branchId) && branch?.branchType !== "إسلامي") throw new TRPCError({ code: "BAD_REQUEST", message: "المربع غير مسند إلى الفرع المحدد." });
       }
       const { visitAt, nextFollowupAt, attachments: submittedAttachments, ...rest } = input;
       const attachments = (submittedAttachments ?? []).map(({ name, url, size }) => ({ name, url, size }));
-      const payload = { ...rest, visitAt: new Date(visitAt), nextFollowupAt: nextFollowupAt ? asDate(nextFollowupAt) : null, employeeId: roleOf(ctx.user) === "branch_employee" ? (ctx.user.employeeId ?? null) : (input.employeeId ?? null), attachments, createdBy: ctx.user.id };
+      const payload = { ...rest, visitAt: new Date(visitAt), nextFollowupAt: nextFollowupAt ? asDate(nextFollowupAt) : null, employeeId: roleOf(ctx.user) === "موظف_الفرع" ? (ctx.user.employeeId ?? null) : (input.employeeId ?? null), attachments, createdBy: ctx.user.id };
       const [result] = await db.insert(visits).values(payload);
       const id = Number((result as { insertId?: number }).insertId);
       await recordPerformance(db, input.branchId, "visits", 1, ctx.user.id);
       if (input.visitType.includes("اجتماع")) await recordPerformance(db, input.branchId, "meetings", 1, ctx.user.id);
-      await audit(db, ctx.user.id, "create", "visit", id, undefined, { branchId: input.branchId, agencyType: input.agencyType, visitType: input.visitType, squareId: input.squareId ?? null, attachmentCount: input.attachments?.length ?? 0 });
+      await audit(db, ctx.user.id, "إنشاء", "visit", id, undefined, { branchId: input.branchId, agencyType: input.agencyType, visitType: input.visitType, squareId: input.squareId ?? null, attachmentCount: input.attachments?.length ?? 0 });
       return { id };
     }),
   }),
 
   targets: router({
     list: protectedProcedure.input(z.object({ branchId: z.number().int().positive().optional() }).optional()).query(async ({ ctx, input }) => {
-      requireRoles(ctx.user, ["super_admin", "executive", "business_development", "quality", "branch_manager"]);
+      requireRoles(ctx.user, ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "توكيد_الجودة", "مدير_الفرع"]);
       const db = await dbOrThrow();
       const scope = effectiveBranchId(ctx.user, input?.branchId);
       const [allTargets, perfRows] = await Promise.all([db.select().from(targets).orderBy(desc(targets.periodStart)), db.select().from(performance)]);
@@ -352,18 +352,18 @@ export const operationalRoutes = {
       return rows.map(item => {
         const start = new Date(dateLabel(item.periodStart) + "T00:00:00.000Z");
         const end = new Date(start);
-        if (item.interval === "daily") end.setUTCDate(end.getUTCDate());
-        if (item.interval === "weekly") end.setUTCDate(end.getUTCDate() + 6);
-        if (item.interval === "monthly") { end.setUTCMonth(end.getUTCMonth() + 1); end.setUTCDate(0); }
-        if (item.interval === "quarterly") { end.setUTCMonth(end.getUTCMonth() + 3); end.setUTCDate(0); }
-        if (item.interval === "yearly") { end.setUTCFullYear(end.getUTCFullYear() + 1); end.setUTCDate(0); }
+        if (item.interval === "يومي") end.setUTCDate(end.getUTCDate());
+        if (item.interval === "أسبوعي") end.setUTCDate(end.getUTCDate() + 6);
+        if (item.interval === "شهري") { end.setUTCMonth(end.getUTCMonth() + 1); end.setUTCDate(0); }
+        if (item.interval === "ربع_سنوي") { end.setUTCMonth(end.getUTCMonth() + 3); end.setUTCDate(0); }
+        if (item.interval === "سنوي") { end.setUTCFullYear(end.getUTCFullYear() + 1); end.setUTCDate(0); }
         const actual = perfRows.filter(row => row.branchId === item.branchId && row.metricCode === item.metricCode && row.periodDate >= start && row.periodDate <= end).reduce((sum, row) => sum + parseCount(row.actualValue), 0);
         const targetValue = parseCount(item.targetValue);
         return { ...item, actual, achievement: targetValue > 0 ? actual / targetValue * 100 : 0, periodEnd: end };
       });
     }),
-    save: protectedProcedure.input(z.object({ id: z.number().int().positive().optional(), branchId: z.number().int().positive(), metricCode: z.string().min(2).max(64), metricName: z.string().min(2).max(120), interval: z.enum(["daily", "weekly", "monthly", "quarterly", "yearly"]), periodStart: dateInput, targetValue: z.number().positive().max(1_000_000_000_000) })).mutation(async ({ ctx, input }) => {
-      requireRoles(ctx.user, ["super_admin"]);
+    save: protectedProcedure.input(z.object({ id: z.number().int().positive().optional(), branchId: z.number().int().positive(), metricCode: z.string().min(2).max(64), metricName: z.string().min(2).max(120), interval: z.enum(["يومي", "أسبوعي", "شهري", "ربع_سنوي", "سنوي"]), periodStart: dateInput, targetValue: z.number().positive().max(1_000_000_000_000) })).mutation(async ({ ctx, input }) => {
+      requireRoles(ctx.user, ["مدير_النظام"]);
       const db = await dbOrThrow();
       const canonicalMetricName = metricLabels[input.metricCode];
       if (!canonicalMetricName) throw new TRPCError({ code: "BAD_REQUEST", message: "المؤشر المحدد غير موجود في كتالوج المؤشرات." });
@@ -388,7 +388,7 @@ export const operationalRoutes = {
           targetId = Number((result as { insertId?: number }).insertId);
         }
       }
-      await audit(db, ctx.user.id, previous ? "update" : "create", "target", targetId, previous, { ...rest, metricName: canonicalMetricName, periodStart, targetValue: input.targetValue });
+      await audit(db, ctx.user.id, previous ? "تعديل" : "إنشاء", "target", targetId, previous, { ...rest, metricName: canonicalMetricName, periodStart, targetValue: input.targetValue });
       return { id: targetId };
     }),
   }),
@@ -397,10 +397,10 @@ export const operationalRoutes = {
     list: protectedProcedure.query(async ({ ctx }) => {
       let rows = await (await dbOrThrow()).select().from(dailyReports).orderBy(desc(dailyReports.reportDate));
       rows = scoped(ctx.user, rows);
-      if (roleOf(ctx.user) === "branch_employee") rows = rows.filter(item => item.userId === ctx.user.id);
+      if (roleOf(ctx.user) === "موظف_الفرع") rows = rows.filter(item => item.userId === ctx.user.id);
       return rows;
     }),
-    save: protectedProcedure.input(z.object({ id: z.number().int().positive().optional(), branchId: z.number().int().positive(), reportDate: dateInput, status: z.enum(["draft", "submitted"]), individualAccounts: z.number().int().min(0).max(1_000_000), companyAccounts: z.number().int().min(0).max(1_000_000), organizationAccounts: z.number().int().min(0).max(1_000_000), governmentAccounts: z.number().int().min(0).max(1_000_000), cacFast: z.number().int().min(0).max(1_000_000), cards: z.number().int().min(0).max(1_000_000), transfers: z.number().int().min(0).max(1_000_000), digitalServices: z.number().int().min(0).max(1_000_000), visitsCount: z.number().int().min(0).max(1_000_000), meetingsCount: z.number().int().min(0).max(1_000_000), callsCount: z.number().int().min(0).max(1_000_000), newCustomers: z.number().int().min(0).max(1_000_000), newOpportunities: z.number().int().min(0).max(1_000_000), followups: z.number().int().min(0).max(1_000_000), obstacles: z.string().max(4000).optional(), needs: z.string().max(4000).optional() })).mutation(async ({ ctx, input }) => {
+    save: protectedProcedure.input(z.object({ id: z.number().int().positive().optional(), branchId: z.number().int().positive(), reportDate: dateInput, status: z.enum(["مسودة", "مرسل"]), individualAccounts: z.number().int().min(0).max(1_000_000), companyAccounts: z.number().int().min(0).max(1_000_000), organizationAccounts: z.number().int().min(0).max(1_000_000), governmentAccounts: z.number().int().min(0).max(1_000_000), cacFast: z.number().int().min(0).max(1_000_000), cards: z.number().int().min(0).max(1_000_000), transfers: z.number().int().min(0).max(1_000_000), digitalServices: z.number().int().min(0).max(1_000_000), visitsCount: z.number().int().min(0).max(1_000_000), meetingsCount: z.number().int().min(0).max(1_000_000), callsCount: z.number().int().min(0).max(1_000_000), newCustomers: z.number().int().min(0).max(1_000_000), newOpportunities: z.number().int().min(0).max(1_000_000), followups: z.number().int().min(0).max(1_000_000), obstacles: z.string().max(4000).optional(), needs: z.string().max(4000).optional() })).mutation(async ({ ctx, input }) => {
       assertBranchWrite(ctx.user, input.branchId, "report");
       const db = await dbOrThrow();
       await assertBranchExists(db, input.branchId);
@@ -422,20 +422,20 @@ export const operationalRoutes = {
       if (previous) {
         assertBranchWrite(ctx.user, previous.branchId, "report");
         if (previous.branchId !== input.branchId) throw new TRPCError({ code: "BAD_REQUEST", message: "لا يمكن نقل التقرير إلى فرع آخر." });
-        if (roleOf(ctx.user) === "branch_employee" && previous.userId !== userId) throw new TRPCError({ code: "FORBIDDEN", message: "لا يمكنك تعديل تقرير موظف آخر." });
+        if (roleOf(ctx.user) === "موظف_الفرع" && previous.userId !== userId) throw new TRPCError({ code: "FORBIDDEN", message: "لا يمكنك تعديل تقرير موظف آخر." });
         await db.update(dailyReports).set(payload).where(eq(dailyReports.id, previous.id));
       }
       const idValue = previous?.id ?? Number(((await db.insert(dailyReports).values(payload))[0] as { insertId?: number }).insertId);
       const fields = [["individualAccounts", "individual_accounts"], ["companyAccounts", "company_accounts"], ["organizationAccounts", "organization_accounts"], ["governmentAccounts", "government_accounts"], ["cacFast", "cac_fast"], ["cards", "cards"], ["transfers", "transfers"], ["digitalServices", "digital_services"], ["visitsCount", "visits"], ["meetingsCount", "meetings"], ["callsCount", "calls"], ["newCustomers", "new_customers"], ["newOpportunities", "new_opportunities"], ["followups", "followups"]] as const;
       for (const [field, metricCode] of fields) {
-        const before = previous?.status === "submitted" ? parseCount(previous[field]) : 0;
-        const after = input.status === "submitted" ? parseCount(input[field]) : 0;
+        const before = previous?.status === "مرسل" ? parseCount(previous[field]) : 0;
+        const after = input.status === "مرسل" ? parseCount(input[field]) : 0;
         await recordPerformance(db, input.branchId, metricCode, after - before, userId, input.reportDate);
       }
       const auditFields = ["individualAccounts", "companyAccounts", "organizationAccounts", "governmentAccounts", "cacFast", "cards", "transfers", "digitalServices", "visitsCount", "meetingsCount", "callsCount", "newCustomers", "newOpportunities", "followups"] as const;
       const previousMetrics = previous ? Object.fromEntries(auditFields.map(field => [field, previous[field]])) : undefined;
       const nextMetrics = Object.fromEntries(auditFields.map(field => [field, input[field]]));
-      await audit(db, userId, previous ? "update" : "create", "daily_report", idValue, previous ? { branchId: previous.branchId, reportDate: dateLabel(previous.reportDate), status: previous.status, metrics: previousMetrics } : undefined, { branchId: input.branchId, reportDate: input.reportDate, status: input.status, metrics: nextMetrics });
+      await audit(db, userId, previous ? "تعديل" : "إنشاء", "daily_report", idValue, previous ? { branchId: previous.branchId, reportDate: dateLabel(previous.reportDate), status: previous.status, metrics: previousMetrics } : undefined, { branchId: input.branchId, reportDate: input.reportDate, status: input.status, metrics: nextMetrics });
       return { id: idValue };
     }),
   }),
@@ -450,34 +450,34 @@ export const operationalRoutes = {
       ]);
       return { reviews: scoped(ctx.user, reviewRows), complaints: scoped(ctx.user, complaintRows), findings: scoped(ctx.user, findingRows), actions: scoped(ctx.user, actionRows), branches: branchRows.filter(branch => branchScope(ctx.user) === undefined || branch.id === branchScope(ctx.user)) };
     }),
-    createComplaint: protectedProcedure.input(z.object({ branchId: z.number().int().positive(), complaintType: z.string().min(2).max(120), complaintDate: dateInput, ownerName: z.string().max(160).optional(), processingDays: z.number().int().min(0).max(3650).default(0), status: z.enum(["open", "in_progress", "resolved", "closed"]), details: z.string().max(5000).optional() })).mutation(async ({ ctx, input }) => {
+    createComplaint: protectedProcedure.input(z.object({ branchId: z.number().int().positive(), complaintType: z.string().min(2).max(120), complaintDate: dateInput, ownerName: z.string().max(160).optional(), processingDays: z.number().int().min(0).max(3650).default(0), status: z.enum(["مفتوح", "قيد_التنفيذ", "تمت_المعالجة", "مغلق"]), details: z.string().max(5000).optional() })).mutation(async ({ ctx, input }) => {
       assertBranchWrite(ctx.user, input.branchId, "quality");
       const db = await dbOrThrow();
       await assertBranchExists(db, input.branchId);
       const payload = { ...input, complaintDate: asDate(input.complaintDate) };
       const [result] = await db.insert(complaints).values(payload);
       const id = Number((result as { insertId?: number }).insertId);
-      await audit(db, ctx.user.id, "create", "complaint", id, undefined, { branchId: input.branchId, complaintType: input.complaintType, complaintDate: input.complaintDate, status: input.status, processingDays: input.processingDays });
+      await audit(db, ctx.user.id, "إنشاء", "complaint", id, undefined, { branchId: input.branchId, complaintType: input.complaintType, complaintDate: input.complaintDate, status: input.status, processingDays: input.processingDays });
       return { id };
     }),
-    createFinding: protectedProcedure.input(z.object({ branchId: z.number().int().positive(), finding: z.string().min(3).max(4000), severity: z.enum(["low", "medium", "high", "critical"]), ownerName: z.string().max(160).optional(), dueDate: dateInput.optional(), status: z.enum(["open", "in_progress", "resolved", "closed"]) })).mutation(async ({ ctx, input }) => {
+    createFinding: protectedProcedure.input(z.object({ branchId: z.number().int().positive(), finding: z.string().min(3).max(4000), severity: z.enum(["منخفض", "متوسط", "مرتفع", "حرج"]), ownerName: z.string().max(160).optional(), dueDate: dateInput.optional(), status: z.enum(["مفتوح", "قيد_التنفيذ", "تمت_المعالجة", "مغلق"]) })).mutation(async ({ ctx, input }) => {
       assertBranchWrite(ctx.user, input.branchId, "quality");
       const db = await dbOrThrow();
       await assertBranchExists(db, input.branchId);
       const payload = { ...input, dueDate: input.dueDate ? asDate(input.dueDate) : null };
       const [result] = await db.insert(qualityFindings).values(payload);
       const id = Number((result as { insertId?: number }).insertId);
-      await audit(db, ctx.user.id, "create", "quality_finding", id, undefined, { branchId: input.branchId, severity: input.severity, dueDate: input.dueDate ?? null, status: input.status });
+      await audit(db, ctx.user.id, "إنشاء", "quality_finding", id, undefined, { branchId: input.branchId, severity: input.severity, dueDate: input.dueDate ?? null, status: input.status });
       return { id };
     }),
-    createAction: protectedProcedure.input(z.object({ branchId: z.number().int().positive(), action: z.string().min(3).max(4000), ownerName: z.string().max(160).optional(), executionDate: dateInput.optional(), progress: z.number().int().min(0).max(100), status: z.enum(["open", "in_progress", "closed"]) })).mutation(async ({ ctx, input }) => {
+    createAction: protectedProcedure.input(z.object({ branchId: z.number().int().positive(), action: z.string().min(3).max(4000), ownerName: z.string().max(160).optional(), executionDate: dateInput.optional(), progress: z.number().int().min(0).max(100), status: z.enum(["مفتوح", "قيد_التنفيذ", "مغلق"]) })).mutation(async ({ ctx, input }) => {
       assertBranchWrite(ctx.user, input.branchId, "quality");
       const db = await dbOrThrow();
       await assertBranchExists(db, input.branchId);
       const payload = { ...input, executionDate: input.executionDate ? asDate(input.executionDate) : null };
       const [result] = await db.insert(correctiveActions).values(payload);
       const id = Number((result as { insertId?: number }).insertId);
-      await audit(db, ctx.user.id, "create", "corrective_action", id, undefined, { branchId: input.branchId, executionDate: input.executionDate ?? null, progress: input.progress, status: input.status });
+      await audit(db, ctx.user.id, "إنشاء", "corrective_action", id, undefined, { branchId: input.branchId, executionDate: input.executionDate ?? null, progress: input.progress, status: input.status });
       return { id };
     }),
     createReview: protectedProcedure.input(z.object({ branchId: z.number().int().positive(), reviewDate: dateInput, reception: z.number().int().min(0).max(100), speed: z.number().int().min(0).max(100), accuracy: z.number().int().min(0).max(100), customerExperience: z.number().int().min(0).max(100), procedures: z.number().int().min(0).max(100), forms: z.number().int().min(0).max(100), kyc: z.number().int().min(0).max(100), instructions: z.number().int().min(0).max(100), reviewer: z.string().max(160).optional(), notes: z.string().max(4000).optional() })).mutation(async ({ ctx, input }) => {
@@ -487,42 +487,42 @@ export const operationalRoutes = {
       const payload = { ...input, reviewDate: asDate(input.reviewDate) };
       const [result] = await db.insert(qualityReviews).values(payload);
       const id = Number((result as { insertId?: number }).insertId);
-      await audit(db, ctx.user.id, "create", "quality_review", id, undefined, { branchId: input.branchId, reviewDate: input.reviewDate, reception: input.reception, speed: input.speed, accuracy: input.accuracy, customerExperience: input.customerExperience, procedures: input.procedures, forms: input.forms, kyc: input.kyc, instructions: input.instructions });
+      await audit(db, ctx.user.id, "إنشاء", "quality_review", id, undefined, { branchId: input.branchId, reviewDate: input.reviewDate, reception: input.reception, speed: input.speed, accuracy: input.accuracy, customerExperience: input.customerExperience, procedures: input.procedures, forms: input.forms, kyc: input.kyc, instructions: input.instructions });
       return { id };
     }),
-    updateComplaint: protectedProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["open", "in_progress", "resolved", "closed"]), processingDays: z.number().int().min(0).max(3650).optional() })).mutation(async ({ ctx, input }) => {
+    updateComplaint: protectedProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["مفتوح", "قيد_التنفيذ", "تمت_المعالجة", "مغلق"]), processingDays: z.number().int().min(0).max(3650).optional() })).mutation(async ({ ctx, input }) => {
       const db = await dbOrThrow();
       const [row] = await db.select().from(complaints).where(eq(complaints.id, input.id)).limit(1);
       if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "الشكوى غير موجودة." });
       assertBranchWrite(ctx.user, row.branchId, "quality");
       await db.update(complaints).set({ status: input.status, processingDays: input.processingDays ?? row.processingDays }).where(eq(complaints.id, row.id));
-      await audit(db, ctx.user.id, "update", "complaint", row.id, { status: row.status, processingDays: row.processingDays }, { status: input.status, processingDays: input.processingDays ?? row.processingDays });
+      await audit(db, ctx.user.id, "تعديل", "complaint", row.id, { status: row.status, processingDays: row.processingDays }, { status: input.status, processingDays: input.processingDays ?? row.processingDays });
       return { success: true };
     }),
-    updateFinding: protectedProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["open", "in_progress", "resolved", "closed"]) })).mutation(async ({ ctx, input }) => {
+    updateFinding: protectedProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["مفتوح", "قيد_التنفيذ", "تمت_المعالجة", "مغلق"]) })).mutation(async ({ ctx, input }) => {
       const db = await dbOrThrow();
       const [row] = await db.select().from(qualityFindings).where(eq(qualityFindings.id, input.id)).limit(1);
       if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "الملاحظة غير موجودة." });
       assertBranchWrite(ctx.user, row.branchId, "quality");
       await db.update(qualityFindings).set({ status: input.status }).where(eq(qualityFindings.id, row.id));
-      await audit(db, ctx.user.id, "update", "quality_finding", row.id, { status: row.status }, { status: input.status });
+      await audit(db, ctx.user.id, "تعديل", "quality_finding", row.id, { status: row.status }, { status: input.status });
       return { success: true };
     }),
-    updateAction: protectedProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["open", "in_progress", "closed"]), progress: z.number().int().min(0).max(100) })).mutation(async ({ ctx, input }) => {
+    updateAction: protectedProcedure.input(z.object({ id: z.number().int().positive(), status: z.enum(["مفتوح", "قيد_التنفيذ", "مغلق"]), progress: z.number().int().min(0).max(100) })).mutation(async ({ ctx, input }) => {
       const db = await dbOrThrow();
       const [row] = await db.select().from(correctiveActions).where(eq(correctiveActions.id, input.id)).limit(1);
       if (!row) throw new TRPCError({ code: "NOT_FOUND", message: "الإجراء التصحيحي غير موجود." });
       assertBranchWrite(ctx.user, row.branchId, "quality");
-      const progress = input.status === "closed" ? 100 : input.progress;
+      const progress = input.status === "مغلق" ? 100 : input.progress;
       await db.update(correctiveActions).set({ status: input.status, progress }).where(eq(correctiveActions.id, row.id));
-      await audit(db, ctx.user.id, "update", "corrective_action", row.id, { status: row.status, progress: row.progress }, { status: input.status, progress });
+      await audit(db, ctx.user.id, "تعديل", "corrective_action", row.id, { status: row.status, progress: row.progress }, { status: input.status, progress });
       return { success: true };
     }),
   }),
 
   reports: router({
     monthly: protectedProcedure.input(z.object({ month: monthInput.optional() }).optional()).query(async ({ ctx, input }) => {
-      requireRoles(ctx.user, ["super_admin", "executive", "business_development", "quality", "branch_manager"]);
+      requireRoles(ctx.user, ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "توكيد_الجودة", "مدير_الفرع"]);
       const db = await dbOrThrow();
       const scope = branchScope(ctx.user);
       const currentMonth = todayKey().slice(0, 7);
@@ -533,14 +533,14 @@ export const operationalRoutes = {
       const [branchRows, performanceRows, targetRows] = await Promise.all([
         db.select().from(branches),
         db.select().from(performance).where(and(gte(performance.periodDate, start), lte(performance.periodDate, end))),
-        db.select().from(targets).where(eq(targets.interval, "monthly")),
+        db.select().from(targets).where(eq(targets.interval, "شهري")),
       ]);
       const visibleBranches = branchRows.filter(branch => scope === undefined || (scope >= 0 && branch.id === scope));
       return visibleBranches.map(branch => {
         const metricTotals: Record<string, number> = {};
         for (const row of performanceRows) if (row.branchId === branch.id) metricTotals[row.metricCode] = (metricTotals[row.metricCode] ?? 0) + parseCount(row.actualValue);
         const accounts = ["individual_accounts", "company_accounts", "organization_accounts", "government_accounts"].reduce((sum, key) => sum + (metricTotals[key] ?? 0), 0);
-        const target = targetRows.filter(item => item.branchId === branch.id && item.metricCode === "new_customers" && item.interval === "monthly" && dateLabel(item.periodStart).slice(0, 7) === dateLabel(start).slice(0, 7)).reduce((sum, item) => sum + parseCount(item.targetValue), 0);
+        const target = targetRows.filter(item => item.branchId === branch.id && item.metricCode === "new_customers" && item.interval === "شهري" && dateLabel(item.periodStart).slice(0, 7) === dateLabel(start).slice(0, 7)).reduce((sum, item) => sum + parseCount(item.targetValue), 0);
         const actual = metricTotals.new_customers ?? 0;
         return { branchId: branch.id, branch: branch.nameAr, period: dateLabel(start), customers: actual, accounts, deposits: metricTotals.deposits ?? 0, financing: metricTotals.financing ?? 0, visits: metricTotals.visits ?? 0, target, achievement: target > 0 ? actual / target * 100 : 0 };
       });
@@ -550,16 +550,16 @@ export const operationalRoutes = {
       const rows = await db.select().from(reports).orderBy(desc(reports.createdAt)).limit(100);
       const role = roleOf(ctx.user);
       let visible = rows.filter(item => {
-        if (item.branchId === null) return ["super_admin", "executive", "business_development", "quality"].includes(role);
+        if (item.branchId === null) return ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "توكيد_الجودة"].includes(role);
         const scope = branchScope(ctx.user);
         return scope === undefined || (scope >= 0 && scope === item.branchId);
       });
-      if (role === "branch_employee") visible = visible.filter(item => item.createdBy === ctx.user.id);
+      if (role === "موظف_الفرع") visible = visible.filter(item => item.createdBy === ctx.user.id);
       if (input?.search) visible = visible.filter(item => `${item.title} ${item.reportType}`.toLowerCase().includes(input.search!.toLowerCase()));
       return visible;
     }),
     weekly: protectedProcedure.input(z.object({ branchId: z.number().int().positive().optional(), start: dateInput.optional() }).optional()).mutation(async ({ ctx, input }) => {
-      requireRoles(ctx.user, ["super_admin", "executive", "business_development", "quality", "branch_manager"]);
+      requireRoles(ctx.user, ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "توكيد_الجودة", "مدير_الفرع"]);
       const db = await dbOrThrow();
       const selectedBranch = effectiveBranchId(ctx.user, input?.branchId);
       const currentDay = todayKey();
@@ -596,14 +596,14 @@ export const operationalRoutes = {
       const newProspects = scopedProspects.filter(item => item.createdAt >= timestampStart && item.createdAt <= timestampEnd).length;
       const scopedVisits = visitRows.filter(item => inScope(item.branchId) && item.visitAt >= timestampStart && item.visitAt <= timestampEnd);
       const dailyInPeriod = dailyRows.filter(item => inScope(item.branchId) && item.reportDate >= start && item.reportDate <= end);
-      const monthlyTarget = targetRows.filter(item => item.metricCode === "new_customers" && item.interval === "monthly" && inScope(item.branchId) && dateLabel(item.periodStart).slice(0, 7) === dateLabel(end).slice(0, 7)).reduce((sum, item) => sum + parseCount(item.targetValue), 0);
-      const savedWeeklyTargets = targetRows.filter(item => item.metricCode === "new_customers" && item.interval === "weekly" && inScope(item.branchId) && dateLabel(item.periodStart) === dateLabel(start));
+      const monthlyTarget = targetRows.filter(item => item.metricCode === "new_customers" && item.interval === "شهري" && inScope(item.branchId) && dateLabel(item.periodStart).slice(0, 7) === dateLabel(end).slice(0, 7)).reduce((sum, item) => sum + parseCount(item.targetValue), 0);
+      const savedWeeklyTargets = targetRows.filter(item => item.metricCode === "new_customers" && item.interval === "أسبوعي" && inScope(item.branchId) && dateLabel(item.periodStart) === dateLabel(start));
       const weeklyTarget = savedWeeklyTargets.length ? savedWeeklyTargets.reduce((sum, item) => sum + parseCount(item.targetValue), 0) : monthlyTarget / 4.345;
       const targetBasis = savedWeeklyTargets.length ? "مستهدف أسبوعي محفوظ" : "تقدير من المستهدف الشهري";
       const achievementPercent = weeklyTarget > 0 ? Math.round(newCustomers / weeklyTarget * 1000) / 10 : 0;
       const obstacles = Array.from(new Set(dailyInPeriod.map(item => item.obstacles).filter((item): item is string => Boolean(item))));
       const needs = Array.from(new Set(dailyInPeriod.map(item => item.needs).filter((item): item is string => Boolean(item))));
-      const conversionCount = scopedProspects.filter(item => item.status === "converted" && item.updatedAt >= timestampStart && item.updatedAt <= timestampEnd).length;
+      const conversionCount = scopedProspects.filter(item => item.status === "تم_الاستقطاب" && item.updatedAt >= timestampStart && item.updatedAt <= timestampEnd).length;
       const data = {
         summary: `من ${dateLabel(start)} إلى ${dateLabel(end)}: ${newCustomers} عميلاً جديداً، ${accounts} حساباً، ${scopedVisits.length} زيارة، وتحقيق ${targetBasis} بنسبة ${achievementPercent}%.`,
         currentTotals, previousTotals,
@@ -612,7 +612,7 @@ export const operationalRoutes = {
         fieldActivity: { visits: scopedVisits.length, meetings: currentTotals.meetings ?? 0, calls: currentTotals.calls ?? 0 },
         newProspects, converted: conversionCount, weeklyTarget, targetBasis,
         conversionRatePercent: scopedProspects.length ? Math.round(conversionCount / scopedProspects.length * 1000) / 10 : 0,
-        visits: scopedVisits.length, opportunities: scopedProspects.filter(item => ["negotiation", "following_up"].includes(item.status)).length,
+        visits: scopedVisits.length, opportunities: scopedProspects.filter(item => ["قيد_التفاوض", "قيد_المتابعة"].includes(item.status)).length,
         obstacles: obstacles.join("؛ ") || "لا توجد معوقات مسجلة في التقارير اليومية.",
         needs: needs.join("؛ ") || "لا توجد احتياجات مدخلة.",
         actions: "متابعة العملاء ذوي المواعيد القادمة، ومراجعة الفروع الأقل إنجازاً، وتحديث الإجراءات التصحيحية المفتوحة.",
@@ -620,16 +620,16 @@ export const operationalRoutes = {
         branchCount: allBranches.filter(branch => inScope(branch.id)).length,
         demoData: true,
       };
-      const [result] = await db.insert(reports).values({ reportType: "weekly", title: `التقرير الأسبوعي — ${dateLabel(start)} إلى ${dateLabel(end)}`, branchId: selectedBranch ?? null, periodStart: start, periodEnd: end, reportData: data, createdBy: ctx.user.id });
+      const [result] = await db.insert(reports).values({ reportType: "أسبوعي", title: `التقرير الأسبوعي — ${dateLabel(start)} إلى ${dateLabel(end)}`, branchId: selectedBranch ?? null, periodStart: start, periodEnd: end, reportData: data, createdBy: ctx.user.id });
       const id = Number((result as { insertId?: number }).insertId);
-      await audit(db, ctx.user.id, "create", "report", id, undefined, { reportType: "weekly", periodStart: start, periodEnd: end });
+      await audit(db, ctx.user.id, "إنشاء", "report", id, undefined, { reportType: "أسبوعي", periodStart: start, periodEnd: end });
       return { id, ...data, periodStart: dateLabel(start), periodEnd: dateLabel(end) };
     }),
     recordDaily: protectedProcedure.input(z.object({ branchId: z.number().int().positive(), reportDate: dateInput, userId: z.number().int().positive().optional() })).query(async ({ ctx, input }) => {
       assertBranchRead(ctx.user, input.branchId);
       const db = await dbOrThrow();
       let rows = await db.select().from(dailyReports).where(and(eq(dailyReports.branchId, input.branchId), eq(dailyReports.reportDate, asDate(input.reportDate)))).orderBy(desc(dailyReports.updatedAt));
-      if (roleOf(ctx.user) === "branch_employee") rows = rows.filter(item => item.userId === ctx.user.id);
+      if (roleOf(ctx.user) === "موظف_الفرع") rows = rows.filter(item => item.userId === ctx.user.id);
       return rows;
     }),
   }),
@@ -649,20 +649,20 @@ export const operationalRoutes = {
       const dynamic = model.branches.flatMap(branch => {
         const output: Array<{ id: string; type: string; title: string; body: string; branchId: number; isRead: boolean; createdAt: string }> = [];
         const createdAt = new Date().toISOString();
-        if (branch.growth < -20) output.push({ id: `decline-${branch.id}`, type: "danger", title: "انخفاض في الأداء", body: `تراجع مؤشر العملاء الجدد في ${branch.nameAr} بأكثر من 20%.`, branchId: branch.id, isRead: false, createdAt });
-        if (branch.achievement > 100) output.push({ id: `target-${branch.id}`, type: "success", title: "إنجاز المستهدف", body: `تجاوز ${branch.nameAr} مستهدف العملاء الجدد.`, branchId: branch.id, isRead: false, createdAt });
-        const hasReport = reportRows.some(report => report.branchId === branch.id && dateLabel(report.reportDate) === todayKey() && (role !== "branch_employee" || report.userId === ctx.user.id));
-        if (!hasReport) output.push({ id: `report-${branch.id}`, type: "reminder", title: "التقرير اليومي غير مرسل", body: role === "branch_employee" ? "لم ترسل تقريرك اليومي بعد." : `لم يُسجل تقرير اليوم لفرع ${branch.nameAr}.`, branchId: branch.id, isRead: false, createdAt });
+        if (branch.growth < -20) output.push({ id: `decline-${branch.id}`, type: "خطر", title: "انخفاض في الأداء", body: `تراجع مؤشر العملاء الجدد في ${branch.nameAr} بأكثر من 20%.`, branchId: branch.id, isRead: false, createdAt });
+        if (branch.achievement > 100) output.push({ id: `target-${branch.id}`, type: "نجاح", title: "إنجاز المستهدف", body: `تجاوز ${branch.nameAr} مستهدف العملاء الجدد.`, branchId: branch.id, isRead: false, createdAt });
+        const hasReport = reportRows.some(report => report.branchId === branch.id && dateLabel(report.reportDate) === todayKey() && (role !== "موظف_الفرع" || report.userId === ctx.user.id));
+        if (!hasReport) output.push({ id: `report-${branch.id}`, type: "تذكير", title: "التقرير اليومي غير مرسل", body: role === "موظف_الفرع" ? "لم ترسل تقريرك اليومي بعد." : `لم يُسجل تقرير اليوم لفرع ${branch.nameAr}.`, branchId: branch.id, isRead: false, createdAt });
         const currentProspects = branch.metricValues.prospects;
         const oldProspects = branch.metricPrevious.prospects;
         const currentRate = currentProspects > 0 ? branch.metricValues.converted / currentProspects : 0;
         const oldRate = oldProspects > 0 ? branch.metricPrevious.converted / oldProspects : 0;
-        if (oldProspects > 0 && currentRate < oldRate) output.push({ id: `conversion-${branch.id}`, type: "warning", title: "انخفاض في معدل التحويل", body: `انخفض معدل تحويل العملاء المحتملين في ${branch.nameAr} عن خط الأساس المقارن.`, branchId: branch.id, isRead: false, createdAt });
+        if (oldProspects > 0 && currentRate < oldRate) output.push({ id: `conversion-${branch.id}`, type: "تحذير", title: "انخفاض في معدل التحويل", body: `انخفض معدل تحويل العملاء المحتملين في ${branch.nameAr} عن خط الأساس المقارن.`, branchId: branch.id, isRead: false, createdAt });
         return output;
       });
       if (canReadProspectDetails) {
-        const overdue = prospectRows.filter(item => item.nextFollowupAt && dateLabel(item.nextFollowupAt) <= todayKey() && !["converted", "not_interested"].includes(item.status) && (scope === undefined || item.branchId === scope) && (role !== "branch_employee" || (ctx.user.employeeId ? item.employeeId === ctx.user.employeeId : item.createdBy === ctx.user.id)));
-        for (const item of overdue.slice(0, 20)) dynamic.push({ id: `followup-${item.id}`, type: "info", title: "متابعة مطلوبة", body: `تحتاج متابعة العميل المحتمل: ${item.name}.`, branchId: item.branchId, isRead: false, createdAt: new Date().toISOString() });
+        const overdue = prospectRows.filter(item => item.nextFollowupAt && dateLabel(item.nextFollowupAt) <= todayKey() && !["تم_الاستقطاب", "غير_مهتم"].includes(item.status) && (scope === undefined || item.branchId === scope) && (role !== "موظف_الفرع" || (ctx.user.employeeId ? item.employeeId === ctx.user.employeeId : item.createdBy === ctx.user.id)));
+        for (const item of overdue.slice(0, 20)) dynamic.push({ id: `followup-${item.id}`, type: "معلومات", title: "متابعة مطلوبة", body: `تحتاج متابعة العميل المحتمل: ${item.name}.`, branchId: item.branchId, isRead: false, createdAt: new Date().toISOString() });
       }
       return [...dynamic, ...visibleStored.map(item => ({ ...item, createdAt: item.createdAt.toISOString() }))].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     }),

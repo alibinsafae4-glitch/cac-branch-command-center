@@ -38,13 +38,13 @@ export const metricNames: Record<string, string> = {
 };
 
 export const prospectStatusLabels: Record<string, string> = {
-  new: "جديد", contacted: "تم التواصل", visited: "تمت الزيارة", following_up: "قيد المتابعة", negotiation: "قيد التفاوض", converted: "تم الاستقطاب", not_interested: "غير مهتم", deferred: "مؤجل",
+  "جديد": "جديد", "تم_التواصل": "تم التواصل", "تمت_الزيارة": "تمت الزيارة", "قيد_المتابعة": "قيد المتابعة", "قيد_التفاوض": "قيد التفاوض", "تم_الاستقطاب": "تم الاستقطاب", "غير_مهتم": "غير مهتم", "مؤجل": "مؤجل",
 };
 
 export const statusTone = (status: string) => {
-  if (["converted", "resolved", "closed", "active", "excellent"].includes(status)) return "success";
-  if (["negotiation", "following_up", "in_progress", "medium", "deferred"].includes(status)) return "warning";
-  if (["open", "critical", "not_interested", "danger"].includes(status)) return "danger";
+  if (["تم_الاستقطاب", "تمت_المعالجة", "مغلق", "نشط", "excellent"].includes(status)) return "success";
+  if (["قيد_التفاوض", "قيد_المتابعة", "قيد_التنفيذ", "متوسط", "مؤجل"].includes(status)) return "warning";
+  if (["مفتوح", "حرج", "غير_مهتم", "خطر"].includes(status)) return "danger";
   return "info";
 };
 
@@ -55,10 +55,10 @@ export const dateForInput = (value?: string | Date | null) => {
 };
 
 export const roleLabels: Record<string, string> = {
-  super_admin: "مدير النظام",
-  executive: "الإدارة العليا",
-  business_development: "تطوير الأعمال",
-  quality: "توكيد الجودة",
-  branch_manager: "مدير الفرع",
-  branch_employee: "موظف الفرع",
+  "مدير_النظام": "مدير النظام",
+  "الإدارة_العليا": "الإدارة العليا",
+  "تطوير_الأعمال": "تطوير الأعمال",
+  "توكيد_الجودة": "توكيد الجودة",
+  "مدير_الفرع": "مدير الفرع",
+  "موظف_الفرع": "موظف الفرع",
 };

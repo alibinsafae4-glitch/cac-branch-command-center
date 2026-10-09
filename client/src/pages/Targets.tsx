@@ -7,9 +7,9 @@ import { useState } from "react";
 import { exportExcel } from "@/lib/export";
 
 const metricOptions = Object.entries(metricNames);
-const intervals = [["daily", "يومي"], ["weekly", "أسبوعي"], ["monthly", "شهري"], ["quarterly", "ربع سنوي"], ["yearly", "سنوي"]] as const;
-type TargetForm = { id?: number; branchId: number; metricCode: string; metricName: string; interval: "daily" | "weekly" | "monthly" | "quarterly" | "yearly"; periodStart: string; targetValue: number };
-const newForm = (branchId = 0): TargetForm => ({ branchId, metricCode: "new_customers", metricName: metricNames.new_customers, interval: "monthly", periodStart: `${dateForInput().slice(0, 7)}-01`, targetValue: 30 });
+const intervals = [["يومي", "يومي"], ["أسبوعي", "أسبوعي"], ["شهري", "شهري"], ["ربع_سنوي", "ربع سنوي"], ["سنوي", "سنوي"]] as const;
+type TargetForm = { id?: number; branchId: number; metricCode: string; metricName: string; interval: "يومي" | "أسبوعي" | "شهري" | "ربع_سنوي" | "سنوي"; periodStart: string; targetValue: number };
+const newForm = (branchId = 0): TargetForm => ({ branchId, metricCode: "new_customers", metricName: metricNames.new_customers, interval: "شهري", periodStart: `${dateForInput().slice(0, 7)}-01`, targetValue: 30 });
 
 export default function TargetsPage() {
   const { user } = useAuth();
@@ -19,7 +19,7 @@ export default function TargetsPage() {
   const branches = trpc.business.branches.list.useQuery();
   const utils = trpc.useUtils();
   const save = trpc.business.targets.save.useMutation({ onSuccess: () => { void utils.business.targets.list.invalidate(); void utils.business.dashboard.summary.invalidate(); setOpen(false); } });
-  const canEdit = user?.role === "admin" || user?.appRole === "super_admin";
+  const canEdit = user?.role === "مدير" || user?.appRole === "مدير_النظام";
   const data = rows.data ?? [];
   const openNew = () => { setForm(newForm(user?.assignedBranchId ?? branches.data?.[0]?.id ?? 0)); setOpen(true); };
   const edit = (row: NonNullable<typeof rows.data>[number]) => setForm({ id: row.id, branchId: row.branchId, metricCode: row.metricCode, metricName: row.metricName, interval: row.interval, periodStart: dateForInput(row.periodStart), targetValue: Number(row.targetValue) });

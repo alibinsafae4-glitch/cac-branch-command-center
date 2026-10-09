@@ -1,0 +1,329 @@
+{
+  "version": 1,
+  "language": "ar",
+  "tables": {
+    "users": {
+      "databaseName": "المستخدمون",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "openId": "معرف_الدخول_لدى_مانوس",
+        "name": "اسم_المستخدم",
+        "email": "البريد_الإلكتروني",
+        "loginMethod": "طريقة_تسجيل_الدخول",
+        "role": "الدور_التقني",
+        "appRole": "الدور_داخل_التطبيق",
+        "assignedBranchId": "معرف_الفرع_المسند",
+        "employeeId": "معرف_الموظف",
+        "isActive": "حالة_تفعيل_الحساب",
+        "createdAt": "تاريخ_إنشاء_الحساب",
+        "updatedAt": "تاريخ_آخر_تعديل",
+        "lastSignedIn": "آخر_تسجيل_دخول"
+      }
+    },
+    "roles": {
+      "databaseName": "الأدوار",
+      "columns": {
+        "roleKey": "رمز_الدور_الثابت",
+        "nameAr": "اسم_الدور_بالعربية",
+        "description": "وصف_الدور",
+        "permissions": "رموز_الصلاحيات"
+      }
+    },
+    "employees": {
+      "databaseName": "الموظفون",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "employeeCode": "الرقم_الوظيفي",
+        "name": "اسم_الموظف",
+        "title": "المسمى_الوظيفي",
+        "branchId": "معرف_الفرع",
+        "status": "حالة_الموظف",
+        "isDemo": "هل_السجل_تجريبي",
+        "createdAt": "تاريخ_إضافة_السجل"
+      }
+    },
+    "branches": {
+      "databaseName": "الفروع",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "code": "رمز_الفرع",
+        "nameAr": "اسم_الفرع_بالعربية",
+        "nameEn": "اسم_الفرع_بالإنجليزية",
+        "managerName": "اسم_المدير",
+        "parentBranchCode": "رمز_الفرع_الأم",
+        "branchType": "نوع_الفرع",
+        "status": "الحالة_التشغيلية",
+        "headcount": "عدد_الموظفين",
+        "createdAt": "تاريخ_الإنشاء",
+        "updatedAt": "آخر_تحديث"
+      }
+    },
+    "squares": {
+      "databaseName": "المربعات_الجغرافية",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "squareNumber": "رقم_المربع",
+        "name": "اسم_المربع",
+        "region": "المنطقة",
+        "polygon": "نقاط_حدود_المربع_التقريبية_بصيغة_جيسون",
+        "entitiesCount": "عدد_الجهات",
+        "companiesCount": "عدد_الشركات",
+        "organizationsCount": "عدد_المنظمات",
+        "merchantsCount": "عدد_التجار",
+        "targetValue": "القيمة_المستهدفة",
+        "createdAt": "تاريخ_الإنشاء",
+        "updatedAt": "آخر_تحديث"
+      }
+    },
+    "squareAssignments": {
+      "databaseName": "إسناد_المربعات",
+      "columns": {
+        "squareId": "معرف_المربع",
+        "branchId": "معرف_الفرع",
+        "employeeId": "معرف_الموظف_اختياري",
+        "isPrimary": "هل_الإسناد_أساسي",
+        "createdAt": "تاريخ_الإسناد"
+      }
+    },
+    "prospects": {
+      "databaseName": "العملاء_المحتملون",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "name": "اسم_العميل_أو_الجهة",
+        "customerType": "نوع_العميل",
+        "sector": "القطاع",
+        "activity": "طبيعة_النشاط",
+        "phone": "الهاتف",
+        "email": "البريد_الإلكتروني",
+        "address": "العنوان",
+        "squareId": "معرف_المربع",
+        "branchId": "معرف_الفرع",
+        "employeeId": "معرف_الموظف_المكلف",
+        "firstContactDate": "تاريخ_أول_تواصل",
+        "lastFollowupAt": "تاريخ_آخر_متابعة",
+        "nextFollowupAt": "موعد_المتابعة_القادمة",
+        "products": "المنتجات_المحتملة",
+        "expectedValue": "القيمة_المتوقعة",
+        "status": "مرحلة_الاستقطاب",
+        "notes": "ملاحظات_المتابعة",
+        "createdBy": "معرف_منشئ_السجل",
+        "isDemo": "هل_السجل_تجريبي",
+        "createdAt": "تاريخ_الإنشاء",
+        "updatedAt": "آخر_تحديث"
+      }
+    },
+    "visits": {
+      "databaseName": "الزيارات_الميدانية",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "agencyName": "اسم_الجهة",
+        "agencyType": "نوع_الجهة",
+        "prospectId": "معرف_العميل_المحتمل_اختياري",
+        "squareId": "معرف_المربع",
+        "branchId": "معرف_الفرع",
+        "employeeId": "معرف_الموظف",
+        "visitAt": "تاريخ_ووقت_الزيارة",
+        "location": "الموقع",
+        "visitType": "نوع_الزيارة",
+        "personMet": "الشخص_الذي_تمت_مقابلته",
+        "result": "نتيجة_الزيارة",
+        "products": "المنتجات_التي_نوقشت",
+        "opportunities": "الفرص_الناتجة",
+        "notes": "ملاحظات",
+        "nextAction": "الإجراء_التالي",
+        "nextFollowupAt": "تاريخ_المتابعة_القادمة",
+        "attachments": "المرفقات_بصيغة_جيسون",
+        "createdBy": "معرف_منشئ_السجل",
+        "isDemo": "هل_السجل_تجريبي",
+        "createdAt": "تاريخ_تسجيل_الزيارة"
+      }
+    },
+    "targets": {
+      "databaseName": "المستهدفات",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "branchId": "معرف_الفرع",
+        "metricCode": "الرمز_التقني_للمؤشر",
+        "metricName": "اسم_المؤشر",
+        "interval": "دورية_المستهدف",
+        "periodStart": "بداية_الفترة",
+        "targetValue": "القيمة_المستهدفة",
+        "createdBy": "معرف_منشئ_السجل",
+        "createdAt": "تاريخ_الإضافة"
+      }
+    },
+    "performance": {
+      "databaseName": "الأداء_الفعلي",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "branchId": "معرف_الفرع",
+        "periodDate": "تاريخ_الأداء",
+        "metricCode": "الرمز_التقني_للمؤشر",
+        "actualValue": "القيمة_الفعلية",
+        "previousValue": "قيمة_الفترة_السابقة",
+        "updatedBy": "معرف_آخر_من_عدل",
+        "updatedAt": "وقت_آخر_تحديث"
+      }
+    },
+    "dailyReports": {
+      "databaseName": "التقارير_اليومية",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "branchId": "معرف_الفرع",
+        "userId": "معرف_المستخدم",
+        "reportDate": "تاريخ_التقرير",
+        "individualAccounts": "حسابات_الأفراد",
+        "companyAccounts": "حسابات_الشركات",
+        "organizationAccounts": "حسابات_المنظمات",
+        "governmentAccounts": "حسابات_الجهات_الحكومية",
+        "cacFast": "عمليات_كاك_فاست",
+        "cards": "البطاقات",
+        "transfers": "الحوالات",
+        "digitalServices": "الخدمات_الرقمية",
+        "visitsCount": "عدد_الزيارات",
+        "meetingsCount": "عدد_الاجتماعات",
+        "callsCount": "عدد_الاتصالات",
+        "newCustomers": "العملاء_الجدد",
+        "newOpportunities": "الفرص_الجديدة",
+        "followups": "المتابعات",
+        "obstacles": "المعوقات",
+        "needs": "الاحتياجات",
+        "status": "حالة_التقرير",
+        "createdAt": "تاريخ_الإنشاء",
+        "updatedAt": "آخر_تحديث"
+      }
+    },
+    "complaints": {
+      "databaseName": "الشكاوى",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "complaintType": "نوع_الشكوى",
+        "branchId": "معرف_الفرع",
+        "complaintDate": "تاريخ_الشكوى",
+        "ownerName": "المسؤول_عن_المعالجة",
+        "processingDays": "أيام_المعالجة",
+        "status": "حالة_الشكوى",
+        "details": "التفاصيل",
+        "createdAt": "تاريخ_الإضافة",
+        "updatedAt": "آخر_تحديث"
+      }
+    },
+    "qualityReviews": {
+      "databaseName": "تقييمات_الجودة",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "branchId": "معرف_الفرع",
+        "reviewDate": "تاريخ_التقييم",
+        "reception": "تقييم_الاستقبال",
+        "speed": "تقييم_سرعة_الخدمة",
+        "accuracy": "تقييم_دقة_المعاملة",
+        "customerExperience": "تقييم_تجربة_العميل",
+        "procedures": "الالتزام_بالإجراءات",
+        "forms": "الالتزام_بالنماذج",
+        "kyc": "الالتزام_بمتطلبات_اعرف_عميلك",
+        "instructions": "الالتزام_بالتعليمات",
+        "reviewer": "اسم_المقيم",
+        "notes": "ملاحظات_التقييم",
+        "createdAt": "تاريخ_الإضافة"
+      }
+    },
+    "qualityFindings": {
+      "databaseName": "ملاحظات_الجودة",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "branchId": "معرف_الفرع",
+        "finding": "نص_الملاحظة",
+        "severity": "درجة_الأهمية",
+        "ownerName": "المسؤول",
+        "dueDate": "تاريخ_الاستحقاق",
+        "status": "حالة_المعالجة",
+        "createdAt": "تاريخ_الإضافة"
+      }
+    },
+    "correctiveActions": {
+      "databaseName": "الإجراءات_التصحيحية",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "branchId": "معرف_الفرع",
+        "action": "وصف_الإجراء_التصحيحي",
+        "ownerName": "المسؤول",
+        "executionDate": "موعد_التنفيذ",
+        "progress": "نسبة_الإنجاز",
+        "status": "حالة_الإجراء",
+        "createdAt": "تاريخ_الإضافة"
+      }
+    },
+    "reports": {
+      "databaseName": "التقارير_المحفوظة",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "reportType": "نوع_التقرير",
+        "title": "عنوان_التقرير",
+        "branchId": "معرف_الفرع_اختياري",
+        "periodStart": "بداية_الفترة",
+        "periodEnd": "نهاية_الفترة",
+        "reportData": "بيانات_التقرير_المجمعة_بصيغة_جيسون",
+        "createdBy": "معرف_منشئ_التقرير",
+        "createdAt": "وقت_الإنشاء"
+      }
+    },
+    "notifications": {
+      "databaseName": "التنبيهات",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "userId": "معرف_المستخدم_اختياري",
+        "branchId": "معرف_الفرع_اختياري",
+        "type": "نوع_التنبيه",
+        "title": "عنوان_التنبيه",
+        "body": "نص_التنبيه",
+        "isRead": "هل_تمت_القراءة",
+        "createdAt": "وقت_الإنشاء"
+      }
+    },
+    "aiInsights": {
+      "databaseName": "تحليلات_الذكاء_الاصطناعي",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "generatedBy": "معرف_منشئ_التحليل",
+        "periodLabel": "الفترة_التحليلية",
+        "headline": "عنوان_التحليل",
+        "content": "نص_التحليل",
+        "recommendations": "التوصيات_بصيغة_جيسون",
+        "sourceSummary": "ملخص_المصادر_بصيغة_جيسون",
+        "createdAt": "وقت_الإنشاء"
+      }
+    },
+    "branchScoreWeights": {
+      "databaseName": "أوزان_تقييم_الفروع",
+      "columns": {
+        "metricCode": "رمز_المؤشر",
+        "metricName": "اسم_المؤشر",
+        "weightPercent": "وزن_المؤشر_كنسبة_مئوية",
+        "updatedBy": "معرف_آخر_من_عدل",
+        "updatedAt": "وقت_آخر_تحديث"
+      }
+    },
+    "auditLogs": {
+      "databaseName": "سجل_التدقيق",
+      "columns": {
+        "id": "المعرف_الداخلي",
+        "actorUserId": "معرف_المستخدم_المنفذ",
+        "action": "نوع_العملية",
+        "entity": "نوع_السجل_المتأثر",
+        "entityId": "معرف_السجل_المتأثر",
+        "previousValue": "القيم_السابقة_بصيغة_جيسون",
+        "newValue": "القيم_الجديدة_بصيغة_جيسون",
+        "createdAt": "وقت_العملية"
+      }
+    },
+    "appSettings": {
+      "databaseName": "إعدادات_التطبيق",
+      "columns": {
+        "settingKey": "مفتاح_الإعداد",
+        "settingValue": "قيمة_الإعداد_بصيغة_جيسون",
+        "updatedBy": "معرف_آخر_من_عدل",
+        "updatedAt": "وقت_آخر_تحديث"
+      }
+    }
+  }
+}

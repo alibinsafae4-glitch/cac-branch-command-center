@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { User } from "../drizzle/schema";
 import { assertActive, assertBranchRead, assertBranchWrite, branchScope, canReadProspects, canReadQualityDetails, canReadVisits } from "./access";
 
-const appUser = (appRole: string, assignedBranchId: number | null = 12, systemRole: "user" | "admin" = "user") => ({
+const appUser = (appRole: string, assignedBranchId: number | null = 12, systemRole: "مستخدم" | "مدير" = "مستخدم") => ({
   id: 5,
   role: systemRole,
   appRole,
@@ -11,7 +11,7 @@ const appUser = (appRole: string, assignedBranchId: number | null = 12, systemRo
 
 describe("branch access controls", () => {
   it("limits branch managers to reads and supported writes in their assigned branch", () => {
-    const manager = appUser("branch_manager");
+    const manager = appUser("مدير_الفرع");
     expect(branchScope(manager)).toBe(12);
     expect(() => assertBranchRead(manager, 12)).not.toThrow();
     expect(() => assertBranchRead(manager, 13)).toThrow();
@@ -21,7 +21,7 @@ describe("branch access controls", () => {
   });
 
   it("limits branch employees to their own branch and prospect, visit, and report writes", () => {
-    const employee = appUser("branch_employee");
+    const employee = appUser("موظف_الفرع");
     expect(() => assertBranchRead(employee, 12)).not.toThrow();
     expect(() => assertBranchRead(employee, 13)).toThrow();
     expect(() => assertBranchWrite(employee, 12, "prospect")).not.toThrow();
@@ -31,7 +31,7 @@ describe("branch access controls", () => {
   });
 
   it("keeps organization-wide reads separate from business-development write privileges", () => {
-    const businessDevelopment = appUser("business_development");
+    const businessDevelopment = appUser("تطوير_الأعمال");
     expect(branchScope(businessDevelopment)).toBeUndefined();
     expect(() => assertBranchRead(businessDevelopment, 99)).not.toThrow();
     expect(() => assertBranchWrite(businessDevelopment, 99, "prospect")).not.toThrow();
@@ -39,18 +39,18 @@ describe("branch access controls", () => {
   });
 
   it("recognizes the platform owner/admin as the super administrator", () => {
-    const owner = appUser("branch_employee", 12, "admin");
+    const owner = appUser("موظف_الفرع", 12, "مدير");
     expect(() => assertBranchRead(owner, 999)).not.toThrow();
     expect(() => assertBranchWrite(owner, 999, "target")).not.toThrow();
   });
 
   it("blocks inactive sessions and limits record-detail readers to the required roles", () => {
-    const inactive = { ...appUser("branch_employee"), isActive: 0 } as unknown as User;
+    const inactive = { ...appUser("موظف_الفرع"), isActive: 0 } as unknown as User;
     expect(() => assertActive(inactive)).toThrow();
-    expect(() => assertActive(appUser("branch_employee"))).not.toThrow();
-    expect(canReadProspects(appUser("executive"))).toBe(false);
-    expect(canReadVisits(appUser("quality"))).toBe(true);
-    expect(canReadVisits(appUser("executive"))).toBe(false);
-    expect(canReadQualityDetails(appUser("executive"))).toBe(false);
+    expect(() => assertActive(appUser("موظف_الفرع"))).not.toThrow();
+    expect(canReadProspects(appUser("الإدارة_العليا"))).toBe(false);
+    expect(canReadVisits(appUser("توكيد_الجودة"))).toBe(true);
+    expect(canReadVisits(appUser("الإدارة_العليا"))).toBe(false);
+    expect(canReadQualityDetails(appUser("الإدارة_العليا"))).toBe(false);
   });
 });

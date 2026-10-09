@@ -49,7 +49,7 @@ const effectiveBranchId = (user: typeof users.$inferSelect, requested?: number) 
   if (requested && requested !== scope) throw new TRPCError({ code: "FORBIDDEN", message: "لا يمكنك الوصول إلى بيانات هذا الفرع." });
   return scope;
 };
-const audit = async (db: Awaited<ReturnType<typeof dbOrThrow>>, actorUserId: number, action: "create" | "update" | "delete" | "role_change", entity: string, entityId: string | number | undefined, previousValue?: unknown, newValue?: unknown) => {
+const audit = async (db: Awaited<ReturnType<typeof dbOrThrow>>, actorUserId: number, action: "إنشاء" | "تعديل" | "حذف" | "تغيير_الدور", entity: string, entityId: string | number | undefined, previousValue?: unknown, newValue?: unknown) => {
   await db.insert(auditLogs).values({
     actorUserId,
     action,
@@ -78,8 +78,8 @@ const parseCount = (value: string | number | null | undefined) => Number(value ?
 const syncDailyPerformance = async (db: Awaited<ReturnType<typeof dbOrThrow>>, branchId: number, reportDate: string, previous: Record<string, unknown> | undefined, next: Record<string, unknown>, actorId: number) => {
   const fields = [["individualAccounts", "individual_accounts"], ["companyAccounts", "company_accounts"], ["organizationAccounts", "organization_accounts"], ["governmentAccounts", "government_accounts"], ["cacFast", "cac_fast"], ["cards", "cards"], ["digitalServices", "digital_services"], ["visitsCount", "visits"], ["meetingsCount", "meetings"], ["callsCount", "calls"], ["newCustomers", "new_customers"], ["newOpportunities", "new_opportunities"], ["followups", "followups"]] as const;
   for (const [field, metricCode] of fields) {
-    const before = previous?.status === "submitted" ? parseCount(previous[field] as number | string | undefined) : 0;
-    const after = next.status === "submitted" ? parseCount(next[field] as number | string | undefined) : 0;
+    const before = previous?.status === "مرسل" ? parseCount(previous[field] as number | string | undefined) : 0;
+    const after = next.status === "مرسل" ? parseCount(next[field] as number | string | undefined) : 0;
     const delta = after - before;
     if (delta !== 0) await recordPerformance(db, branchId, metricCode, delta, actorId, reportDate);
   }
@@ -117,14 +117,14 @@ export const businessRouter = router({
 
   intelligence: router({
     latest: protectedProcedure.query(async ({ ctx }) => {
-      requireRoles(ctx.user, ["super_admin", "executive", "business_development"]);
+      requireRoles(ctx.user, ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال"]);
       const db = await dbOrThrow();
       const scope = branchScope(ctx.user);
       const rows = await db.select().from(aiInsights).orderBy(desc(aiInsights.createdAt)).limit(20);
       return scope === undefined ? rows : rows;
     }),
     analyze: protectedProcedure.mutation(async ({ ctx }) => {
-      requireRoles(ctx.user, ["super_admin", "executive", "business_development"]);
+      requireRoles(ctx.user, ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال"]);
       const db = await dbOrThrow();
       const model = await buildDashboard(ctx.user);
       const safeAggregate = model.branches.map(branch => ({ branch: branch.nameAr, branchScore: Math.round(branch.score), achievementPercent: Math.round(branch.achievement * 10) / 10, growthPercent: Math.round(branch.growth * 10) / 10, newCustomers: branch.metricValues.new_customers, deposits: branch.metricValues.deposits, visits: branch.metricValues.visits, complaintsOpen: branch.complaintsCount }));
@@ -215,7 +215,7 @@ export const businessRouter = router({
       const headline = "قراءة تحليلية مجمعة لأداء الفروع — حتى اليوم";
       const [inserted] = await db.insert(aiInsights).values({ generatedBy: ctx.user.id, periodLabel, headline, content, recommendations, sourceSummary: { period: periodLabel, branchCount: safeAggregate.length, demoData: true, metrics: ["branchScore", "achievementPercent", "growthPercent", "newCustomers", "deposits", "visits", "complaintsOpen"] } });
       const id = Number((inserted as { insertId?: number }).insertId);
-      await audit(db, ctx.user.id, "create", "ai_insight", id, undefined, { branchCount: safeAggregate.length });
+      await audit(db, ctx.user.id, "إنشاء", "ai_insight", id, undefined, { branchCount: safeAggregate.length });
       return { id, headline, content, recommendations, generatedAt: new Date().toISOString(), demoData: true };
     }),
   }),
@@ -238,24 +238,24 @@ export const businessRouter = router({
         db.select().from(reports).where(like(reports.title, q)),
       ]);
       const branchAllowed = (branchId: number) => scope === undefined || branchId === scope;
-      const employeeAllowed = (employeeId: number | null | undefined, createdBy: number | null | undefined) => role !== "branch_employee" || (ctx.user.employeeId ? employeeId === ctx.user.employeeId : createdBy === ctx.user.id);
+      const employeeAllowed = (employeeId: number | null | undefined, createdBy: number | null | undefined) => role !== "موظف_الفرع" || (ctx.user.employeeId ? employeeId === ctx.user.employeeId : createdBy === ctx.user.id);
       const canReadQuality = canReadQualityDetails(ctx.user);
-      const canReadGlobalReports = ["super_admin", "executive", "business_development", "quality"].includes(role);
+      const canReadGlobalReports = ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "توكيد_الجودة"].includes(role);
       return [
         ...branchRows.filter(item => branchAllowed(item.id)).slice(0, 5).map(item => ({ kind: "فرع", label: item.nameAr, href: `/branches/${item.id}` })),
-        ...employeeRows.filter(item => branchAllowed(item.branchId) && (role !== "branch_employee" || item.branchId === scope)).slice(0, 5).map(item => ({ kind: "موظف", label: `${item.name} · ${item.title}`, href: "/branches" })),
+        ...employeeRows.filter(item => branchAllowed(item.branchId) && (role !== "موظف_الفرع" || item.branchId === scope)).slice(0, 5).map(item => ({ kind: "موظف", label: `${item.name} · ${item.title}`, href: "/branches" })),
         ...(canReadProspects(ctx.user) ? prospectRows.filter(item => branchAllowed(item.branchId) && employeeAllowed(item.employeeId, item.createdBy)).slice(0, 5).map(item => ({ kind: "عميل محتمل", label: item.name, href: "/prospects" })) : []),
         ...squareRows.filter(square => assignmentRows.some(assignment => assignment.squareId === square.id && (scope === undefined || assignment.branchId === scope))).slice(0, 5).map(item => ({ kind: "مربع", label: item.name, href: "/squares" })),
         ...(canReadVisits(ctx.user) ? visitRows.filter(item => branchAllowed(item.branchId) && employeeAllowed(item.employeeId, item.createdBy)).slice(0, 5).map(item => ({ kind: "زيارة", label: item.agencyName, href: "/visits" })) : []),
         ...(canReadQuality ? complaintRows.filter(item => branchAllowed(item.branchId)).slice(0, 5).map(item => ({ kind: "شكوى", label: item.complaintType, href: "/quality" })) : []),
         ...(canReadQuality ? findingRows.filter(item => branchAllowed(item.branchId)).slice(0, 5).map(item => ({ kind: "ملاحظة", label: item.finding.slice(0, 140), href: "/quality" })) : []),
-        ...reportRows.filter(item => item.branchId === null ? canReadGlobalReports : branchAllowed(item.branchId)).filter(item => role !== "branch_employee" || item.createdBy === ctx.user.id).slice(0, 5).map(item => ({ kind: "تقرير", label: item.title, href: "/reports" })),
+        ...reportRows.filter(item => item.branchId === null ? canReadGlobalReports : branchAllowed(item.branchId)).filter(item => role !== "موظف_الفرع" || item.createdBy === ctx.user.id).slice(0, 5).map(item => ({ kind: "تقرير", label: item.title, href: "/reports" })),
       ].slice(0, 24);
     }),
   }),
   settings: router({
     overview: protectedProcedure.query(async ({ ctx }) => {
-      requireRoles(ctx.user, ["super_admin"]);
+      requireRoles(ctx.user, ["مدير_النظام"]);
       const db = await dbOrThrow();
       const [weightRows, userRows, roleRows, auditRows, branchRows] = await Promise.all([
         db.select().from(branchScoreWeights), db.select().from(users).orderBy(desc(users.createdAt)).limit(200),
@@ -270,30 +270,30 @@ export const businessRouter = router({
       return { weights: [...normalizedWeights.values()], users: userRows.map(({ openId: _openId, ...rest }) => rest), roles: roleRows, auditLogs: auditRows, branches: branchRows };
     }),
     updateWeights: protectedProcedure.input(z.object({ weights: z.array(z.object({ metricCode: z.string().min(2).max(64), metricName: z.string().min(2).max(120), weightPercent: z.number().int().min(0).max(100) })).length(7) })).mutation(async ({ ctx, input }) => {
-      requireRoles(ctx.user, ["super_admin"]);
+      requireRoles(ctx.user, ["مدير_النظام"]);
       if (!isCompleteBranchScoreWeights(input.weights)) throw new TRPCError({ code: "BAD_REQUEST", message: "أدخل فئات Branch Score السبع الفريدة المعتمدة، على أن يساوي مجموع أوزانها 100%." });
       const db = await dbOrThrow();
       for (const row of input.weights) await db.insert(branchScoreWeights).values({ ...row, updatedBy: ctx.user.id }).onDuplicateKeyUpdate({ set: { metricName: row.metricName, weightPercent: row.weightPercent, updatedBy: ctx.user.id } });
-      await audit(db, ctx.user.id, "update", "branch_score_weights", undefined, undefined, input.weights as unknown);
+      await audit(db, ctx.user.id, "تعديل", "branch_score_weights", undefined, undefined, input.weights as unknown);
       return { success: true };
     }),
-    updateUser: protectedProcedure.input(z.object({ userId: z.number().int().positive(), appRole: z.enum(["super_admin", "executive", "business_development", "quality", "branch_manager", "branch_employee"]), assignedBranchId: z.number().int().positive().nullable(), employeeId: z.number().int().positive().nullable(), isActive: z.boolean() })).mutation(async ({ ctx, input }) => {
-      requireRoles(ctx.user, ["super_admin"]);
-      if (input.userId === ctx.user.id && (input.appRole !== "super_admin" || !input.isActive)) throw new TRPCError({ code: "BAD_REQUEST", message: "لا يمكن سحب صلاحية مدير النظام من الجلسة الحالية." });
+    updateUser: protectedProcedure.input(z.object({ userId: z.number().int().positive(), appRole: z.enum(["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "توكيد_الجودة", "مدير_الفرع", "موظف_الفرع"]), assignedBranchId: z.number().int().positive().nullable(), employeeId: z.number().int().positive().nullable(), isActive: z.boolean() })).mutation(async ({ ctx, input }) => {
+      requireRoles(ctx.user, ["مدير_النظام"]);
+      if (input.userId === ctx.user.id && (input.appRole !== "مدير_النظام" || !input.isActive)) throw new TRPCError({ code: "BAD_REQUEST", message: "لا يمكن سحب صلاحية مدير النظام من الجلسة الحالية." });
       const db = await dbOrThrow();
-      if (["branch_manager", "branch_employee"].includes(input.appRole) && !input.assignedBranchId) throw new TRPCError({ code: "BAD_REQUEST", message: "يجب إسناد مستخدم الفرع إلى فرع محدد." });
+      if (["مدير_الفرع", "موظف_الفرع"].includes(input.appRole) && !input.assignedBranchId) throw new TRPCError({ code: "BAD_REQUEST", message: "يجب إسناد مستخدم الفرع إلى فرع محدد." });
       if (input.assignedBranchId) {
         const [branch] = await db.select({ id: branches.id }).from(branches).where(eq(branches.id, input.assignedBranchId)).limit(1);
         if (!branch) throw new TRPCError({ code: "BAD_REQUEST", message: "الفرع المحدد غير موجود." });
       }
       if (input.employeeId) {
         const [employee] = await db.select().from(employees).where(eq(employees.id, input.employeeId)).limit(1);
-        if (!employee || employee.branchId !== input.assignedBranchId || employee.status !== "active") throw new TRPCError({ code: "BAD_REQUEST", message: "اختر موظفاً نشطاً تابعاً للفرع المحدد." });
+        if (!employee || employee.branchId !== input.assignedBranchId || employee.status !== "نشط") throw new TRPCError({ code: "BAD_REQUEST", message: "اختر موظفاً نشطاً تابعاً للفرع المحدد." });
       }
       const [previous] = await db.select().from(users).where(eq(users.id, input.userId)).limit(1);
       if (!previous) throw new TRPCError({ code: "NOT_FOUND", message: "المستخدم غير موجود." });
       await db.update(users).set({ appRole: input.appRole, assignedBranchId: input.assignedBranchId, employeeId: input.employeeId, isActive: input.isActive ? 1 : 0 }).where(eq(users.id, input.userId));
-      await audit(db, ctx.user.id, "role_change", "user", input.userId, { appRole: previous.appRole, assignedBranchId: previous.assignedBranchId, isActive: previous.isActive }, input);
+      await audit(db, ctx.user.id, "تغيير_الدور", "مستخدم", input.userId, { appRole: previous.appRole, assignedBranchId: previous.assignedBranchId, isActive: previous.isActive }, input);
       return { success: true };
     }),
   }),

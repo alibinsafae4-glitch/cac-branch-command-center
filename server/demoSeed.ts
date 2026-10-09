@@ -22,12 +22,12 @@ import {
 } from "../drizzle/schema";
 
 const demoBranches = [
-  { code: "CR", nameAr: "فرع كريتر", nameEn: "Crater Branch", branchType: "branch" as const, managerName: "مدير فرع كريتر", headcount: 24 },
-  { code: "MN", nameAr: "فرع المنصورة", nameEn: "Mansoura Branch", branchType: "branch" as const, managerName: "مدير فرع المنصورة", headcount: 31 },
-  { code: "SO", nameAr: "فرع الشيخ عثمان", nameEn: "Sheikh Othman Branch", branchType: "branch" as const, managerName: "مدير فرع الشيخ عثمان", headcount: 28 },
-  { code: "BR", nameAr: "مكتب البريقة", nameEn: "Al-Buraiqah Office", branchType: "suboffice" as const, managerName: "مسؤول مكتب البريقة", parentBranchCode: "SO", headcount: 9 },
-  { code: "NK", nameAr: "فرع النخبة", nameEn: "Al-Nukhba Branch", branchType: "branch" as const, managerName: "مدير فرع النخبة", headcount: 18 },
-  { code: "KI", nameAr: "فرع كاك الإسلامي", nameEn: "CAC Islamic Branch", branchType: "islamic" as const, managerName: "مدير كاك الإسلامي", headcount: 22 },
+  { code: "CR", nameAr: "فرع كريتر", nameEn: "Crater Branch", branchType: "فرع" as const, managerName: "مدير فرع كريتر", headcount: 24 },
+  { code: "MN", nameAr: "فرع المنصورة", nameEn: "Mansoura Branch", branchType: "فرع" as const, managerName: "مدير فرع المنصورة", headcount: 31 },
+  { code: "SO", nameAr: "فرع الشيخ عثمان", nameEn: "Sheikh Othman Branch", branchType: "فرع" as const, managerName: "مدير فرع الشيخ عثمان", headcount: 28 },
+  { code: "BR", nameAr: "مكتب البريقة", nameEn: "Al-Buraiqah Office", branchType: "مكتب_فرعي" as const, managerName: "مسؤول مكتب البريقة", parentBranchCode: "SO", headcount: 9 },
+  { code: "NK", nameAr: "فرع النخبة", nameEn: "Al-Nukhba Branch", branchType: "فرع" as const, managerName: "مدير فرع النخبة", headcount: 18 },
+  { code: "KI", nameAr: "فرع كاك الإسلامي", nameEn: "CAC Islamic Branch", branchType: "إسلامي" as const, managerName: "مدير كاك الإسلامي", headcount: 22 },
 ];
 
 const metrics = [
@@ -47,16 +47,16 @@ const metrics = [
   ["followups", "المتابعات", 26],
   ["transfers", "الحوالات", 17],
   ["prospects", "العملاء المحتملون", 19],
-  ["converted", "العملاء المستقطبون", 8],
+  ["تم_الاستقطاب", "العملاء المستقطبون", 8],
 ] as const;
 
 const roleRows = [
-  { roleKey: "super_admin", nameAr: "مدير النظام", permissions: ["all"] },
-  { roleKey: "executive", nameAr: "الإدارة العليا", permissions: ["dashboard.read", "reports.read", "intelligence.read", "alerts.read"] },
-  { roleKey: "business_development", nameAr: "تطوير الأعمال", permissions: ["branches.read", "prospects.manage", "visits.manage", "squares.read", "targets.read", "reports.read"] },
-  { roleKey: "quality", nameAr: "توكيد الجودة", permissions: ["branches.read", "quality.manage", "reports.read", "alerts.read"] },
-  { roleKey: "branch_manager", nameAr: "مدير الفرع", permissions: ["branch.read", "branch.write", "prospects.manage", "visits.manage", "reports.manage", "quality.read"] },
-  { roleKey: "branch_employee", nameAr: "موظف الفرع", permissions: ["assigned_prospects.manage", "assigned_visits.manage", "daily_reports.manage"] },
+  { roleKey: "مدير_النظام", nameAr: "مدير النظام", permissions: ["all"] },
+  { roleKey: "الإدارة_العليا", nameAr: "الإدارة العليا", permissions: ["dashboard.read", "reports.read", "intelligence.read", "alerts.read"] },
+  { roleKey: "تطوير_الأعمال", nameAr: "تطوير الأعمال", permissions: ["branches.read", "prospects.manage", "visits.manage", "squares.read", "targets.read", "reports.read"] },
+  { roleKey: "توكيد_الجودة", nameAr: "توكيد الجودة", permissions: ["branches.read", "quality.manage", "reports.read", "alerts.read"] },
+  { roleKey: "مدير_الفرع", nameAr: "مدير الفرع", permissions: ["branch.read", "branch.write", "prospects.manage", "visits.manage", "reports.manage", "quality.read"] },
+  { roleKey: "موظف_الفرع", nameAr: "موظف الفرع", permissions: ["assigned_prospects.manage", "assigned_visits.manage", "daily_reports.manage"] },
 ];
 
 const dateKey = (value: Date) => businessDateKey(value);
@@ -108,7 +108,7 @@ export async function ensureDemoSeed() {
       }
       for (const [metricCode, label, baseline] of metrics) {
         const targetScale = metricCode === "deposits" || metricCode === "financing" ? 2 : 1;
-        await db.insert(targets).values({ branchId: branch.id, metricCode, metricName: label, interval: "monthly", periodStart: dateValue(currentMonth), targetValue: String(baseline * targetScale) }).onDuplicateKeyUpdate({ set: { targetValue: sql`targetValue` } });
+        await db.insert(targets).values({ branchId: branch.id, metricCode, metricName: label, interval: "شهري", periodStart: dateValue(currentMonth), targetValue: String(baseline * targetScale) }).onDuplicateKeyUpdate({ set: { targetValue: sql`targetValue` } });
       }
     }
     for (let offset = 0; offset < perfValues.length; offset += 250) {
@@ -163,7 +163,7 @@ export async function ensureDemoSeed() {
       const branch = allBranches[i % allBranches.length];
       const employee = allEmployees.find(item => item.branchId === branch.id);
       const square = allSquares[i % allSquares.length];
-      const statuses = ["new", "contacted", "visited", "following_up", "negotiation", "converted", "deferred"] as const;
+      const statuses = ["جديد", "تم_التواصل", "تمت_الزيارة", "قيد_المتابعة", "قيد_التفاوض", "تم_الاستقطاب", "مؤجل"] as const;
       const first = new Date(now); first.setDate(first.getDate() - (i % 18));
       const next = new Date(now); next.setDate(next.getDate() + ((i % 5) - 2));
       demoProspects.push({
@@ -241,7 +241,7 @@ export async function ensureDemoSeed() {
         followups: 4 + (branch.id % 7),
         obstacles: "لا توجد معوقات تشغيلية مهمة (سجل تجريبي).",
         needs: "متابعة الاحتياجات المسجلة للفرع (سجل تجريبي).",
-        status: "submitted",
+        status: "مرسل",
       });
     }
   }
@@ -264,11 +264,11 @@ export async function ensureDemoSeed() {
       });
     }
     await db.insert(complaints).values([
-      { complaintType: "تأخر خدمة (تجريبي)", branchId: allBranches[0].id, complaintDate: today, ownerName: "مسؤول افتراضي", processingDays: 2, status: "in_progress", details: "شكوى اصطناعية للعرض فقط." },
-      { complaintType: "استفسار خدمة (تجريبي)", branchId: allBranches[1].id, complaintDate: today, ownerName: "مسؤول افتراضي", processingDays: 1, status: "open", details: "شكوى اصطناعية للعرض فقط." },
+      { complaintType: "تأخر خدمة (تجريبي)", branchId: allBranches[0].id, complaintDate: today, ownerName: "مسؤول افتراضي", processingDays: 2, status: "قيد_التنفيذ", details: "شكوى اصطناعية للعرض فقط." },
+      { complaintType: "استفسار خدمة (تجريبي)", branchId: allBranches[1].id, complaintDate: today, ownerName: "مسؤول افتراضي", processingDays: 1, status: "مفتوح", details: "شكوى اصطناعية للعرض فقط." },
     ]);
-    await db.insert(qualityFindings).values({ branchId: allBranches[0].id, finding: "استكمال قائمة تحقق توضيحية — مثال تجريبي.", severity: "medium", ownerName: "مسؤول افتراضي", dueDate: today, status: "open" });
-    await db.insert(correctiveActions).values({ branchId: allBranches[0].id, action: "تحديث إجراء تشغيلي افتراضي للمراجعة.", ownerName: "مسؤول افتراضي", executionDate: today, progress: 40, status: "in_progress" });
+    await db.insert(qualityFindings).values({ branchId: allBranches[0].id, finding: "استكمال قائمة تحقق توضيحية — مثال تجريبي.", severity: "متوسط", ownerName: "مسؤول افتراضي", dueDate: today, status: "مفتوح" });
+    await db.insert(correctiveActions).values({ branchId: allBranches[0].id, action: "تحديث إجراء تشغيلي افتراضي للمراجعة.", ownerName: "مسؤول افتراضي", executionDate: today, progress: 40, status: "قيد_التنفيذ" });
   }
 
   const weights = await db.select({ metricCode: branchScoreWeights.metricCode }).from(branchScoreWeights).limit(1);
@@ -287,8 +287,8 @@ export async function ensureDemoSeed() {
   const notificationRows = await db.select({ id: notifications.id }).from(notifications).limit(1);
   if (!notificationRows.length) {
     await db.insert(notifications).values([
-      { type: "warning", title: "مراجعة الأداء", body: "أحد مؤشرات الأداء يحتاج إلى متابعة هذا الأسبوع (تنبيه تجريبي).", branchId: allBranches[2].id },
-      { type: "info", title: "تقرير اليوم", body: "تقرير الفرع التجريبي جاهز للمراجعة.", branchId: allBranches[0].id },
+      { type: "تحذير", title: "مراجعة الأداء", body: "أحد مؤشرات الأداء يحتاج إلى متابعة هذا الأسبوع (تنبيه تجريبي).", branchId: allBranches[2].id },
+      { type: "معلومات", title: "تقرير اليوم", body: "تقرير الفرع التجريبي جاهز للمراجعة.", branchId: allBranches[0].id },
     ]);
   }
 

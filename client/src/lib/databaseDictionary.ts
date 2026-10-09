@@ -1,7 +1,8 @@
-export type DictionaryField = { name: string; label: string };
+export type DictionaryField = { name: string; label: string; databaseName: string };
 export type DictionaryAction = { path: string; label: string; roles?: string[] };
 export type DictionaryTable = {
   name: string;
+  databaseName: string;
   title: string;
   description: string;
   fields: DictionaryField[];
@@ -10,14 +11,14 @@ export type DictionaryTable = {
 };
 export type DictionaryGroup = { title: string; description: string; tables: DictionaryTable[] };
 
-const f = (name: string, label: string): DictionaryField => ({ name, label });
-const admin = ["super_admin"];
-const branchRoles = ["super_admin", "business_development", "branch_manager"];
-const prospectRoles = ["super_admin", "business_development", "branch_manager", "branch_employee"];
-const visitRoles = ["super_admin", "business_development", "quality", "branch_manager", "branch_employee"];
-const qualityRoles = ["super_admin", "quality", "branch_manager"];
-const targetRoles = ["super_admin", "executive", "business_development", "branch_manager"];
-const intelligenceRoles = ["super_admin", "executive", "business_development"];
+const f = (name: string, label: string, databaseName: string): DictionaryField => ({ name, label, databaseName });
+const admin = ["مدير_النظام"];
+const branchRoles = ["مدير_النظام", "تطوير_الأعمال", "مدير_الفرع"];
+const prospectRoles = ["مدير_النظام", "تطوير_الأعمال", "مدير_الفرع", "موظف_الفرع"];
+const visitRoles = ["مدير_النظام", "تطوير_الأعمال", "توكيد_الجودة", "مدير_الفرع", "موظف_الفرع"];
+const qualityRoles = ["مدير_النظام", "توكيد_الجودة", "مدير_الفرع"];
+const targetRoles = ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "مدير_الفرع"];
+const intelligenceRoles = ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال"];
 
 export const databaseDictionary: DictionaryGroup[] = [
   {
@@ -25,19 +26,19 @@ export const databaseDictionary: DictionaryGroup[] = [
     description: "حسابات الدخول والأدوار والموظفون المرتبطون بالفروع.",
     tables: [
       {
-        name: "users", title: "المستخدمون", description: "حسابات Manus التي تدخل إلى النظام، مع الدور التجاري والفرع وحالة التفعيل.",
+        name: "users", databaseName: "المستخدمون", title: "المستخدمون", description: "حسابات Manus التي تدخل إلى النظام، مع الدور التجاري والفرع وحالة التفعيل.",
         action: { path: "/settings", label: "إدارة المستخدمين", roles: admin },
-        fields: [f("id", "المعرّف الداخلي"), f("openId", "معرّف الدخول لدى Manus"), f("name", "اسم المستخدم"), f("email", "البريد الإلكتروني"), f("loginMethod", "طريقة تسجيل الدخول"), f("role", "الدور التقني"), f("appRole", "الدور داخل التطبيق"), f("assignedBranchId", "معرّف الفرع المسند"), f("employeeId", "معرّف الموظف"), f("isActive", "حالة تفعيل الحساب"), f("createdAt", "تاريخ إنشاء الحساب"), f("updatedAt", "تاريخ آخر تعديل"), f("lastSignedIn", "آخر تسجيل دخول")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("openId", "معرّف الدخول لدى Manus", "معرف_الدخول_لدى_مانوس"), f("name", "اسم المستخدم", "اسم_المستخدم"), f("email", "البريد الإلكتروني", "البريد_الإلكتروني"), f("loginMethod", "طريقة تسجيل الدخول", "طريقة_تسجيل_الدخول"), f("role", "الدور التقني", "الدور_التقني"), f("appRole", "الدور داخل التطبيق", "الدور_داخل_التطبيق"), f("assignedBranchId", "معرّف الفرع المسند", "معرف_الفرع_المسند"), f("employeeId", "معرّف الموظف", "معرف_الموظف"), f("isActive", "حالة تفعيل الحساب", "حالة_تفعيل_الحساب"), f("createdAt", "تاريخ إنشاء الحساب", "تاريخ_إنشاء_الحساب"), f("updatedAt", "تاريخ آخر تعديل", "تاريخ_آخر_تعديل"), f("lastSignedIn", "آخر تسجيل دخول", "آخر_تسجيل_دخول")],
       },
       {
-        name: "roles", title: "الأدوار", description: "أسماء الأدوار ووصفها وقائمة الصلاحيات المعتمدة.",
+        name: "roles", databaseName: "الأدوار", title: "الأدوار", description: "أسماء الأدوار ووصفها وقائمة الصلاحيات المعتمدة.",
         action: { path: "/settings", label: "عرض الأدوار", roles: admin },
-        fields: [f("roleKey", "رمز الدور الثابت"), f("nameAr", "اسم الدور بالعربية"), f("description", "وصف الدور"), f("permissions", "رموز الصلاحيات")],
+        fields: [f("roleKey", "رمز الدور الثابت", "رمز_الدور_الثابت"), f("nameAr", "اسم الدور بالعربية", "اسم_الدور_بالعربية"), f("description", "وصف الدور", "وصف_الدور"), f("permissions", "رموز الصلاحيات", "رموز_الصلاحيات")],
       },
       {
-        name: "employees", title: "الموظفون", description: "ملفات الموظفين المرتبطة بفرع، وتُستخدم لإسناد المربعات والأنشطة.",
+        name: "employees", databaseName: "الموظفون", title: "الموظفون", description: "ملفات الموظفين المرتبطة بفرع، وتُستخدم لإسناد المربعات والأنشطة.",
         action: { path: "/settings", label: "ربط الموظف بالمستخدم", roles: admin },
-        fields: [f("id", "المعرّف الداخلي"), f("employeeCode", "الرقم الوظيفي"), f("name", "اسم الموظف"), f("title", "المسمى الوظيفي"), f("branchId", "معرّف الفرع"), f("status", "حالة الموظف"), f("isDemo", "هل السجل تجريبي؟"), f("createdAt", "تاريخ إضافة السجل")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("employeeCode", "الرقم الوظيفي", "الرقم_الوظيفي"), f("name", "اسم الموظف", "اسم_الموظف"), f("title", "المسمى الوظيفي", "المسمى_الوظيفي"), f("branchId", "معرّف الفرع", "معرف_الفرع"), f("status", "حالة الموظف", "حالة_الموظف"), f("isDemo", "هل السجل تجريبي؟", "هل_السجل_تجريبي"), f("createdAt", "تاريخ إضافة السجل", "تاريخ_إضافة_السجل")],
       },
     ],
   },
@@ -46,19 +47,19 @@ export const databaseDictionary: DictionaryGroup[] = [
     description: "تعريف الفروع والمربعات وعلاقات الإسناد بينها.",
     tables: [
       {
-        name: "branches", title: "الفروع", description: "الاسم والرمز والنوع والحالة والفرع الأم وبيانات المسؤول وعدد الموظفين.",
-        action: { path: "/branches", label: "فتح شاشة الفروع", roles: ["super_admin", "executive", "business_development", "branch_manager"] },
-        fields: [f("id", "المعرّف الداخلي"), f("code", "رمز الفرع"), f("nameAr", "اسم الفرع بالعربية"), f("nameEn", "اسم الفرع بالإنجليزية"), f("managerName", "اسم المدير"), f("parentBranchCode", "رمز الفرع الأم"), f("branchType", "نوع الفرع"), f("status", "الحالة التشغيلية"), f("headcount", "عدد الموظفين"), f("createdAt", "تاريخ الإنشاء"), f("updatedAt", "آخر تحديث")],
+        name: "branches", databaseName: "الفروع", title: "الفروع", description: "الاسم والرمز والنوع والحالة والفرع الأم وبيانات المسؤول وعدد الموظفين.",
+        action: { path: "/branches", label: "فتح شاشة الفروع", roles: ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "مدير_الفرع"] },
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("code", "رمز الفرع", "رمز_الفرع"), f("nameAr", "اسم الفرع بالعربية", "اسم_الفرع_بالعربية"), f("nameEn", "اسم الفرع بالإنجليزية", "اسم_الفرع_بالإنجليزية"), f("managerName", "اسم المدير", "اسم_المدير"), f("parentBranchCode", "رمز الفرع الأم", "رمز_الفرع_الأم"), f("branchType", "نوع الفرع", "نوع_الفرع"), f("status", "الحالة التشغيلية", "الحالة_التشغيلية"), f("headcount", "عدد الموظفين", "عدد_الموظفين"), f("createdAt", "تاريخ الإنشاء", "تاريخ_الإنشاء"), f("updatedAt", "آخر تحديث", "آخر_تحديث")],
       },
       {
-        name: "squares", title: "المربعات الجغرافية", description: "المربعات الخمسة عشر التجريبية وبيانات المنطقة والحدود والمؤشرات الأساسية.",
-        action: { path: "/squares", label: "فتح شاشة المربعات", roles: ["super_admin", "business_development", "branch_manager"] },
-        fields: [f("id", "المعرّف الداخلي"), f("squareNumber", "رقم المربع"), f("name", "اسم المربع"), f("region", "المنطقة"), f("polygon", "نقاط حدود المربع التقريبية بصيغة JSON"), f("entitiesCount", "عدد الجهات"), f("companiesCount", "عدد الشركات"), f("organizationsCount", "عدد المنظمات"), f("merchantsCount", "عدد التجار"), f("targetValue", "القيمة المستهدفة"), f("createdAt", "تاريخ الإنشاء"), f("updatedAt", "آخر تحديث")],
+        name: "squares", databaseName: "المربعات_الجغرافية", title: "المربعات الجغرافية", description: "المربعات الخمسة عشر التجريبية وبيانات المنطقة والحدود والمؤشرات الأساسية.",
+        action: { path: "/squares", label: "فتح شاشة المربعات", roles: ["مدير_النظام", "تطوير_الأعمال", "مدير_الفرع"] },
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("squareNumber", "رقم المربع", "رقم_المربع"), f("name", "اسم المربع", "اسم_المربع"), f("region", "المنطقة", "المنطقة"), f("polygon", "نقاط حدود المربع التقريبية بصيغة JSON", "نقاط_حدود_المربع_التقريبية_بصيغة_جيسون"), f("entitiesCount", "عدد الجهات", "عدد_الجهات"), f("companiesCount", "عدد الشركات", "عدد_الشركات"), f("organizationsCount", "عدد المنظمات", "عدد_المنظمات"), f("merchantsCount", "عدد التجار", "عدد_التجار"), f("targetValue", "القيمة المستهدفة", "القيمة_المستهدفة"), f("createdAt", "تاريخ الإنشاء", "تاريخ_الإنشاء"), f("updatedAt", "آخر تحديث", "آخر_تحديث")],
       },
       {
-        name: "squareAssignments", title: "إسناد المربعات", description: "يربط المربع بفرع وموظف؛ قد يكون للمربع أكثر من فرع مُسند.",
-        action: { path: "/squares", label: "إدارة الإسناد من الخريطة", roles: ["super_admin", "business_development", "branch_manager"] },
-        fields: [f("squareId", "معرّف المربع"), f("branchId", "معرّف الفرع"), f("employeeId", "معرّف الموظف (اختياري)"), f("isPrimary", "هل الإسناد أساسي؟"), f("createdAt", "تاريخ الإسناد")],
+        name: "squareAssignments", databaseName: "إسناد_المربعات", title: "إسناد المربعات", description: "يربط المربع بفرع وموظف؛ قد يكون للمربع أكثر من فرع مُسند.",
+        action: { path: "/squares", label: "إدارة الإسناد من الخريطة", roles: ["مدير_النظام", "تطوير_الأعمال", "مدير_الفرع"] },
+        fields: [f("squareId", "معرّف المربع", "معرف_المربع"), f("branchId", "معرّف الفرع", "معرف_الفرع"), f("employeeId", "معرّف الموظف (اختياري)", "معرف_الموظف_اختياري"), f("isPrimary", "هل الإسناد أساسي؟", "هل_الإسناد_أساسي"), f("createdAt", "تاريخ الإسناد", "تاريخ_الإسناد")],
       },
     ],
   },
@@ -67,30 +68,30 @@ export const databaseDictionary: DictionaryGroup[] = [
     description: "العملاء المحتملون والزيارات والمستهدفات والقيم الفعلية والتقارير اليومية.",
     tables: [
       {
-        name: "prospects", title: "العملاء المحتملون", description: "بيانات المتابعة والاستقطاب، وتُقيّد القراءة بحسب دور المستخدم وفرعه وإسناده.",
+        name: "prospects", databaseName: "العملاء_المحتملون", title: "العملاء المحتملون", description: "بيانات المتابعة والاستقطاب، وتُقيّد القراءة بحسب دور المستخدم وفرعه وإسناده.",
         action: { path: "/prospects", label: "فتح شاشة العملاء المحتملين", roles: prospectRoles },
-        fields: [f("id", "المعرّف الداخلي"), f("name", "اسم العميل أو الجهة"), f("customerType", "نوع العميل"), f("sector", "القطاع"), f("activity", "طبيعة النشاط"), f("phone", "الهاتف"), f("email", "البريد الإلكتروني"), f("address", "العنوان"), f("squareId", "معرّف المربع"), f("branchId", "معرّف الفرع"), f("employeeId", "معرّف الموظف المكلف"), f("firstContactDate", "تاريخ أول تواصل"), f("lastFollowupAt", "تاريخ آخر متابعة"), f("nextFollowupAt", "موعد المتابعة القادمة"), f("products", "المنتجات المحتملة"), f("expectedValue", "القيمة المتوقعة"), f("status", "مرحلة الاستقطاب"), f("notes", "ملاحظات المتابعة"), f("createdBy", "معرّف منشئ السجل"), f("isDemo", "هل السجل تجريبي؟"), f("createdAt", "تاريخ الإنشاء"), f("updatedAt", "آخر تحديث")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("name", "اسم العميل أو الجهة", "اسم_العميل_أو_الجهة"), f("customerType", "نوع العميل", "نوع_العميل"), f("sector", "القطاع", "القطاع"), f("activity", "طبيعة النشاط", "طبيعة_النشاط"), f("phone", "الهاتف", "الهاتف"), f("email", "البريد الإلكتروني", "البريد_الإلكتروني"), f("address", "العنوان", "العنوان"), f("squareId", "معرّف المربع", "معرف_المربع"), f("branchId", "معرّف الفرع", "معرف_الفرع"), f("employeeId", "معرّف الموظف المكلف", "معرف_الموظف_المكلف"), f("firstContactDate", "تاريخ أول تواصل", "تاريخ_أول_تواصل"), f("lastFollowupAt", "تاريخ آخر متابعة", "تاريخ_آخر_متابعة"), f("nextFollowupAt", "موعد المتابعة القادمة", "موعد_المتابعة_القادمة"), f("products", "المنتجات المحتملة", "المنتجات_المحتملة"), f("expectedValue", "القيمة المتوقعة", "القيمة_المتوقعة"), f("status", "مرحلة الاستقطاب", "مرحلة_الاستقطاب"), f("notes", "ملاحظات المتابعة", "ملاحظات_المتابعة"), f("createdBy", "معرّف منشئ السجل", "معرف_منشئ_السجل"), f("isDemo", "هل السجل تجريبي؟", "هل_السجل_تجريبي"), f("createdAt", "تاريخ الإنشاء", "تاريخ_الإنشاء"), f("updatedAt", "آخر تحديث", "آخر_تحديث")],
       },
       {
-        name: "visits", title: "الزيارات الميدانية", description: "الجهة والموظف والفرع والوقت والنتيجة والمتابعة والمرفقات.",
+        name: "visits", databaseName: "الزيارات_الميدانية", title: "الزيارات الميدانية", description: "الجهة والموظف والفرع والوقت والنتيجة والمتابعة والمرفقات.",
         action: { path: "/visits", label: "فتح شاشة الزيارات", roles: visitRoles },
-        fields: [f("id", "المعرّف الداخلي"), f("agencyName", "اسم الجهة"), f("agencyType", "نوع الجهة"), f("prospectId", "معرّف العميل المحتمل (اختياري)"), f("squareId", "معرّف المربع"), f("branchId", "معرّف الفرع"), f("employeeId", "معرّف الموظف"), f("visitAt", "تاريخ ووقت الزيارة"), f("location", "الموقع"), f("visitType", "نوع الزيارة"), f("personMet", "الشخص الذي تمت مقابلته"), f("result", "نتيجة الزيارة"), f("products", "المنتجات التي نوقشت"), f("opportunities", "الفرص الناتجة"), f("notes", "ملاحظات"), f("nextAction", "الإجراء التالي"), f("nextFollowupAt", "تاريخ المتابعة القادمة"), f("attachments", "المرفقات بصيغة JSON"), f("createdBy", "معرّف منشئ السجل"), f("isDemo", "هل السجل تجريبي؟"), f("createdAt", "تاريخ تسجيل الزيارة")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("agencyName", "اسم الجهة", "اسم_الجهة"), f("agencyType", "نوع الجهة", "نوع_الجهة"), f("prospectId", "معرّف العميل المحتمل (اختياري)", "معرف_العميل_المحتمل_اختياري"), f("squareId", "معرّف المربع", "معرف_المربع"), f("branchId", "معرّف الفرع", "معرف_الفرع"), f("employeeId", "معرّف الموظف", "معرف_الموظف"), f("visitAt", "تاريخ ووقت الزيارة", "تاريخ_ووقت_الزيارة"), f("location", "الموقع", "الموقع"), f("visitType", "نوع الزيارة", "نوع_الزيارة"), f("personMet", "الشخص الذي تمت مقابلته", "الشخص_الذي_تمت_مقابلته"), f("result", "نتيجة الزيارة", "نتيجة_الزيارة"), f("products", "المنتجات التي نوقشت", "المنتجات_التي_نوقشت"), f("opportunities", "الفرص الناتجة", "الفرص_الناتجة"), f("notes", "ملاحظات", "ملاحظات"), f("nextAction", "الإجراء التالي", "الإجراء_التالي"), f("nextFollowupAt", "تاريخ المتابعة القادمة", "تاريخ_المتابعة_القادمة"), f("attachments", "المرفقات بصيغة JSON", "المرفقات_بصيغة_جيسون"), f("createdBy", "معرّف منشئ السجل", "معرف_منشئ_السجل"), f("isDemo", "هل السجل تجريبي؟", "هل_السجل_تجريبي"), f("createdAt", "تاريخ تسجيل الزيارة", "تاريخ_تسجيل_الزيارة")],
       },
       {
-        name: "targets", title: "المستهدفات", description: "القيمة المخطط لها لكل فرع ومؤشر وفترة زمنية.",
+        name: "targets", databaseName: "المستهدفات", title: "المستهدفات", description: "القيمة المخطط لها لكل فرع ومؤشر وفترة زمنية.",
         action: { path: "/targets", label: "فتح شاشة المستهدفات", roles: targetRoles },
-        fields: [f("id", "المعرّف الداخلي"), f("branchId", "معرّف الفرع"), f("metricCode", "الرمز التقني للمؤشر"), f("metricName", "اسم المؤشر"), f("interval", "دورية المستهدف"), f("periodStart", "بداية الفترة"), f("targetValue", "القيمة المستهدفة"), f("createdBy", "معرّف منشئ السجل"), f("createdAt", "تاريخ الإضافة")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("branchId", "معرّف الفرع", "معرف_الفرع"), f("metricCode", "الرمز التقني للمؤشر", "الرمز_التقني_للمؤشر"), f("metricName", "اسم المؤشر", "اسم_المؤشر"), f("interval", "دورية المستهدف", "دورية_المستهدف"), f("periodStart", "بداية الفترة", "بداية_الفترة"), f("targetValue", "القيمة المستهدفة", "القيمة_المستهدفة"), f("createdBy", "معرّف منشئ السجل", "معرف_منشئ_السجل"), f("createdAt", "تاريخ الإضافة", "تاريخ_الإضافة")],
       },
       {
-        name: "performance", title: "الأداء الفعلي", description: "القيم اليومية الفعلية والسابقة لكل فرع ومؤشر؛ تُحدّثها مسارات التشغيل والتقارير.",
+        name: "performance", databaseName: "الأداء_الفعلي", title: "الأداء الفعلي", description: "القيم اليومية الفعلية والسابقة لكل فرع ومؤشر؛ تُحدّثها مسارات التشغيل والتقارير.",
         action: { path: "/reports", label: "مراجعة الأداء عبر التقارير", roles: targetRoles },
         managedBySystem: true,
-        fields: [f("id", "المعرّف الداخلي"), f("branchId", "معرّف الفرع"), f("periodDate", "تاريخ الأداء"), f("metricCode", "الرمز التقني للمؤشر"), f("actualValue", "القيمة الفعلية"), f("previousValue", "قيمة الفترة السابقة"), f("updatedBy", "معرّف آخر من عدّل"), f("updatedAt", "وقت آخر تحديث")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("branchId", "معرّف الفرع", "معرف_الفرع"), f("periodDate", "تاريخ الأداء", "تاريخ_الأداء"), f("metricCode", "الرمز التقني للمؤشر", "الرمز_التقني_للمؤشر"), f("actualValue", "القيمة الفعلية", "القيمة_الفعلية"), f("previousValue", "قيمة الفترة السابقة", "قيمة_الفترة_السابقة"), f("updatedBy", "معرّف آخر من عدّل", "معرف_آخر_من_عدل"), f("updatedAt", "وقت آخر تحديث", "وقت_آخر_تحديث")],
       },
       {
-        name: "dailyReports", title: "التقارير اليومية", description: "إنتاج الحسابات والخدمات والزيارات والاتصالات والمتابعات والمعوقات والاحتياجات اليومية.",
-        action: { path: "/reports", label: "فتح مركز التقارير", roles: ["super_admin", "business_development", "branch_manager", "branch_employee"] },
-        fields: [f("id", "المعرّف الداخلي"), f("branchId", "معرّف الفرع"), f("userId", "معرّف المستخدم"), f("reportDate", "تاريخ التقرير"), f("individualAccounts", "حسابات الأفراد"), f("companyAccounts", "حسابات الشركات"), f("organizationAccounts", "حسابات المنظمات"), f("governmentAccounts", "حسابات الجهات الحكومية"), f("cacFast", "عمليات CAC Fast"), f("cards", "البطاقات"), f("transfers", "الحوالات"), f("digitalServices", "الخدمات الرقمية"), f("visitsCount", "عدد الزيارات"), f("meetingsCount", "عدد الاجتماعات"), f("callsCount", "عدد الاتصالات"), f("newCustomers", "العملاء الجدد"), f("newOpportunities", "الفرص الجديدة"), f("followups", "المتابعات"), f("obstacles", "المعوقات"), f("needs", "الاحتياجات"), f("status", "حالة التقرير"), f("createdAt", "تاريخ الإنشاء"), f("updatedAt", "آخر تحديث")],
+        name: "dailyReports", databaseName: "التقارير_اليومية", title: "التقارير اليومية", description: "إنتاج الحسابات والخدمات والزيارات والاتصالات والمتابعات والمعوقات والاحتياجات اليومية.",
+        action: { path: "/reports", label: "فتح مركز التقارير", roles: ["مدير_النظام", "تطوير_الأعمال", "مدير_الفرع", "موظف_الفرع"] },
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("branchId", "معرّف الفرع", "معرف_الفرع"), f("userId", "معرّف المستخدم", "معرف_المستخدم"), f("reportDate", "تاريخ التقرير", "تاريخ_التقرير"), f("individualAccounts", "حسابات الأفراد", "حسابات_الأفراد"), f("companyAccounts", "حسابات الشركات", "حسابات_الشركات"), f("organizationAccounts", "حسابات المنظمات", "حسابات_المنظمات"), f("governmentAccounts", "حسابات الجهات الحكومية", "حسابات_الجهات_الحكومية"), f("cacFast", "عمليات CAC Fast", "عمليات_كاك_فاست"), f("cards", "البطاقات", "البطاقات"), f("transfers", "الحوالات", "الحوالات"), f("digitalServices", "الخدمات الرقمية", "الخدمات_الرقمية"), f("visitsCount", "عدد الزيارات", "عدد_الزيارات"), f("meetingsCount", "عدد الاجتماعات", "عدد_الاجتماعات"), f("callsCount", "عدد الاتصالات", "عدد_الاتصالات"), f("newCustomers", "العملاء الجدد", "العملاء_الجدد"), f("newOpportunities", "الفرص الجديدة", "الفرص_الجديدة"), f("followups", "المتابعات", "المتابعات"), f("obstacles", "المعوقات", "المعوقات"), f("needs", "الاحتياجات", "الاحتياجات"), f("status", "حالة التقرير", "حالة_التقرير"), f("createdAt", "تاريخ الإنشاء", "تاريخ_الإنشاء"), f("updatedAt", "آخر تحديث", "آخر_تحديث")],
       },
     ],
   },
@@ -99,24 +100,24 @@ export const databaseDictionary: DictionaryGroup[] = [
     description: "تقييمات الخدمة والملاحظات والإجراءات التصحيحية والشكاوى.",
     tables: [
       {
-        name: "complaints", title: "الشكاوى", description: "نوع الشكوى وفرعها وتاريخها ومسؤولها ومدة معالجتها وحالتها.",
+        name: "complaints", databaseName: "الشكاوى", title: "الشكاوى", description: "نوع الشكوى وفرعها وتاريخها ومسؤولها ومدة معالجتها وحالتها.",
         action: { path: "/quality", label: "فتح شاشة الجودة", roles: qualityRoles },
-        fields: [f("id", "المعرّف الداخلي"), f("complaintType", "نوع الشكوى"), f("branchId", "معرّف الفرع"), f("complaintDate", "تاريخ الشكوى"), f("ownerName", "المسؤول عن المعالجة"), f("processingDays", "أيام المعالجة"), f("status", "حالة الشكوى"), f("details", "التفاصيل"), f("createdAt", "تاريخ الإضافة"), f("updatedAt", "آخر تحديث")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("complaintType", "نوع الشكوى", "نوع_الشكوى"), f("branchId", "معرّف الفرع", "معرف_الفرع"), f("complaintDate", "تاريخ الشكوى", "تاريخ_الشكوى"), f("ownerName", "المسؤول عن المعالجة", "المسؤول_عن_المعالجة"), f("processingDays", "أيام المعالجة", "أيام_المعالجة"), f("status", "حالة الشكوى", "حالة_الشكوى"), f("details", "التفاصيل", "التفاصيل"), f("createdAt", "تاريخ الإضافة", "تاريخ_الإضافة"), f("updatedAt", "آخر تحديث", "آخر_تحديث")],
       },
       {
-        name: "qualityReviews", title: "تقييمات الجودة", description: "درجات الاستقبال والسرعة والدقة وتجربة العميل والالتزام بالإجراءات والنماذج وKYC والتعليمات.",
+        name: "qualityReviews", databaseName: "تقييمات_الجودة", title: "تقييمات الجودة", description: "درجات الاستقبال والسرعة والدقة وتجربة العميل والالتزام بالإجراءات والنماذج وKYC والتعليمات.",
         action: { path: "/quality", label: "فتح شاشة الجودة", roles: qualityRoles },
-        fields: [f("id", "المعرّف الداخلي"), f("branchId", "معرّف الفرع"), f("reviewDate", "تاريخ التقييم"), f("reception", "تقييم الاستقبال"), f("speed", "تقييم سرعة الخدمة"), f("accuracy", "تقييم دقة المعاملة"), f("customerExperience", "تقييم تجربة العميل"), f("procedures", "الالتزام بالإجراءات"), f("forms", "الالتزام بالنماذج"), f("kyc", "الالتزام بمتطلبات KYC"), f("instructions", "الالتزام بالتعليمات"), f("reviewer", "اسم المقيّم"), f("notes", "ملاحظات التقييم"), f("createdAt", "تاريخ الإضافة")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("branchId", "معرّف الفرع", "معرف_الفرع"), f("reviewDate", "تاريخ التقييم", "تاريخ_التقييم"), f("reception", "تقييم الاستقبال", "تقييم_الاستقبال"), f("speed", "تقييم سرعة الخدمة", "تقييم_سرعة_الخدمة"), f("accuracy", "تقييم دقة المعاملة", "تقييم_دقة_المعاملة"), f("customerExperience", "تقييم تجربة العميل", "تقييم_تجربة_العميل"), f("procedures", "الالتزام بالإجراءات", "الالتزام_بالإجراءات"), f("forms", "الالتزام بالنماذج", "الالتزام_بالنماذج"), f("kyc", "الالتزام بمتطلبات KYC", "الالتزام_بمتطلبات_اعرف_عميلك"), f("instructions", "الالتزام بالتعليمات", "الالتزام_بالتعليمات"), f("reviewer", "اسم المقيّم", "اسم_المقيم"), f("notes", "ملاحظات التقييم", "ملاحظات_التقييم"), f("createdAt", "تاريخ الإضافة", "تاريخ_الإضافة")],
       },
       {
-        name: "qualityFindings", title: "ملاحظات الجودة", description: "ملاحظات مصنفة بحسب الأهمية والمسؤول والموعد والحالة.",
+        name: "qualityFindings", databaseName: "ملاحظات_الجودة", title: "ملاحظات الجودة", description: "ملاحظات مصنفة بحسب الأهمية والمسؤول والموعد والحالة.",
         action: { path: "/quality", label: "فتح شاشة الجودة", roles: qualityRoles },
-        fields: [f("id", "المعرّف الداخلي"), f("branchId", "معرّف الفرع"), f("finding", "نص الملاحظة"), f("severity", "درجة الأهمية"), f("ownerName", "المسؤول"), f("dueDate", "تاريخ الاستحقاق"), f("status", "حالة المعالجة"), f("createdAt", "تاريخ الإضافة")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("branchId", "معرّف الفرع", "معرف_الفرع"), f("finding", "نص الملاحظة", "نص_الملاحظة"), f("severity", "درجة الأهمية", "درجة_الأهمية"), f("ownerName", "المسؤول", "المسؤول"), f("dueDate", "تاريخ الاستحقاق", "تاريخ_الاستحقاق"), f("status", "حالة المعالجة", "حالة_المعالجة"), f("createdAt", "تاريخ الإضافة", "تاريخ_الإضافة")],
       },
       {
-        name: "correctiveActions", title: "الإجراءات التصحيحية", description: "إجراءات التحسين والمسؤول عنها وموعدها ونسبة إنجازها وحالتها.",
+        name: "correctiveActions", databaseName: "الإجراءات_التصحيحية", title: "الإجراءات التصحيحية", description: "إجراءات التحسين والمسؤول عنها وموعدها ونسبة إنجازها وحالتها.",
         action: { path: "/quality", label: "فتح شاشة الجودة", roles: qualityRoles },
-        fields: [f("id", "المعرّف الداخلي"), f("branchId", "معرّف الفرع"), f("action", "وصف الإجراء التصحيحي"), f("ownerName", "المسؤول"), f("executionDate", "موعد التنفيذ"), f("progress", "نسبة الإنجاز"), f("status", "حالة الإجراء"), f("createdAt", "تاريخ الإضافة")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("branchId", "معرّف الفرع", "معرف_الفرع"), f("action", "وصف الإجراء التصحيحي", "وصف_الإجراء_التصحيحي"), f("ownerName", "المسؤول", "المسؤول"), f("executionDate", "موعد التنفيذ", "موعد_التنفيذ"), f("progress", "نسبة الإنجاز", "نسبة_الإنجاز"), f("status", "حالة الإجراء", "حالة_الإجراء"), f("createdAt", "تاريخ الإضافة", "تاريخ_الإضافة")],
       },
     ],
   },
@@ -125,38 +126,38 @@ export const databaseDictionary: DictionaryGroup[] = [
     description: "المخرجات المحفوظة والتنبيهات والتحليلات والإعدادات وأثر التغييرات.",
     tables: [
       {
-        name: "reports", title: "التقارير المحفوظة", description: "نوع التقرير وعنوانه وفترته والفرع الاختياري والبيانات المجمعة.",
-        action: { path: "/reports", label: "فتح مركز التقارير", roles: ["super_admin", "executive", "business_development", "quality", "branch_manager", "branch_employee"] },
-        fields: [f("id", "المعرّف الداخلي"), f("reportType", "نوع التقرير"), f("title", "عنوان التقرير"), f("branchId", "معرّف الفرع (اختياري)"), f("periodStart", "بداية الفترة"), f("periodEnd", "نهاية الفترة"), f("reportData", "بيانات التقرير المجمعة بصيغة JSON"), f("createdBy", "معرّف منشئ التقرير"), f("createdAt", "وقت الإنشاء")],
+        name: "reports", databaseName: "التقارير_المحفوظة", title: "التقارير المحفوظة", description: "نوع التقرير وعنوانه وفترته والفرع الاختياري والبيانات المجمعة.",
+        action: { path: "/reports", label: "فتح مركز التقارير", roles: ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "توكيد_الجودة", "مدير_الفرع", "موظف_الفرع"] },
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("reportType", "نوع التقرير", "نوع_التقرير"), f("title", "عنوان التقرير", "عنوان_التقرير"), f("branchId", "معرّف الفرع (اختياري)", "معرف_الفرع_اختياري"), f("periodStart", "بداية الفترة", "بداية_الفترة"), f("periodEnd", "نهاية الفترة", "نهاية_الفترة"), f("reportData", "بيانات التقرير المجمعة بصيغة JSON", "بيانات_التقرير_المجمعة_بصيغة_جيسون"), f("createdBy", "معرّف منشئ التقرير", "معرف_منشئ_التقرير"), f("createdAt", "وقت الإنشاء", "وقت_الإنشاء")],
       },
       {
-        name: "notifications", title: "التنبيهات", description: "رسائل النظام الموجهة لمستخدم أو فرع وحالة قراءتها.",
-        action: { path: "/alerts", label: "عرض التنبيهات", roles: ["super_admin", "executive", "business_development", "quality", "branch_manager", "branch_employee"] },
+        name: "notifications", databaseName: "التنبيهات", title: "التنبيهات", description: "رسائل النظام الموجهة لمستخدم أو فرع وحالة قراءتها.",
+        action: { path: "/alerts", label: "عرض التنبيهات", roles: ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "توكيد_الجودة", "مدير_الفرع", "موظف_الفرع"] },
         managedBySystem: true,
-        fields: [f("id", "المعرّف الداخلي"), f("userId", "معرّف المستخدم (اختياري)"), f("branchId", "معرّف الفرع (اختياري)"), f("type", "نوع التنبيه"), f("title", "عنوان التنبيه"), f("body", "نص التنبيه"), f("isRead", "هل تمت القراءة؟"), f("createdAt", "وقت الإنشاء")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("userId", "معرّف المستخدم (اختياري)", "معرف_المستخدم_اختياري"), f("branchId", "معرّف الفرع (اختياري)", "معرف_الفرع_اختياري"), f("type", "نوع التنبيه", "نوع_التنبيه"), f("title", "عنوان التنبيه", "عنوان_التنبيه"), f("body", "نص التنبيه", "نص_التنبيه"), f("isRead", "هل تمت القراءة؟", "هل_تمت_القراءة"), f("createdAt", "وقت الإنشاء", "وقت_الإنشاء")],
       },
       {
-        name: "aiInsights", title: "تحليلات الذكاء الاصطناعي", description: "ملخصات تحليلية وتوصيات مرتبطة بفترة ومستخدم منشئ؛ تحفظ دون أسماء العملاء أو معرّفاتهم.",
+        name: "aiInsights", databaseName: "تحليلات_الذكاء_الاصطناعي", title: "تحليلات الذكاء الاصطناعي", description: "ملخصات تحليلية وتوصيات مرتبطة بفترة ومستخدم منشئ؛ تحفظ دون أسماء العملاء أو معرّفاتهم.",
         action: { path: "/intelligence", label: "فتح ذكاء الأعمال", roles: intelligenceRoles },
         managedBySystem: true,
-        fields: [f("id", "المعرّف الداخلي"), f("generatedBy", "معرّف منشئ التحليل"), f("periodLabel", "الفترة التحليلية"), f("headline", "عنوان التحليل"), f("content", "نص التحليل"), f("recommendations", "التوصيات بصيغة JSON"), f("sourceSummary", "ملخص المصادر بصيغة JSON"), f("createdAt", "وقت الإنشاء")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("generatedBy", "معرّف منشئ التحليل", "معرف_منشئ_التحليل"), f("periodLabel", "الفترة التحليلية", "الفترة_التحليلية"), f("headline", "عنوان التحليل", "عنوان_التحليل"), f("content", "نص التحليل", "نص_التحليل"), f("recommendations", "التوصيات بصيغة JSON", "التوصيات_بصيغة_جيسون"), f("sourceSummary", "ملخص المصادر بصيغة JSON", "ملخص_المصادر_بصيغة_جيسون"), f("createdAt", "وقت الإنشاء", "وقت_الإنشاء")],
       },
       {
-        name: "branchScoreWeights", title: "أوزان تقييم الفروع", description: "نسبة مساهمة كل مؤشر في Branch Score؛ يجب أن يساوي مجموع النسب 100%.",
+        name: "branchScoreWeights", databaseName: "أوزان_تقييم_الفروع", title: "أوزان تقييم الفروع", description: "نسبة مساهمة كل مؤشر في Branch Score؛ يجب أن يساوي مجموع النسب 100%.",
         action: { path: "/settings", label: "تعديل الأوزان", roles: admin },
-        fields: [f("metricCode", "رمز المؤشر"), f("metricName", "اسم المؤشر"), f("weightPercent", "وزن المؤشر كنسبة مئوية"), f("updatedBy", "معرّف آخر من عدّل"), f("updatedAt", "وقت آخر تحديث")],
+        fields: [f("metricCode", "رمز المؤشر", "رمز_المؤشر"), f("metricName", "اسم المؤشر", "اسم_المؤشر"), f("weightPercent", "وزن المؤشر كنسبة مئوية", "وزن_المؤشر_كنسبة_مئوية"), f("updatedBy", "معرّف آخر من عدّل", "معرف_آخر_من_عدل"), f("updatedAt", "وقت آخر تحديث", "وقت_آخر_تحديث")],
       },
       {
-        name: "auditLogs", title: "سجل التدقيق", description: "أثر تغييرات الإنشاء والتعديل والحذف وتغيير الدور؛ لا يتضمن النصوص الحساسة كاملة.",
+        name: "auditLogs", databaseName: "سجل_التدقيق", title: "سجل التدقيق", description: "أثر تغييرات الإنشاء والتعديل والحذف وتغيير الدور؛ لا يتضمن النصوص الحساسة كاملة.",
         action: { path: "/settings", label: "عرض سجل التدقيق", roles: admin },
         managedBySystem: true,
-        fields: [f("id", "المعرّف الداخلي"), f("actorUserId", "معرّف المستخدم المنفّذ"), f("action", "نوع العملية"), f("entity", "نوع السجل المتأثر"), f("entityId", "معرّف السجل المتأثر"), f("previousValue", "القيم السابقة بصيغة JSON"), f("newValue", "القيم الجديدة بصيغة JSON"), f("createdAt", "وقت العملية")],
+        fields: [f("id", "المعرّف الداخلي", "المعرف_الداخلي"), f("actorUserId", "معرّف المستخدم المنفّذ", "معرف_المستخدم_المنفذ"), f("action", "نوع العملية", "نوع_العملية"), f("entity", "نوع السجل المتأثر", "نوع_السجل_المتأثر"), f("entityId", "معرّف السجل المتأثر", "معرف_السجل_المتأثر"), f("previousValue", "القيم السابقة بصيغة JSON", "القيم_السابقة_بصيغة_جيسون"), f("newValue", "القيم الجديدة بصيغة JSON", "القيم_الجديدة_بصيغة_جيسون"), f("createdAt", "وقت العملية", "وقت_العملية")],
       },
       {
-        name: "appSettings", title: "إعدادات التطبيق", description: "إعدادات داخلية بصيغة مفتاح وقيمة؛ تُدار من صفحة إعدادات النظام.",
+        name: "appSettings", databaseName: "إعدادات_التطبيق", title: "إعدادات التطبيق", description: "إعدادات داخلية بصيغة مفتاح وقيمة؛ تُدار من صفحة إعدادات النظام.",
         action: { path: "/settings", label: "فتح إعدادات النظام", roles: admin },
         managedBySystem: true,
-        fields: [f("settingKey", "مفتاح الإعداد"), f("settingValue", "قيمة الإعداد بصيغة JSON"), f("updatedBy", "معرّف آخر من عدّل"), f("updatedAt", "وقت آخر تحديث")],
+        fields: [f("settingKey", "مفتاح الإعداد", "مفتاح_الإعداد"), f("settingValue", "قيمة الإعداد بصيغة JSON", "قيمة_الإعداد_بصيغة_جيسون"), f("updatedBy", "معرّف آخر من عدّل", "معرف_آخر_من_عدل"), f("updatedAt", "وقت آخر تحديث", "وقت_آخر_تحديث")],
       },
     ],
   },

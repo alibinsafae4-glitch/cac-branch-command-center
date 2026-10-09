@@ -29,7 +29,7 @@ export async function buildDashboard(user: typeof users.$inferSelect) {
   const [allBranches, perfRows, targetRows, allEmployees, allProspects, allVisits, allComplaints, allFindings, allActions, qualityRows, weightRows] = await Promise.all([
     db.select().from(branches),
     db.select().from(performance).orderBy(desc(performance.periodDate)),
-    db.select().from(targets).where(eq(targets.interval, "monthly")),
+    db.select().from(targets).where(eq(targets.interval, "شهري")),
     db.select().from(employees),
     db.select().from(prospects),
     db.select().from(visits),
@@ -110,7 +110,7 @@ export async function buildDashboard(user: typeof users.$inferSelect) {
     const rating = score >= 85 ? "ممتاز" : score >= 70 ? "يحتاج متابعة" : "يحتاج تدخل";
     return {
       ...branch,
-      employeesCount: allEmployees.filter(employee => employee.branchId === branch.id && employee.status === "active").length || branch.headcount,
+      employeesCount: allEmployees.filter(employee => employee.branchId === branch.id && employee.status === "نشط").length || branch.headcount,
       target,
       actual: metricValues.new_customers ?? 0,
       achievement,
@@ -125,11 +125,11 @@ export async function buildDashboard(user: typeof users.$inferSelect) {
       performanceUpdatedAt: performanceUpdatedAt.get(branch.id) ?? branch.updatedAt,
       prospectsCount: allProspects.filter(item => item.branchId === branch.id).length,
       visitsCount: allVisits.filter(item => item.branchId === branch.id).length,
-      complaintsCount: allComplaints.filter(item => item.branchId === branch.id && ["open", "in_progress"].includes(item.status)).length,
+      complaintsCount: allComplaints.filter(item => item.branchId === branch.id && ["مفتوح", "قيد_التنفيذ"].includes(item.status)).length,
       qualityScore,
       complianceScore,
-      openFindingsCount: allFindings.filter(item => item.branchId === branch.id && ["open", "in_progress"].includes(item.status)).length,
-      openActionsCount: allActions.filter(item => item.branchId === branch.id && item.status !== "closed").length,
+      openFindingsCount: allFindings.filter(item => item.branchId === branch.id && ["مفتوح", "قيد_التنفيذ"].includes(item.status)).length,
+      openActionsCount: allActions.filter(item => item.branchId === branch.id && item.status !== "مغلق").length,
     };
   });
   const total = (key: string) => branchData.reduce((sum, branch) => sum + (branch.metricValues[key] ?? 0), 0);
@@ -147,7 +147,7 @@ export async function buildDashboard(user: typeof users.$inferSelect) {
   };
   return {
     kpis: {
-      branches: allowedBranches.filter(branch => branch.status === "active").length,
+      branches: allowedBranches.filter(branch => branch.status === "نشط").length,
       newCustomers: actualTotal,
       accounts: total("individual_accounts") + total("company_accounts") + total("organization_accounts") + total("government_accounts"),
       deposits: total("deposits"),

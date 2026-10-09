@@ -12,14 +12,14 @@ const navItems: Array<{ label: string; path: string; icon: LucideIcon; roles?: s
   { label: "لوحة القيادة", path: "/", icon: LayoutDashboard },
   { label: "الفروع", path: "/branches", icon: Landmark },
   { label: "المربعات الجغرافية", path: "/squares", icon: MapPinned },
-  { label: "العملاء المحتملون", path: "/prospects", icon: UsersRound, roles: ["super_admin", "business_development", "branch_manager", "branch_employee"] },
-  { label: "الزيارات الميدانية", path: "/visits", icon: Activity, roles: ["super_admin", "business_development", "quality", "branch_manager", "branch_employee"] },
-  { label: "المستهدفات", path: "/targets", icon: Target, roles: ["super_admin", "executive", "business_development", "branch_manager"] },
-  { label: "توكيد الجودة", path: "/quality", icon: ShieldCheck, roles: ["super_admin", "quality", "branch_manager"] },
+  { label: "العملاء المحتملون", path: "/prospects", icon: UsersRound, roles: ["مدير_النظام", "تطوير_الأعمال", "مدير_الفرع", "موظف_الفرع"] },
+  { label: "الزيارات الميدانية", path: "/visits", icon: Activity, roles: ["مدير_النظام", "تطوير_الأعمال", "توكيد_الجودة", "مدير_الفرع", "موظف_الفرع"] },
+  { label: "المستهدفات", path: "/targets", icon: Target, roles: ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "مدير_الفرع"] },
+  { label: "توكيد الجودة", path: "/quality", icon: ShieldCheck, roles: ["مدير_النظام", "توكيد_الجودة", "مدير_الفرع"] },
   { label: "مركز التقارير", path: "/reports", icon: FileBarChart2 },
-  { label: "ذكاء الأعمال", path: "/intelligence", icon: BrainCircuit, roles: ["super_admin", "executive", "business_development"] },
+  { label: "ذكاء الأعمال", path: "/intelligence", icon: BrainCircuit, roles: ["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال"] },
   { label: "التنبيهات", path: "/alerts", icon: Bell },
-  { label: "الإعدادات", path: "/settings", icon: Settings, roles: ["super_admin"] },
+  { label: "الإعدادات", path: "/settings", icon: Settings, roles: ["مدير_النظام"] },
   { label: "قاموس قاعدة البيانات", path: "/database-guide", icon: Database },
 ];
 
@@ -32,7 +32,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const search = trpc.business.search.global.useQuery({ query }, { enabled: Boolean(user && query.trim().length > 1), staleTime: 5000 });
   const alerts = trpc.business.alerts.list.useQuery(undefined, { enabled: Boolean(user), staleTime: 20_000 });
-  const visibleNav = navItems.filter(item => !item.roles || item.roles.includes(user?.appRole ?? "branch_employee") || user?.role === "admin");
+  const visibleNav = navItems.filter(item => !item.roles || item.roles.includes(user?.appRole ?? "موظف_الفرع") || user?.role === "مدير");
   const [pathname] = useLocation();
   useEffect(() => { setMobileOpen(false); setSearchOpen(false); }, [pathname]);
   const openResults = search.data ?? [];
@@ -54,7 +54,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex min-w-0 items-center gap-3"><button aria-label="فتح القائمة" className="rounded-xl p-2 text-slate-600 hover:bg-slate-100 md:hidden" onClick={() => setMobileOpen(true)}><Menu size={19} /></button><div className="hidden text-xs text-slate-400 sm:block">{new Intl.DateTimeFormat("ar-YE", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: BUSINESS_TIME_ZONE }).format(new Date())}</div><div className="hidden h-5 w-px bg-slate-200 sm:block" /><div className="truncate text-[13px] font-semibold text-slate-700">{navItems.find(item => item.path === pathname)?.label ?? (pathname.startsWith("/branches/") ? "تفاصيل الفرع" : "مركز القيادة")}</div></div>
         <div className="flex items-center gap-2 sm:gap-3"><div className="relative hidden sm:block"><div className="flex h-9 w-[220px] items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 focus-within:border-primary focus-within:bg-white"><Search size={15} className="text-slate-400" /><input value={query} onFocus={() => setSearchOpen(true)} onChange={event => setQuery(event.target.value)} onKeyDown={event => { if (event.key === "Escape") setSearchOpen(false); if (event.key === "Enter" && openResults[0]) setLocation(openResults[0].href); }} placeholder="بحث عام…" className="w-full bg-transparent text-xs outline-none placeholder:text-slate-400" /></div>{searchOpen && query.length > 1 && <div className="absolute left-0 top-11 z-50 max-h-80 w-[320px] overflow-y-auto rounded-xl border border-slate-200 bg-white p-2 shadow-xl">{search.isLoading ? <div className="p-3 text-xs text-slate-400">جارٍ البحث…</div> : openResults.length ? openResults.map((result, i) => <button key={`${result.kind}-${i}`} onClick={() => setLocation(result.href)} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-right hover:bg-slate-50"><span className="min-w-20 text-[10px] text-primary">{result.kind}</span><span className="truncate text-xs text-slate-700">{result.label}</span></button>) : <div className="p-3 text-xs text-slate-400">لا توجد نتائج مطابقة.</div>}</div>}</div>
           <button aria-label="التنبيهات" onClick={() => setLocation("/alerts")} className="relative rounded-xl border border-slate-200 p-2 text-slate-600 hover:bg-slate-50"><Bell size={16} />{(alerts.data ?? []).some(item => !item.isRead) && <span className="absolute -left-1 -top-1 h-2.5 w-2.5 rounded-full border-2 border-white bg-rose-500" />}</button>
-          <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-slate-50"><span className="grid h-8 w-8 place-items-center rounded-full bg-teal-100 text-xs font-bold text-primary">{(user.name ?? "م").slice(0, 1)}</span><span className="hidden max-w-32 text-right sm:block"><span className="block truncate text-xs font-semibold text-slate-800">{user.name ?? "مستخدم"}</span><span className="block truncate text-[10px] text-slate-500">{user.appRole === "super_admin" || user.role === "admin" ? "مدير النظام" : "مستخدم مصرح"}</span></span><ChevronDown size={14} className="hidden text-slate-400 sm:block" /></button>
+          <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-slate-50"><span className="grid h-8 w-8 place-items-center rounded-full bg-teal-100 text-xs font-bold text-primary">{(user.name ?? "م").slice(0, 1)}</span><span className="hidden max-w-32 text-right sm:block"><span className="block truncate text-xs font-semibold text-slate-800">{user.name ?? "مستخدم"}</span><span className="block truncate text-[10px] text-slate-500">{user.appRole === "مدير_النظام" || user.role === "مدير" ? "مدير النظام" : "مستخدم مصرح"}</span></span><ChevronDown size={14} className="hidden text-slate-400 sm:block" /></button>
           {profileOpen && <div className="fixed left-4 top-[58px] z-50 w-56 rounded-xl border border-slate-200 bg-white p-2 shadow-xl"><div className="border-b border-slate-100 px-3 py-2"><div className="text-xs font-semibold">{user.name}</div><div className="mt-1 truncate text-[10px] text-slate-500">{user.email}</div></div><button onClick={() => { setProfileOpen(false); void logout(); }} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs text-rose-700 hover:bg-rose-50"><LogOut size={14} />تسجيل الخروج</button></div>}
         </div>
       </header>

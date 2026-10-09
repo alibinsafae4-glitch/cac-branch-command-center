@@ -8,8 +8,8 @@ import { ChevronDown, ChevronUp, Database, Download, ExternalLink, Search, Shiel
 function downloadCsv() {
   const quote = (value: string) => `"${value.replaceAll('"', '""')}"`;
   const rows = [
-    ["الجدول التقني", "اسم الجدول بالعربية", "الحقل التقني", "شرح الحقل بالعربية"],
-    ...databaseDictionary.flatMap(group => group.tables.flatMap(table => table.fields.map(field => [table.name, table.title, field.name, field.label]))),
+    ["اسم الجدول الفعلي في MySQL", "عنوان الجدول", "اسم العمود الفعلي في MySQL", "اسم الخاصية داخل التطبيق", "شرح الحقل بالعربية"],
+    ...databaseDictionary.flatMap(group => group.tables.flatMap(table => table.fields.map(field => [table.databaseName, table.title, field.databaseName, field.name, field.label]))),
   ];
   const csv = `\uFEFF${rows.map(row => row.map(quote).join(",")).join("\r\n")}`;
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
@@ -31,15 +31,15 @@ export default function DatabaseGuidePage() {
     ...group,
     tables: group.tables.flatMap(table => {
       if (!normalizedQuery) return [{ ...table, visibleFields: table.fields }];
-      const tableMatch = [table.name, table.title, table.description].some(value => value.toLocaleLowerCase("ar").includes(normalizedQuery));
-      const matchingFields = table.fields.filter(field => `${field.name} ${field.label}`.toLocaleLowerCase("ar").includes(normalizedQuery));
+      const tableMatch = [table.name, table.databaseName, table.title, table.description].some(value => value.toLocaleLowerCase("ar").includes(normalizedQuery));
+      const matchingFields = table.fields.filter(field => `${field.name} ${field.databaseName} ${field.label}`.toLocaleLowerCase("ar").includes(normalizedQuery));
       return tableMatch || matchingFields.length ? [{ ...table, visibleFields: tableMatch ? table.fields : matchingFields }] : [];
     }),
   })).filter(group => group.tables.length), [normalizedQuery]);
   const visibleTableCount = filteredGroups.reduce((sum, group) => sum + group.tables.length, 0);
   const visibleFieldCount = filteredGroups.reduce((sum, group) => sum + group.tables.reduce((inner, table) => inner + table.visibleFields.length, 0), 0);
 
-  const canOpen = (roles?: string[]) => Boolean(user && (!roles || roles.includes(user.appRole) || user.role === "admin"));
+  const canOpen = (roles?: string[]) => Boolean(user && (!roles || roles.includes(user.appRole) || user.role === "مدير"));
 
   return <>
     <PageHeading eyebrow="مرجع البيانات" title="قاموس قاعدة البيانات" description="ترجمة عملية لأسماء الجداول والحقول الفعلية في MySQL، مع روابط لشاشات إدارة البيانات المتاحة حسب الدور." actions={<AppButton variant="secondary" onClick={downloadCsv}><Download size={15} />تنزيل القاموس CSV</AppButton>} />
@@ -49,8 +49,8 @@ export default function DatabaseGuidePage() {
         <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#125b53] text-white shadow-sm"><Database size={20} /></div>
         <div className="flex-1">
           <div className="flex items-center gap-2 text-sm font-bold text-[#193c3b]"><ShieldCheck size={16} className="text-[#125b53]" />كيف تتعامل مع قاعدة البيانات؟</div>
-          <p className="mt-2 max-w-4xl text-sm leading-7 text-[#536763]">البيانات محفوظة في MySQL المُدارة. أسماء الجداول والحقول التقنية تبقى بالإنجليزية حتى يظل التطبيق والترحيلات متوافقين؛ يعرض هذا الدليل معناها بالعربية. للإضافة أو التعديل استخدم زر الشاشة المناسبة بجوار الجدول، بدلاً من تغيير بنية MySQL يدوياً. لا يعرض هذا الدليل سجلات العملاء أو بيانات فعلية.</p>
-          <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-[#5c6d67]"><span className="rounded-full border border-[#d5e3d9] bg-white/80 px-3 py-1.5">أسماء الأعمدة التقنية محفوظة كما هي</span><span className="rounded-full border border-[#d5e3d9] bg-white/80 px-3 py-1.5">واجهات الإضافة تحترم الدور ونطاق الفرع</span><span className="rounded-full border border-[#d5e3d9] bg-white/80 px-3 py-1.5">التعديل المباشر للحقول الداخلية غير موصى به</span></div>
+          <p className="mt-2 max-w-4xl text-sm leading-7 text-[#536763]">أُعيدت تسمية الجداول والأعمدة الفعلية في MySQL بالعربية، وكذلك قيم الأدوار والحالات. تظهر هنا أسماء MySQL كما هي، بينما تبقى أسماء الخصائص داخل الشيفرة ثابتة لدعم التطبيق والتكاملات. للإضافة أو التعديل استخدم شاشة النظام المناسبة؛ هذا الدليل لا يتيح SQL ولا يعرض سجلات عملاء فعلية.</p>
+          <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-[#5c6d67]"><span className="rounded-full border border-[#d5e3d9] bg-white/80 px-3 py-1.5">أسماء الجداول والأعمدة الفعلية بالعربية</span><span className="rounded-full border border-[#d5e3d9] bg-white/80 px-3 py-1.5">واجهات الإضافة تحترم الدور ونطاق الفرع</span><span className="rounded-full border border-[#d5e3d9] bg-white/80 px-3 py-1.5">التعديل المباشر للحقول الداخلية غير موصى به</span></div>
         </div>
       </div>
     </Panel>
@@ -77,17 +77,17 @@ export default function DatabaseGuidePage() {
               <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
                 <button onClick={() => setOpenTables(current => ({ ...current, [table.name]: !current[table.name] }))} className="flex min-w-0 flex-1 items-center gap-3 text-right">
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#e9f2ec] text-primary"><TableProperties size={17} /></span>
-                  <span className="min-w-0 flex-1"><span className="flex flex-wrap items-center gap-x-2 gap-y-1"><span className="text-sm font-bold text-[#193037]">{table.title}</span><code dir="ltr" className="rounded-md bg-[#f2f5f1] px-2 py-1 font-mono text-[10px] text-[#506560]">{table.name}</code>{table.managedBySystem && <span className="rounded-full bg-[#f7f1e3] px-2 py-1 text-[9px] font-semibold text-[#80683a]">تدار تلقائياً جزئياً</span>}</span><span className="mt-1 block text-xs leading-5 text-[#70807a]">{table.description}</span><span className="mt-1 block text-[10px] text-[#8a9791]">{table.fields.length} حقلاً</span></span>
+                  <span className="min-w-0 flex-1"><span className="flex flex-wrap items-center gap-x-2 gap-y-1"><span className="text-sm font-bold text-[#193037]">{table.title}</span><code dir="rtl" title={`المعرّف البرمجي: ${table.name}`} className="rounded-md bg-[#f2f5f1] px-2 py-1 font-mono text-[10px] text-[#506560]">{table.databaseName}</code>{table.managedBySystem && <span className="rounded-full bg-[#f7f1e3] px-2 py-1 text-[9px] font-semibold text-[#80683a]">تدار تلقائياً جزئياً</span>}</span><span className="mt-1 block text-xs leading-5 text-[#70807a]">{table.description}</span><span className="mt-1 block text-[10px] text-[#8a9791]">{table.fields.length} حقلاً</span></span>
                   {expanded ? <ChevronUp size={17} className="shrink-0 text-[#82918b]" /> : <ChevronDown size={17} className="shrink-0 text-[#82918b]" />}
                 </button>
                 {table.action && canOpen(table.action.roles) && <button onClick={() => setLocation(table.action!.path)} className="inline-flex min-h-9 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#dbe4de] bg-white px-3 text-[11px] font-semibold text-[#315a52] transition hover:border-[#bad0c2] hover:bg-[#f4f8f4]"><ExternalLink size={13} />{table.action.label}</button>}
               </div>
               {expanded && <div className="border-t border-[#edf1ed] px-3 py-3 sm:px-5 sm:py-4">
-                <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold text-[#75847d]"><span>المعنى بالعربية</span><span className="h-px flex-1 bg-[#edf1ed]" /><span>اسم الحقل في المخطط</span></div>
+                <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold text-[#75847d]"><span>المعنى بالعربية</span><span className="h-px flex-1 bg-[#edf1ed]" /><span>اسم العمود الفعلي بالعربية</span></div>
                 <div className="grid gap-1 sm:grid-cols-2 xl:grid-cols-3">
                   {fields.map(field => <div key={field.name} className="flex min-h-10 items-center justify-between gap-3 rounded-lg px-3 py-2 odd:bg-[#f7f9f6]">
                     <span className="text-xs text-[#455b57]">{field.label}</span>
-                    <code dir="ltr" className="shrink-0 font-mono text-[10px] text-[#71807b]">{field.name}</code>
+                    <code dir="rtl" title={`الخاصية البرمجية: ${field.name}`} className="shrink-0 font-mono text-[10px] text-[#71807b]">{field.databaseName}</code>
                   </div>)}
                 </div>
                 {table.managedBySystem && <p className="mt-3 rounded-lg bg-[#f7f5ed] px-3 py-2 text-[10px] leading-5 text-[#786844]">بعض سجلات هذا الجدول تُحدَّث آلياً من عمليات التطبيق؛ استخدم الشاشة المرتبطة للمراجعة ولا تعدّل القيم المحسوبة يدوياً.</p>}

@@ -15,6 +15,13 @@
       "when": 1791398844352,
       "tag": "0001_flaky_shiver_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1791560465504,
+      "tag": "0002_arabic_database",
+      "breakpoints": true
     }
   ]
 }

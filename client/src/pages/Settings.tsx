@@ -4,7 +4,7 @@ import { AppButton, PageHeading, Panel, SelectField, TextField } from "@/compone
 import { useEffect, useState } from "react";
 import { KeyRound, Save, ShieldCheck, SlidersHorizontal, UsersRound } from "lucide-react";
 
-const appRoles = [["super_admin", "مدير النظام"], ["executive", "الإدارة العليا"], ["business_development", "تطوير الأعمال"], ["quality", "توكيد الجودة"], ["branch_manager", "مدير الفرع"], ["branch_employee", "موظف الفرع"]] as const;
+const appRoles = [["مدير_النظام", "مدير النظام"], ["الإدارة_العليا", "الإدارة العليا"], ["تطوير_الأعمال", "تطوير الأعمال"], ["توكيد_الجودة", "توكيد الجودة"], ["مدير_الفرع", "مدير الفرع"], ["موظف_الفرع", "موظف الفرع"]] as const;
 export default function SettingsPage() {
   const query = trpc.business.settings.overview.useQuery();
   const utils = trpc.useUtils();
