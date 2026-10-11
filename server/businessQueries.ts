@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, gte, lte, ne, or, sql } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { branches, branchScoreWeights, complaints, correctiveActions, employees, performance, prospects, qualityFindings, qualityReviews, targets, users, visits } from "../drizzle/schema";
 import { getDb } from "./db";
@@ -26,25 +26,35 @@ const dbOrThrow = async () => {
 export async function buildDashboard(user: typeof users.$inferSelect) {
   const db = await dbOrThrow();
   const scope = branchScope(user);
-  const [allBranches, perfRows, targetRows, allEmployees, allProspects, allVisits, allComplaints, allFindings, allActions, qualityRows, weightRows] = await Promise.all([
-    db.select().from(branches),
-    db.select().from(performance).orderBy(desc(performance.periodDate)),
-    db.select().from(targets).where(eq(targets.interval, "شهري")),
-    db.select().from(employees),
-    db.select().from(prospects),
-    db.select().from(visits),
-    db.select().from(complaints),
-    db.select().from(qualityFindings),
-    db.select().from(correctiveActions),
-    db.select().from(qualityReviews).orderBy(desc(qualityReviews.reviewDate)),
-    db.select().from(branchScoreWeights),
-  ]);
-  const allowedBranches = scope === undefined ? allBranches : scope < 0 ? [] : allBranches.filter(branch => branch.id === scope);
   const today = asDate(todayKey());
   const currentStart = asDate(monthStart());
   const previousMonthStart = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - 1, 1));
   const previousMonthDays = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 0)).getUTCDate();
   const previousEnd = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - 1, Math.min(today.getUTCDate(), previousMonthDays)));
+  const rangeStart = previousMonthStart < currentStart ? previousMonthStart : currentStart;
+  const scopedBranch = (column: typeof branches.id | typeof employees.branchId | typeof performance.branchId | typeof targets.branchId | typeof prospects.branchId | typeof visits.branchId | typeof complaints.branchId | typeof qualityFindings.branchId | typeof correctiveActions.branchId | typeof qualityReviews.branchId) =>
+    scope === undefined ? undefined : scope < 0 ? sql`1 = 0` : eq(column, scope);
+  const [allBranches, perfRows, targetRows, employeeCounts, prospectCounts, visitCounts, complaintCounts, findingCounts, actionCounts, weightRows] = await Promise.all([
+    db.select().from(branches).where(scopedBranch(branches.id)),
+    db.select().from(performance).where(and(scopedBranch(performance.branchId), gte(performance.periodDate, rangeStart), lte(performance.periodDate, today))).orderBy(desc(performance.periodDate)),
+    db.select().from(targets).where(and(scopedBranch(targets.branchId), eq(targets.interval, "شهري"), gte(targets.periodStart, previousMonthStart), lte(targets.periodStart, today))),
+    db.select({ branchId: employees.branchId, total: count() }).from(employees).where(and(scopedBranch(employees.branchId), eq(employees.status, "نشط"))).groupBy(employees.branchId),
+    db.select({ branchId: prospects.branchId, total: count() }).from(prospects).where(scopedBranch(prospects.branchId)).groupBy(prospects.branchId),
+    db.select({ branchId: visits.branchId, total: count() }).from(visits).where(scopedBranch(visits.branchId)).groupBy(visits.branchId),
+    db.select({ branchId: complaints.branchId, total: count() }).from(complaints).where(and(scopedBranch(complaints.branchId), or(eq(complaints.status, "مفتوح"), eq(complaints.status, "قيد_التنفيذ")))).groupBy(complaints.branchId),
+    db.select({ branchId: qualityFindings.branchId, total: count() }).from(qualityFindings).where(and(scopedBranch(qualityFindings.branchId), or(eq(qualityFindings.status, "مفتوح"), eq(qualityFindings.status, "قيد_التنفيذ")))).groupBy(qualityFindings.branchId),
+    db.select({ branchId: correctiveActions.branchId, total: count() }).from(correctiveActions).where(and(scopedBranch(correctiveActions.branchId), ne(correctiveActions.status, "مغلق"))).groupBy(correctiveActions.branchId),
+    db.select().from(branchScoreWeights),
+  ]);
+  const allowedBranches = scope !== undefined && scope < 0 ? [] : allBranches;
+  const qualityRows = (await Promise.all(allowedBranches.map(branch => db.select().from(qualityReviews).where(eq(qualityReviews.branchId, branch.id)).orderBy(desc(qualityReviews.reviewDate)).limit(1)))).flat();
+  const countByBranch = (rows: Array<{ branchId: number; total: number }>) => new Map(rows.map(row => [row.branchId, Number(row.total)]));
+  const employeesByBranch = countByBranch(employeeCounts);
+  const prospectsByBranch = countByBranch(prospectCounts);
+  const visitsByBranch = countByBranch(visitCounts);
+  const complaintsByBranch = countByBranch(complaintCounts);
+  const findingsByBranch = countByBranch(findingCounts);
+  const actionsByBranch = countByBranch(actionCounts);
   const inRange = (value: Date, start: Date, end: Date) => dateLabel(value) >= dateLabel(start) && dateLabel(value) <= dateLabel(end);
   const currentTotals = new Map<string, number>();
   const previousTotals = new Map<string, number>();
@@ -110,7 +120,7 @@ export async function buildDashboard(user: typeof users.$inferSelect) {
     const rating = score >= 85 ? "ممتاز" : score >= 70 ? "يحتاج متابعة" : "يحتاج تدخل";
     return {
       ...branch,
-      employeesCount: allEmployees.filter(employee => employee.branchId === branch.id && employee.status === "نشط").length || branch.headcount,
+      employeesCount: employeesByBranch.get(branch.id) || branch.headcount,
       target,
       actual: metricValues.new_customers ?? 0,
       achievement,
@@ -123,13 +133,13 @@ export async function buildDashboard(user: typeof users.$inferSelect) {
       metricPrevious,
       targetValues,
       performanceUpdatedAt: performanceUpdatedAt.get(branch.id) ?? branch.updatedAt,
-      prospectsCount: allProspects.filter(item => item.branchId === branch.id).length,
-      visitsCount: allVisits.filter(item => item.branchId === branch.id).length,
-      complaintsCount: allComplaints.filter(item => item.branchId === branch.id && ["مفتوح", "قيد_التنفيذ"].includes(item.status)).length,
+      prospectsCount: prospectsByBranch.get(branch.id) ?? 0,
+      visitsCount: visitsByBranch.get(branch.id) ?? 0,
+      complaintsCount: complaintsByBranch.get(branch.id) ?? 0,
       qualityScore,
       complianceScore,
-      openFindingsCount: allFindings.filter(item => item.branchId === branch.id && ["مفتوح", "قيد_التنفيذ"].includes(item.status)).length,
-      openActionsCount: allActions.filter(item => item.branchId === branch.id && item.status !== "مغلق").length,
+      openFindingsCount: findingsByBranch.get(branch.id) ?? 0,
+      openActionsCount: actionsByBranch.get(branch.id) ?? 0,
     };
   });
   const total = (key: string) => branchData.reduce((sum, branch) => sum + (branch.metricValues[key] ?? 0), 0);

@@ -135,6 +135,7 @@ body { font-family: "IBM Plex Sans Arabic", Inter, "Segoe UI", Tahoma, sans-seri
   main { margin: 0 !important; padding: 0 !important; max-width: none !important; }
   section, article, table { break-inside: avoid; }
   table { font-size: 9pt !important; }
+  body.cbcc-printing-demo::before { content: "بيانات تجريبية — CAC BANK"; position: fixed; inset: 42% 0 auto; z-index: 9999; color: rgba(15, 118, 110, .13); font-size: 42pt; font-weight: 800; text-align: center; transform: rotate(-24deg); pointer-events: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

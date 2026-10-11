@@ -18,6 +18,10 @@ export async function getDb() {
   return _db;
 }
 
+export type Database = NonNullable<Awaited<ReturnType<typeof getDb>>>;
+export type DatabaseTransaction = Parameters<Parameters<Database["transaction"]>[0]>[0];
+export type DatabaseSession = Database | DatabaseTransaction;
+
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) {
     throw new Error("User openId is required for upsert");

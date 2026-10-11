@@ -25,7 +25,7 @@ import {
   users,
   visits,
 } from "../drizzle/schema";
-import { getDb } from "./db";
+import { getDb, type DatabaseSession } from "./db";
 import { assertBranchRead, assertBranchWrite, branchScope, canReadProspects, canReadQualityDetails, canReadVisits, requireRoles, roleOf } from "./access";
 import { protectedProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
@@ -49,7 +49,7 @@ const effectiveBranchId = (user: typeof users.$inferSelect, requested?: number) 
   if (requested && requested !== scope) throw new TRPCError({ code: "FORBIDDEN", message: "لا يمكنك الوصول إلى بيانات هذا الفرع." });
   return scope;
 };
-const audit = async (db: Awaited<ReturnType<typeof dbOrThrow>>, actorUserId: number, action: "إنشاء" | "تعديل" | "حذف" | "تغيير_الدور", entity: string, entityId: string | number | undefined, previousValue?: unknown, newValue?: unknown) => {
+const audit = async (db: DatabaseSession, actorUserId: number, action: "إنشاء" | "تعديل" | "حذف" | "تغيير_الدور", entity: string, entityId: string | number | undefined, previousValue?: unknown, newValue?: unknown) => {
   await db.insert(auditLogs).values({
     actorUserId,
     action,
@@ -59,14 +59,11 @@ const audit = async (db: Awaited<ReturnType<typeof dbOrThrow>>, actorUserId: num
     newValue: newValue as Record<string, unknown> | undefined,
   });
 };
-const recordPerformance = async (db: Awaited<ReturnType<typeof dbOrThrow>>, branchId: number, metricCode: string, delta: number, actorId?: number, periodKey = todayKey()) => {
+const recordPerformance = async (db: DatabaseSession, branchId: number, metricCode: string, delta: number, actorId?: number, periodKey = todayKey()) => {
   const day = asDate(periodKey);
-  const existing = await db.select().from(performance).where(and(eq(performance.branchId, branchId), eq(performance.metricCode, metricCode), eq(performance.periodDate, day))).limit(1);
-  if (existing.length) {
-    await db.update(performance).set({ actualValue: sql`${performance.actualValue} + ${delta}`, updatedBy: actorId }).where(eq(performance.id, existing[0].id));
-  } else {
-    await db.insert(performance).values({ branchId, periodDate: day, metricCode, actualValue: String(delta), previousValue: "0", updatedBy: actorId });
-  }
+  await db.insert(performance).values({ branchId, periodDate: day, metricCode, actualValue: String(delta), previousValue: "0", updatedBy: actorId ?? null }).onDuplicateKeyUpdate({
+    set: { actualValue: sql`${performance.actualValue} + ${delta}`, updatedBy: actorId ?? null },
+  });
 };
 const scopedRows = async <T extends { branchId: number }>(user: typeof users.$inferSelect, rows: T[]) => {
   const scope = branchScope(user);
@@ -75,7 +72,7 @@ const scopedRows = async <T extends { branchId: number }>(user: typeof users.$in
   return rows.filter(row => row.branchId === scope);
 };
 const parseCount = (value: string | number | null | undefined) => Number(value ?? 0) || 0;
-const syncDailyPerformance = async (db: Awaited<ReturnType<typeof dbOrThrow>>, branchId: number, reportDate: string, previous: Record<string, unknown> | undefined, next: Record<string, unknown>, actorId: number) => {
+const syncDailyPerformance = async (db: DatabaseSession, branchId: number, reportDate: string, previous: Record<string, unknown> | undefined, next: Record<string, unknown>, actorId: number) => {
   const fields = [["individualAccounts", "individual_accounts"], ["companyAccounts", "company_accounts"], ["organizationAccounts", "organization_accounts"], ["governmentAccounts", "government_accounts"], ["cacFast", "cac_fast"], ["cards", "cards"], ["digitalServices", "digital_services"], ["visitsCount", "visits"], ["meetingsCount", "meetings"], ["callsCount", "calls"], ["newCustomers", "new_customers"], ["newOpportunities", "new_opportunities"], ["followups", "followups"]] as const;
   for (const [field, metricCode] of fields) {
     const before = previous?.status === "مرسل" ? parseCount(previous[field] as number | string | undefined) : 0;
@@ -213,10 +210,12 @@ export const businessRouter = router({
         throw new TRPCError({ code: "SERVICE_UNAVAILABLE", message: "تعذر إنشاء التحليل الآن؛ تحقق من اتصال خدمة الذكاء الاصطناعي ثم أعد المحاولة." });
       }
       const headline = "قراءة تحليلية مجمعة لأداء الفروع — حتى اليوم";
-      const [inserted] = await db.insert(aiInsights).values({ generatedBy: ctx.user.id, periodLabel, headline, content, recommendations, sourceSummary: { period: periodLabel, branchCount: safeAggregate.length, demoData: true, metrics: ["branchScore", "achievementPercent", "growthPercent", "newCustomers", "deposits", "visits", "complaintsOpen"] } });
-      const id = Number((inserted as { insertId?: number }).insertId);
-      await audit(db, ctx.user.id, "إنشاء", "ai_insight", id, undefined, { branchCount: safeAggregate.length });
-      return { id, headline, content, recommendations, generatedAt: new Date().toISOString(), demoData: true };
+      return db.transaction(async tx => {
+        const [inserted] = await tx.insert(aiInsights).values({ generatedBy: ctx.user.id, periodLabel, headline, content, recommendations, sourceSummary: { period: periodLabel, branchCount: safeAggregate.length, demoData: true, metrics: ["branchScore", "achievementPercent", "growthPercent", "newCustomers", "deposits", "visits", "complaintsOpen"] } });
+        const id = Number((inserted as { insertId?: number }).insertId);
+        await audit(tx, ctx.user.id, "إنشاء", "ai_insight", id, undefined, { branchCount: safeAggregate.length });
+        return { id, headline, content, recommendations, generatedAt: new Date().toISOString(), demoData: true };
+      });
     }),
   }),
 
@@ -273,9 +272,12 @@ export const businessRouter = router({
       requireRoles(ctx.user, ["مدير_النظام"]);
       if (!isCompleteBranchScoreWeights(input.weights)) throw new TRPCError({ code: "BAD_REQUEST", message: "أدخل فئات Branch Score السبع الفريدة المعتمدة، على أن يساوي مجموع أوزانها 100%." });
       const db = await dbOrThrow();
-      for (const row of input.weights) await db.insert(branchScoreWeights).values({ ...row, updatedBy: ctx.user.id }).onDuplicateKeyUpdate({ set: { metricName: row.metricName, weightPercent: row.weightPercent, updatedBy: ctx.user.id } });
-      await audit(db, ctx.user.id, "تعديل", "branch_score_weights", undefined, undefined, input.weights as unknown);
-      return { success: true };
+      return db.transaction(async tx => {
+        const previous = await tx.select().from(branchScoreWeights);
+        for (const row of input.weights) await tx.insert(branchScoreWeights).values({ ...row, updatedBy: ctx.user.id }).onDuplicateKeyUpdate({ set: { metricName: row.metricName, weightPercent: row.weightPercent, updatedBy: ctx.user.id } });
+        await audit(tx, ctx.user.id, "تعديل", "branch_score_weights", undefined, previous as unknown, input.weights as unknown);
+        return { success: true };
+      });
     }),
     updateUser: protectedProcedure.input(z.object({ userId: z.number().int().positive(), appRole: z.enum(["مدير_النظام", "الإدارة_العليا", "تطوير_الأعمال", "توكيد_الجودة", "مدير_الفرع", "موظف_الفرع"]), assignedBranchId: z.number().int().positive().nullable(), employeeId: z.number().int().positive().nullable(), isActive: z.boolean() })).mutation(async ({ ctx, input }) => {
       requireRoles(ctx.user, ["مدير_النظام"]);
@@ -290,11 +292,13 @@ export const businessRouter = router({
         const [employee] = await db.select().from(employees).where(eq(employees.id, input.employeeId)).limit(1);
         if (!employee || employee.branchId !== input.assignedBranchId || employee.status !== "نشط") throw new TRPCError({ code: "BAD_REQUEST", message: "اختر موظفاً نشطاً تابعاً للفرع المحدد." });
       }
-      const [previous] = await db.select().from(users).where(eq(users.id, input.userId)).limit(1);
-      if (!previous) throw new TRPCError({ code: "NOT_FOUND", message: "المستخدم غير موجود." });
-      await db.update(users).set({ appRole: input.appRole, assignedBranchId: input.assignedBranchId, employeeId: input.employeeId, isActive: input.isActive ? 1 : 0 }).where(eq(users.id, input.userId));
-      await audit(db, ctx.user.id, "تغيير_الدور", "مستخدم", input.userId, { appRole: previous.appRole, assignedBranchId: previous.assignedBranchId, isActive: previous.isActive }, input);
-      return { success: true };
+      return db.transaction(async tx => {
+        const [previous] = await tx.select().from(users).where(eq(users.id, input.userId)).limit(1);
+        if (!previous) throw new TRPCError({ code: "NOT_FOUND", message: "المستخدم غير موجود." });
+        await tx.update(users).set({ appRole: input.appRole, assignedBranchId: input.assignedBranchId, employeeId: input.employeeId, isActive: input.isActive ? 1 : 0 }).where(eq(users.id, input.userId));
+        await audit(tx, ctx.user.id, "تغيير_الدور", "مستخدم", input.userId, { appRole: previous.appRole, assignedBranchId: previous.assignedBranchId, employeeId: previous.employeeId, isActive: previous.isActive }, input);
+        return { success: true };
+      });
     }),
   }),
 });

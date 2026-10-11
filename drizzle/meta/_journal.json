@@ -22,6 +22,20 @@
       "when": 1791560465504,
       "tag": "0002_arabic_database",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1791653609760,
+      "tag": "0003_relational_integrity",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1791733361100,
+      "tag": "0004_alert_lifecycle",
+      "breakpoints": true
     }
   ]
 }

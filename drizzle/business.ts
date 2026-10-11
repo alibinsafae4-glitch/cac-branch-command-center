@@ -2,6 +2,7 @@ import {
   boolean,
   date,
   decimal,
+  foreignKey,
   index,
   int,
   json,
@@ -13,52 +14,13 @@ import {
   uniqueIndex,
   varchar,
 } from "drizzle-orm/mysql-core";
-
-export const branches = mysqlTable("الفروع", {
-  id: int("المعرف_الداخلي").autoincrement().primaryKey(),
-  code: varchar("رمز_الفرع", { length: 32 }).notNull().unique("الفروع_فريد_رمز_الفرع"),
-  nameAr: varchar("اسم_الفرع_بالعربية", { length: 160 }).notNull(),
-  nameEn: varchar("اسم_الفرع_بالإنجليزية", { length: 160 }).notNull(),
-  managerName: varchar("اسم_المدير", { length: 160 }),
-  parentBranchCode: varchar("رمز_الفرع_الأم", { length: 32 }),
-  branchType: mysqlEnum("نوع_الفرع", ["فرع", "مكتب_فرعي", "إسلامي"]).default("فرع").notNull(),
-  status: mysqlEnum("الحالة_التشغيلية", ["نشط", "غير_نشط"]).default("نشط").notNull(),
-  headcount: int("عدد_الموظفين").default(0).notNull(),
-  createdAt: timestamp("تاريخ_الإنشاء").defaultNow().notNull(),
-  updatedAt: timestamp("آخر_تحديث").defaultNow().onUpdateNow().notNull(),
-});
+import { branches, employees, squares, users } from "./core";
 
 export const roles = mysqlTable("الأدوار", {
   roleKey: varchar("رمز_الدور_الثابت", { length: 40 }).primaryKey(),
   nameAr: varchar("اسم_الدور_بالعربية", { length: 100 }).notNull(),
   description: text("وصف_الدور"),
   permissions: json("رموز_الصلاحيات").$type<string[]>().notNull(),
-});
-
-export const employees = mysqlTable("الموظفون", {
-  id: int("المعرف_الداخلي").autoincrement().primaryKey(),
-  employeeCode: varchar("الرقم_الوظيفي", { length: 32 }).notNull().unique("الموظفون_فريد_الرقم_الوظيفي"),
-  name: varchar("اسم_الموظف", { length: 160 }).notNull(),
-  title: varchar("المسمى_الوظيفي", { length: 120 }).notNull(),
-  branchId: int("معرف_الفرع").notNull(),
-  status: mysqlEnum("حالة_الموظف", ["نشط", "غير_نشط"]).default("نشط").notNull(),
-  isDemo: boolean("هل_السجل_تجريبي").default(true).notNull(),
-  createdAt: timestamp("تاريخ_إضافة_السجل").defaultNow().notNull(),
-}, table => ({ branchIdx: index("الموظفون_فهرس_01").on(table.branchId) }));
-
-export const squares = mysqlTable("المربعات_الجغرافية", {
-  id: int("المعرف_الداخلي").autoincrement().primaryKey(),
-  squareNumber: int("رقم_المربع").notNull().unique("المربعات_الجغرافية_فريد_رقم_المربع"),
-  name: varchar("اسم_المربع", { length: 120 }).notNull(),
-  region: varchar("المنطقة", { length: 120 }).notNull(),
-  polygon: json("نقاط_حدود_المربع_التقريبية_بصيغة_جيسون").$type<Array<[number, number]>>().notNull(),
-  entitiesCount: int("عدد_الجهات").default(0).notNull(),
-  companiesCount: int("عدد_الشركات").default(0).notNull(),
-  organizationsCount: int("عدد_المنظمات").default(0).notNull(),
-  merchantsCount: int("عدد_التجار").default(0).notNull(),
-  targetValue: int("القيمة_المستهدفة").default(0).notNull(),
-  createdAt: timestamp("تاريخ_الإنشاء").defaultNow().notNull(),
-  updatedAt: timestamp("آخر_تحديث").defaultNow().onUpdateNow().notNull(),
 });
 
 export const squareAssignments = mysqlTable("إسناد_المربعات", {
@@ -68,8 +30,12 @@ export const squareAssignments = mysqlTable("إسناد_المربعات", {
   isPrimary: boolean("هل_الإسناد_أساسي").default(false).notNull(),
   createdAt: timestamp("تاريخ_الإسناد").defaultNow().notNull(),
 }, table => ({
+  fk_square_assignment_square: foreignKey({ columns: [table.squareId], foreignColumns: [squares.id], name: "fk_square_assignment_square" }).onDelete("restrict"),
+  fk_square_assignment_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_square_assignment_branch" }).onDelete("restrict"),
+  fk_square_assignment_employee: foreignKey({ columns: [table.employeeId], foreignColumns: [employees.id], name: "fk_square_assignment_employee" }).onDelete("restrict"),
   pk: primaryKey({ columns: [table.squareId, table.branchId] }),
   branchIdx: index("إسناد_المربعات_فهرس_01").on(table.branchId),
+  employeeIdx: index("إسناد_المربعات_فهرس_الموظف").on(table.employeeId),
 }));
 
 export const prospects = mysqlTable("العملاء_المحتملون", {
@@ -96,10 +62,16 @@ export const prospects = mysqlTable("العملاء_المحتملون", {
   createdAt: timestamp("تاريخ_الإنشاء").defaultNow().notNull(),
   updatedAt: timestamp("آخر_تحديث").defaultNow().onUpdateNow().notNull(),
 }, table => ({
+  fk_prospect_square: foreignKey({ columns: [table.squareId], foreignColumns: [squares.id], name: "fk_prospect_square" }).onDelete("restrict"),
+  fk_prospect_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_prospect_branch" }).onDelete("restrict"),
+  fk_prospect_employee: foreignKey({ columns: [table.employeeId], foreignColumns: [employees.id], name: "fk_prospect_employee" }).onDelete("restrict"),
+  fk_prospect_creator: foreignKey({ columns: [table.createdBy], foreignColumns: [users.id], name: "fk_prospect_creator" }).onDelete("restrict"),
   branchIdx: index("العملاء_المحتملون_فهرس_01").on(table.branchId),
   employeeIdx: index("العملاء_المحتملون_فهرس_02").on(table.employeeId),
   statusIdx: index("العملاء_المحتملون_فهرس_03").on(table.status),
   nextFollowupIdx: index("العملاء_المحتملون_فهرس_04").on(table.nextFollowupAt),
+  squareIdx: index("العملاء_المحتملون_فهرس_المربع").on(table.squareId),
+  creatorIdx: index("العملاء_المحتملون_فهرس_المنشئ").on(table.createdBy),
 }));
 
 export const visits = mysqlTable("الزيارات_الميدانية", {
@@ -125,9 +97,17 @@ export const visits = mysqlTable("الزيارات_الميدانية", {
   isDemo: boolean("هل_السجل_تجريبي").default(false).notNull(),
   createdAt: timestamp("تاريخ_تسجيل_الزيارة").defaultNow().notNull(),
 }, table => ({
+  fk_visit_prospect: foreignKey({ columns: [table.prospectId], foreignColumns: [prospects.id], name: "fk_visit_prospect" }).onDelete("restrict"),
+  fk_visit_square: foreignKey({ columns: [table.squareId], foreignColumns: [squares.id], name: "fk_visit_square" }).onDelete("restrict"),
+  fk_visit_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_visit_branch" }).onDelete("restrict"),
+  fk_visit_employee: foreignKey({ columns: [table.employeeId], foreignColumns: [employees.id], name: "fk_visit_employee" }).onDelete("restrict"),
+  fk_visit_creator: foreignKey({ columns: [table.createdBy], foreignColumns: [users.id], name: "fk_visit_creator" }).onDelete("restrict"),
   branchIdx: index("الزيارات_الميدانية_فهرس_01").on(table.branchId),
   employeeIdx: index("الزيارات_الميدانية_فهرس_02").on(table.employeeId),
   visitDateIdx: index("الزيارات_الميدانية_فهرس_03").on(table.visitAt),
+  prospectIdx: index("الزيارات_الميدانية_فهرس_العميل").on(table.prospectId),
+  squareIdx: index("الزيارات_الميدانية_فهرس_المربع").on(table.squareId),
+  creatorIdx: index("الزيارات_الميدانية_فهرس_المنشئ").on(table.createdBy),
 }));
 
 export const targets = mysqlTable("المستهدفات", {
@@ -141,8 +121,11 @@ export const targets = mysqlTable("المستهدفات", {
   createdBy: int("معرف_منشئ_السجل"),
   createdAt: timestamp("تاريخ_الإضافة").defaultNow().notNull(),
 }, table => ({
+  fk_target_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_target_branch" }).onDelete("restrict"),
+  fk_target_creator: foreignKey({ columns: [table.createdBy], foreignColumns: [users.id], name: "fk_target_creator" }).onDelete("restrict"),
   branchMetricIdx: index("المستهدفات_فهرس_01").on(table.branchId, table.metricCode),
   uniquePeriod: uniqueIndex("المستهدفات_فهرس_02").on(table.branchId, table.metricCode, table.interval, table.periodStart),
+  creatorIdx: index("المستهدفات_فهرس_المنشئ").on(table.createdBy),
 }));
 
 export const performance = mysqlTable("الأداء_الفعلي", {
@@ -155,9 +138,12 @@ export const performance = mysqlTable("الأداء_الفعلي", {
   updatedBy: int("معرف_آخر_من_عدل"),
   updatedAt: timestamp("وقت_آخر_تحديث").defaultNow().onUpdateNow().notNull(),
 }, table => ({
+  fk_performance_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_performance_branch" }).onDelete("restrict"),
+  fk_performance_updater: foreignKey({ columns: [table.updatedBy], foreignColumns: [users.id], name: "fk_performance_updater" }).onDelete("restrict"),
   metricIdx: index("الأداء_الفعلي_فهرس_01").on(table.metricCode, table.periodDate),
   branchDateIdx: index("الأداء_الفعلي_فهرس_02").on(table.branchId, table.periodDate),
   uniqueMetricDay: uniqueIndex("الأداء_الفعلي_فهرس_03").on(table.branchId, table.periodDate, table.metricCode),
+  updaterIdx: index("الأداء_الفعلي_فهرس_المعدل").on(table.updatedBy),
 }));
 
 export const dailyReports = mysqlTable("التقارير_اليومية", {
@@ -185,8 +171,10 @@ export const dailyReports = mysqlTable("التقارير_اليومية", {
   createdAt: timestamp("تاريخ_الإنشاء").defaultNow().notNull(),
   updatedAt: timestamp("آخر_تحديث").defaultNow().onUpdateNow().notNull(),
 }, table => ({
+  fk_daily_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_daily_branch" }).onDelete("restrict"),
   branchDateIdx: index("التقارير_اليومية_فهرس_01").on(table.branchId, table.reportDate),
   userIdx: index("التقارير_اليومية_فهرس_02").on(table.userId),
+  uniqueAuthorDate: uniqueIndex("فريد_يومي_مستخدم").on(table.branchId, table.userId, table.reportDate),
 }));
 
 export const complaints = mysqlTable("الشكاوى", {
@@ -201,6 +189,7 @@ export const complaints = mysqlTable("الشكاوى", {
   createdAt: timestamp("تاريخ_الإضافة").defaultNow().notNull(),
   updatedAt: timestamp("آخر_تحديث").defaultNow().onUpdateNow().notNull(),
 }, table => ({
+  fk_complaint_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_complaint_branch" }).onDelete("restrict"),
   branchDateIdx: index("الشكاوى_فهرس_01").on(table.branchId, table.complaintDate),
   statusIdx: index("الشكاوى_فهرس_02").on(table.status),
 }));
@@ -220,7 +209,8 @@ export const qualityReviews = mysqlTable("تقييمات_الجودة", {
   reviewer: varchar("اسم_المقيم", { length: 160 }),
   notes: text("ملاحظات_التقييم"),
   createdAt: timestamp("تاريخ_الإضافة").defaultNow().notNull(),
-}, table => ({ branchDateIdx: index("تقييمات_الجودة_فهرس_01").on(table.branchId, table.reviewDate) }));
+}, table => ({
+  fk_quality_review_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_quality_review_branch" }).onDelete("restrict"), branchDateIdx: index("تقييمات_الجودة_فهرس_01").on(table.branchId, table.reviewDate) }));
 
 export const qualityFindings = mysqlTable("ملاحظات_الجودة", {
   id: int("المعرف_الداخلي").autoincrement().primaryKey(),
@@ -231,7 +221,8 @@ export const qualityFindings = mysqlTable("ملاحظات_الجودة", {
   dueDate: date("تاريخ_الاستحقاق"),
   status: mysqlEnum("حالة_المعالجة", ["مفتوح", "قيد_التنفيذ", "تمت_المعالجة", "مغلق"]).default("مفتوح").notNull(),
   createdAt: timestamp("تاريخ_الإضافة").defaultNow().notNull(),
-}, table => ({ branchIdx: index("ملاحظات_الجودة_فهرس_01").on(table.branchId), dueIdx: index("ملاحظات_الجودة_فهرس_02").on(table.dueDate) }));
+}, table => ({
+  fk_quality_finding_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_quality_finding_branch" }).onDelete("restrict"), branchIdx: index("ملاحظات_الجودة_فهرس_01").on(table.branchId), dueIdx: index("ملاحظات_الجودة_فهرس_02").on(table.dueDate) }));
 
 export const correctiveActions = mysqlTable("الإجراءات_التصحيحية", {
   id: int("المعرف_الداخلي").autoincrement().primaryKey(),
@@ -242,7 +233,8 @@ export const correctiveActions = mysqlTable("الإجراءات_التصحيحي
   progress: int("نسبة_الإنجاز").default(0).notNull(),
   status: mysqlEnum("حالة_الإجراء", ["مفتوح", "قيد_التنفيذ", "مغلق"]).default("مفتوح").notNull(),
   createdAt: timestamp("تاريخ_الإضافة").defaultNow().notNull(),
-}, table => ({ branchIdx: index("الإجراءات_التصحيحية_فهرس_01").on(table.branchId) }));
+}, table => ({
+  fk_corrective_action_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_corrective_action_branch" }).onDelete("restrict"), branchIdx: index("الإجراءات_التصحيحية_فهرس_01").on(table.branchId) }));
 
 export const notifications = mysqlTable("التنبيهات", {
   id: int("المعرف_الداخلي").autoincrement().primaryKey(),
@@ -252,10 +244,23 @@ export const notifications = mysqlTable("التنبيهات", {
   title: varchar("عنوان_التنبيه", { length: 180 }).notNull(),
   body: text("نص_التنبيه").notNull(),
   isRead: boolean("هل_تمت_القراءة").default(false).notNull(),
+  alertKey: varchar("مفتاح_التنبيه", { length: 255 }),
+  alertStatus: mysqlEnum("حالة_التنبيه", ["نشط", "تمت_المراجعة", "مؤجل", "محلول", "انتهى"]).default("نشط").notNull(),
+  acknowledgedAt: timestamp("وقت_الإقرار"),
+  acknowledgedBy: int("معرف_المقر_اختياري"),
+  snoozedUntil: timestamp("موعد_استئناف_التنبيه"),
+  resolvedAt: timestamp("وقت_الحل"),
+  lastSeenAt: timestamp("آخر_ظهور_للتنبيه"),
   createdAt: timestamp("وقت_الإنشاء").defaultNow().notNull(),
 }, table => ({
+  fk_notification_user: foreignKey({ columns: [table.userId], foreignColumns: [users.id], name: "fk_notification_user" }).onDelete("restrict"),
+  fk_notification_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_notification_branch" }).onDelete("restrict"),
+  fk_notification_acknowledger: foreignKey({ columns: [table.acknowledgedBy], foreignColumns: [users.id], name: "fk_notification_acknowledger" }).onDelete("restrict"),
   userReadIdx: index("التنبيهات_فهرس_01").on(table.userId, table.isRead),
   branchIdx: index("التنبيهات_فهرس_02").on(table.branchId),
+  acknowledgerIdx: index("التنبيهات_فهرس_المقر").on(table.acknowledgedBy),
+  alertKeyUnique: uniqueIndex("التنبيهات_فريد_المفتاح").on(table.alertKey),
+  alertStatusIdx: index("التنبيهات_فهرس_الحالة").on(table.userId, table.alertStatus, table.createdAt),
 }));
 
 export const aiInsights = mysqlTable("تحليلات_الذكاء_الاصطناعي", {
@@ -267,7 +272,10 @@ export const aiInsights = mysqlTable("تحليلات_الذكاء_الاصطنا
   recommendations: json("التوصيات_بصيغة_جيسون").$type<string[]>().notNull(),
   sourceSummary: json("ملخص_المصادر_بصيغة_جيسون").$type<Record<string, unknown>>().notNull(),
   createdAt: timestamp("وقت_الإنشاء").defaultNow().notNull(),
-});
+}, table => ({
+  fk_ai_creator: foreignKey({ columns: [table.generatedBy], foreignColumns: [users.id], name: "fk_ai_creator" }).onDelete("restrict"),
+  creatorIdx: index("تحليلات_الذكاء_فهرس_المنشئ").on(table.generatedBy),
+}));
 
 export const branchScoreWeights = mysqlTable("أوزان_تقييم_الفروع", {
   metricCode: varchar("رمز_المؤشر", { length: 64 }).primaryKey(),
@@ -275,7 +283,10 @@ export const branchScoreWeights = mysqlTable("أوزان_تقييم_الفروع
   weightPercent: int("وزن_المؤشر_كنسبة_مئوية").notNull(),
   updatedBy: int("معرف_آخر_من_عدل"),
   updatedAt: timestamp("وقت_آخر_تحديث").defaultNow().onUpdateNow().notNull(),
-});
+}, table => ({
+  fk_score_weight_updater: foreignKey({ columns: [table.updatedBy], foreignColumns: [users.id], name: "fk_score_weight_updater" }).onDelete("restrict"),
+  updaterIdx: index("أوزان_التقييم_فهرس_المعدل").on(table.updatedBy),
+}));
 
 export const auditLogs = mysqlTable("سجل_التدقيق", {
   id: int("المعرف_الداخلي").autoincrement().primaryKey(),
@@ -287,6 +298,7 @@ export const auditLogs = mysqlTable("سجل_التدقيق", {
   newValue: json("القيم_الجديدة_بصيغة_جيسون").$type<Record<string, unknown>>(),
   createdAt: timestamp("وقت_العملية").defaultNow().notNull(),
 }, table => ({
+  fk_audit_actor: foreignKey({ columns: [table.actorUserId], foreignColumns: [users.id], name: "fk_audit_actor" }).onDelete("restrict"),
   actorIdx: index("سجل_التدقيق_فهرس_01").on(table.actorUserId),
   entityIdx: index("سجل_التدقيق_فهرس_02").on(table.entity, table.entityId),
   dateIdx: index("سجل_التدقيق_فهرس_03").on(table.createdAt),
@@ -297,7 +309,10 @@ export const appSettings = mysqlTable("إعدادات_التطبيق", {
   settingValue: json("قيمة_الإعداد_بصيغة_جيسون").$type<unknown>().notNull(),
   updatedBy: int("معرف_آخر_من_عدل"),
   updatedAt: timestamp("وقت_آخر_تحديث").defaultNow().onUpdateNow().notNull(),
-});
+}, table => ({
+  fk_setting_updater: foreignKey({ columns: [table.updatedBy], foreignColumns: [users.id], name: "fk_setting_updater" }).onDelete("restrict"),
+  updaterIdx: index("إعدادات_التطبيق_فهرس_المعدل").on(table.updatedBy),
+}));
 
 export const reports = mysqlTable("التقارير_المحفوظة", {
   id: int("المعرف_الداخلي").autoincrement().primaryKey(),
@@ -310,7 +325,10 @@ export const reports = mysqlTable("التقارير_المحفوظة", {
   createdBy: int("معرف_منشئ_التقرير").notNull(),
   createdAt: timestamp("وقت_الإنشاء").defaultNow().notNull(),
 }, table => ({
+  fk_report_branch: foreignKey({ columns: [table.branchId], foreignColumns: [branches.id], name: "fk_report_branch" }).onDelete("restrict"),
+  fk_report_creator: foreignKey({ columns: [table.createdBy], foreignColumns: [users.id], name: "fk_report_creator" }).onDelete("restrict"),
   typeIdx: index("التقارير_المحفوظة_فهرس_01").on(table.reportType),
   dateIdx: index("التقارير_المحفوظة_فهرس_02").on(table.periodStart, table.periodEnd),
   branchIdx: index("التقارير_المحفوظة_فهرس_03").on(table.branchId),
+  creatorIdx: index("التقارير_المحفوظة_فهرس_المنشئ").on(table.createdBy),
 }));

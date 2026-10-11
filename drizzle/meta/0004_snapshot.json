@@ -1,0 +1,2877 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "id": "4716bdab-21ae-4301-8368-117549c34aaa",
+  "prevId": "632ef42f-6433-4018-9279-ce9079f47d39",
+  "tables": {
+    "الفروع": {
+      "name": "الفروع",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "رمز_الفرع": {
+          "name": "رمز_الفرع",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "اسم_الفرع_بالعربية": {
+          "name": "اسم_الفرع_بالعربية",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "اسم_الفرع_بالإنجليزية": {
+          "name": "اسم_الفرع_بالإنجليزية",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "اسم_المدير": {
+          "name": "اسم_المدير",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "رمز_الفرع_الأم": {
+          "name": "رمز_الفرع_الأم",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "نوع_الفرع": {
+          "name": "نوع_الفرع",
+          "type": "enum('فرع','مكتب_فرعي','إسلامي')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'فرع'"
+        },
+        "الحالة_التشغيلية": {
+          "name": "الحالة_التشغيلية",
+          "type": "enum('نشط','غير_نشط')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'نشط'"
+        },
+        "عدد_الموظفين": {
+          "name": "عدد_الموظفين",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "تاريخ_الإنشاء": {
+          "name": "تاريخ_الإنشاء",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "آخر_تحديث": {
+          "name": "آخر_تحديث",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "الفروع_المعرف_الداخلي": {
+          "name": "الفروع_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "الفروع_فريد_رمز_الفرع": {
+          "name": "الفروع_فريد_رمز_الفرع",
+          "columns": [
+            "رمز_الفرع"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "الموظفون": {
+      "name": "الموظفون",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "الرقم_الوظيفي": {
+          "name": "الرقم_الوظيفي",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "اسم_الموظف": {
+          "name": "اسم_الموظف",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "المسمى_الوظيفي": {
+          "name": "المسمى_الوظيفي",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_الفرع": {
+          "name": "معرف_الفرع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "حالة_الموظف": {
+          "name": "حالة_الموظف",
+          "type": "enum('نشط','غير_نشط')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'نشط'"
+        },
+        "هل_السجل_تجريبي": {
+          "name": "هل_السجل_تجريبي",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "تاريخ_إضافة_السجل": {
+          "name": "تاريخ_إضافة_السجل",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "الموظفون_فهرس_01": {
+          "name": "الموظفون_فهرس_01",
+          "columns": [
+            "معرف_الفرع"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_employees_branch": {
+          "name": "fk_employees_branch",
+          "tableFrom": "الموظفون",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "الموظفون_المعرف_الداخلي": {
+          "name": "الموظفون_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "الموظفون_فريد_الرقم_الوظيفي": {
+          "name": "الموظفون_فريد_الرقم_الوظيفي",
+          "columns": [
+            "الرقم_الوظيفي"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "المربعات_الجغرافية": {
+      "name": "المربعات_الجغرافية",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "رقم_المربع": {
+          "name": "رقم_المربع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "اسم_المربع": {
+          "name": "اسم_المربع",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "المنطقة": {
+          "name": "المنطقة",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "نقاط_حدود_المربع_التقريبية_بصيغة_جيسون": {
+          "name": "نقاط_حدود_المربع_التقريبية_بصيغة_جيسون",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "عدد_الجهات": {
+          "name": "عدد_الجهات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "عدد_الشركات": {
+          "name": "عدد_الشركات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "عدد_المنظمات": {
+          "name": "عدد_المنظمات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "عدد_التجار": {
+          "name": "عدد_التجار",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "القيمة_المستهدفة": {
+          "name": "القيمة_المستهدفة",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "تاريخ_الإنشاء": {
+          "name": "تاريخ_الإنشاء",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "آخر_تحديث": {
+          "name": "آخر_تحديث",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "المربعات_الجغرافية_المعرف_الداخلي": {
+          "name": "المربعات_الجغرافية_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "المربعات_الجغرافية_فريد_رقم_المربع": {
+          "name": "المربعات_الجغرافية_فريد_رقم_المربع",
+          "columns": [
+            "رقم_المربع"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "المستخدمون": {
+      "name": "المستخدمون",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "معرف_الدخول_لدى_مانوس": {
+          "name": "معرف_الدخول_لدى_مانوس",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "اسم_المستخدم": {
+          "name": "اسم_المستخدم",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "البريد_الإلكتروني": {
+          "name": "البريد_الإلكتروني",
+          "type": "varchar(320)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "طريقة_تسجيل_الدخول": {
+          "name": "طريقة_تسجيل_الدخول",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "الدور_التقني": {
+          "name": "الدور_التقني",
+          "type": "enum('مستخدم','مدير')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'مستخدم'"
+        },
+        "الدور_داخل_التطبيق": {
+          "name": "الدور_داخل_التطبيق",
+          "type": "enum('مدير_النظام','الإدارة_العليا','تطوير_الأعمال','توكيد_الجودة','مدير_الفرع','موظف_الفرع')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'موظف_الفرع'"
+        },
+        "معرف_الفرع_المسند": {
+          "name": "معرف_الفرع_المسند",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "معرف_الموظف": {
+          "name": "معرف_الموظف",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "حالة_تفعيل_الحساب": {
+          "name": "حالة_تفعيل_الحساب",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 1
+        },
+        "تاريخ_إنشاء_الحساب": {
+          "name": "تاريخ_إنشاء_الحساب",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "تاريخ_آخر_تعديل": {
+          "name": "تاريخ_آخر_تعديل",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        },
+        "آخر_تسجيل_دخول": {
+          "name": "آخر_تسجيل_دخول",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "المستخدمون_فهرس_الفرع": {
+          "name": "المستخدمون_فهرس_الفرع",
+          "columns": [
+            "معرف_الفرع_المسند"
+          ],
+          "isUnique": false
+        },
+        "المستخدمون_فهرس_الموظف": {
+          "name": "المستخدمون_فهرس_الموظف",
+          "columns": [
+            "معرف_الموظف"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_users_branch": {
+          "name": "fk_users_branch",
+          "tableFrom": "المستخدمون",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع_المسند"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_users_employee": {
+          "name": "fk_users_employee",
+          "tableFrom": "المستخدمون",
+          "tableTo": "الموظفون",
+          "columnsFrom": [
+            "معرف_الموظف"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "المستخدمون_المعرف_الداخلي": {
+          "name": "المستخدمون_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "المستخدمون_فريد_معرف_الدخول_لدى_مانوس": {
+          "name": "المستخدمون_فريد_معرف_الدخول_لدى_مانوس",
+          "columns": [
+            "معرف_الدخول_لدى_مانوس"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "تحليلات_الذكاء_الاصطناعي": {
+      "name": "تحليلات_الذكاء_الاصطناعي",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "معرف_منشئ_التحليل": {
+          "name": "معرف_منشئ_التحليل",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "الفترة_التحليلية": {
+          "name": "الفترة_التحليلية",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "عنوان_التحليل": {
+          "name": "عنوان_التحليل",
+          "type": "varchar(240)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "نص_التحليل": {
+          "name": "نص_التحليل",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "التوصيات_بصيغة_جيسون": {
+          "name": "التوصيات_بصيغة_جيسون",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ملخص_المصادر_بصيغة_جيسون": {
+          "name": "ملخص_المصادر_بصيغة_جيسون",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "وقت_الإنشاء": {
+          "name": "وقت_الإنشاء",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "تحليلات_الذكاء_فهرس_المنشئ": {
+          "name": "تحليلات_الذكاء_فهرس_المنشئ",
+          "columns": [
+            "معرف_منشئ_التحليل"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_ai_creator": {
+          "name": "fk_ai_creator",
+          "tableFrom": "تحليلات_الذكاء_الاصطناعي",
+          "tableTo": "المستخدمون",
+          "columnsFrom": [
+            "معرف_منشئ_التحليل"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "تحليلات_الذكاء_الاصطناعي_المعرف_الداخلي": {
+          "name": "تحليلات_الذكاء_الاصطناعي_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "إعدادات_التطبيق": {
+      "name": "إعدادات_التطبيق",
+      "columns": {
+        "مفتاح_الإعداد": {
+          "name": "مفتاح_الإعداد",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "قيمة_الإعداد_بصيغة_جيسون": {
+          "name": "قيمة_الإعداد_بصيغة_جيسون",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_آخر_من_عدل": {
+          "name": "معرف_آخر_من_عدل",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "وقت_آخر_تحديث": {
+          "name": "وقت_آخر_تحديث",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "إعدادات_التطبيق_فهرس_المعدل": {
+          "name": "إعدادات_التطبيق_فهرس_المعدل",
+          "columns": [
+            "معرف_آخر_من_عدل"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_setting_updater": {
+          "name": "fk_setting_updater",
+          "tableFrom": "إعدادات_التطبيق",
+          "tableTo": "المستخدمون",
+          "columnsFrom": [
+            "معرف_آخر_من_عدل"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "إعدادات_التطبيق_مفتاح_الإعداد": {
+          "name": "إعدادات_التطبيق_مفتاح_الإعداد",
+          "columns": [
+            "مفتاح_الإعداد"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "سجل_التدقيق": {
+      "name": "سجل_التدقيق",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "معرف_المستخدم_المنفذ": {
+          "name": "معرف_المستخدم_المنفذ",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "نوع_العملية": {
+          "name": "نوع_العملية",
+          "type": "enum('إنشاء','تعديل','حذف','تغيير_الدور','تسجيل_الدخول')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "نوع_السجل_المتأثر": {
+          "name": "نوع_السجل_المتأثر",
+          "type": "varchar(96)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_السجل_المتأثر": {
+          "name": "معرف_السجل_المتأثر",
+          "type": "varchar(96)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "القيم_السابقة_بصيغة_جيسون": {
+          "name": "القيم_السابقة_بصيغة_جيسون",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "القيم_الجديدة_بصيغة_جيسون": {
+          "name": "القيم_الجديدة_بصيغة_جيسون",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "وقت_العملية": {
+          "name": "وقت_العملية",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "سجل_التدقيق_فهرس_01": {
+          "name": "سجل_التدقيق_فهرس_01",
+          "columns": [
+            "معرف_المستخدم_المنفذ"
+          ],
+          "isUnique": false
+        },
+        "سجل_التدقيق_فهرس_02": {
+          "name": "سجل_التدقيق_فهرس_02",
+          "columns": [
+            "نوع_السجل_المتأثر",
+            "معرف_السجل_المتأثر"
+          ],
+          "isUnique": false
+        },
+        "سجل_التدقيق_فهرس_03": {
+          "name": "سجل_التدقيق_فهرس_03",
+          "columns": [
+            "وقت_العملية"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_audit_actor": {
+          "name": "fk_audit_actor",
+          "tableFrom": "سجل_التدقيق",
+          "tableTo": "المستخدمون",
+          "columnsFrom": [
+            "معرف_المستخدم_المنفذ"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "سجل_التدقيق_المعرف_الداخلي": {
+          "name": "سجل_التدقيق_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "أوزان_تقييم_الفروع": {
+      "name": "أوزان_تقييم_الفروع",
+      "columns": {
+        "رمز_المؤشر": {
+          "name": "رمز_المؤشر",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "اسم_المؤشر": {
+          "name": "اسم_المؤشر",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "وزن_المؤشر_كنسبة_مئوية": {
+          "name": "وزن_المؤشر_كنسبة_مئوية",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_آخر_من_عدل": {
+          "name": "معرف_آخر_من_عدل",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "وقت_آخر_تحديث": {
+          "name": "وقت_آخر_تحديث",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "أوزان_التقييم_فهرس_المعدل": {
+          "name": "أوزان_التقييم_فهرس_المعدل",
+          "columns": [
+            "معرف_آخر_من_عدل"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_score_weight_updater": {
+          "name": "fk_score_weight_updater",
+          "tableFrom": "أوزان_تقييم_الفروع",
+          "tableTo": "المستخدمون",
+          "columnsFrom": [
+            "معرف_آخر_من_عدل"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "أوزان_تقييم_الفروع_رمز_المؤشر": {
+          "name": "أوزان_تقييم_الفروع_رمز_المؤشر",
+          "columns": [
+            "رمز_المؤشر"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "الشكاوى": {
+      "name": "الشكاوى",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "نوع_الشكوى": {
+          "name": "نوع_الشكوى",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_الفرع": {
+          "name": "معرف_الفرع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "تاريخ_الشكوى": {
+          "name": "تاريخ_الشكوى",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "المسؤول_عن_المعالجة": {
+          "name": "المسؤول_عن_المعالجة",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "أيام_المعالجة": {
+          "name": "أيام_المعالجة",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "حالة_الشكوى": {
+          "name": "حالة_الشكوى",
+          "type": "enum('مفتوح','قيد_التنفيذ','تمت_المعالجة','مغلق')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'مفتوح'"
+        },
+        "التفاصيل": {
+          "name": "التفاصيل",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "تاريخ_الإضافة": {
+          "name": "تاريخ_الإضافة",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "آخر_تحديث": {
+          "name": "آخر_تحديث",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "الشكاوى_فهرس_01": {
+          "name": "الشكاوى_فهرس_01",
+          "columns": [
+            "معرف_الفرع",
+            "تاريخ_الشكوى"
+          ],
+          "isUnique": false
+        },
+        "الشكاوى_فهرس_02": {
+          "name": "الشكاوى_فهرس_02",
+          "columns": [
+            "حالة_الشكوى"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_complaint_branch": {
+          "name": "fk_complaint_branch",
+          "tableFrom": "الشكاوى",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "الشكاوى_المعرف_الداخلي": {
+          "name": "الشكاوى_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "الإجراءات_التصحيحية": {
+      "name": "الإجراءات_التصحيحية",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "معرف_الفرع": {
+          "name": "معرف_الفرع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "وصف_الإجراء_التصحيحي": {
+          "name": "وصف_الإجراء_التصحيحي",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "المسؤول": {
+          "name": "المسؤول",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "موعد_التنفيذ": {
+          "name": "موعد_التنفيذ",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "نسبة_الإنجاز": {
+          "name": "نسبة_الإنجاز",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "حالة_الإجراء": {
+          "name": "حالة_الإجراء",
+          "type": "enum('مفتوح','قيد_التنفيذ','مغلق')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'مفتوح'"
+        },
+        "تاريخ_الإضافة": {
+          "name": "تاريخ_الإضافة",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "الإجراءات_التصحيحية_فهرس_01": {
+          "name": "الإجراءات_التصحيحية_فهرس_01",
+          "columns": [
+            "معرف_الفرع"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_corrective_action_branch": {
+          "name": "fk_corrective_action_branch",
+          "tableFrom": "الإجراءات_التصحيحية",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "الإجراءات_التصحيحية_المعرف_الداخلي": {
+          "name": "الإجراءات_التصحيحية_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "التقارير_اليومية": {
+      "name": "التقارير_اليومية",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "معرف_الفرع": {
+          "name": "معرف_الفرع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_المستخدم": {
+          "name": "معرف_المستخدم",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "تاريخ_التقرير": {
+          "name": "تاريخ_التقرير",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "حسابات_الأفراد": {
+          "name": "حسابات_الأفراد",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "حسابات_الشركات": {
+          "name": "حسابات_الشركات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "حسابات_المنظمات": {
+          "name": "حسابات_المنظمات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "حسابات_الجهات_الحكومية": {
+          "name": "حسابات_الجهات_الحكومية",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "عمليات_كاك_فاست": {
+          "name": "عمليات_كاك_فاست",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "البطاقات": {
+          "name": "البطاقات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "الحوالات": {
+          "name": "الحوالات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "الخدمات_الرقمية": {
+          "name": "الخدمات_الرقمية",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "عدد_الزيارات": {
+          "name": "عدد_الزيارات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "عدد_الاجتماعات": {
+          "name": "عدد_الاجتماعات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "عدد_الاتصالات": {
+          "name": "عدد_الاتصالات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "العملاء_الجدد": {
+          "name": "العملاء_الجدد",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "الفرص_الجديدة": {
+          "name": "الفرص_الجديدة",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "المتابعات": {
+          "name": "المتابعات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "المعوقات": {
+          "name": "المعوقات",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "الاحتياجات": {
+          "name": "الاحتياجات",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "حالة_التقرير": {
+          "name": "حالة_التقرير",
+          "type": "enum('مسودة','مرسل')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'مسودة'"
+        },
+        "تاريخ_الإنشاء": {
+          "name": "تاريخ_الإنشاء",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "آخر_تحديث": {
+          "name": "آخر_تحديث",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "التقارير_اليومية_فهرس_01": {
+          "name": "التقارير_اليومية_فهرس_01",
+          "columns": [
+            "معرف_الفرع",
+            "تاريخ_التقرير"
+          ],
+          "isUnique": false
+        },
+        "التقارير_اليومية_فهرس_02": {
+          "name": "التقارير_اليومية_فهرس_02",
+          "columns": [
+            "معرف_المستخدم"
+          ],
+          "isUnique": false
+        },
+        "فريد_يومي_مستخدم": {
+          "name": "فريد_يومي_مستخدم",
+          "columns": [
+            "معرف_الفرع",
+            "معرف_المستخدم",
+            "تاريخ_التقرير"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "fk_daily_branch": {
+          "name": "fk_daily_branch",
+          "tableFrom": "التقارير_اليومية",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "التقارير_اليومية_المعرف_الداخلي": {
+          "name": "التقارير_اليومية_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "التنبيهات": {
+      "name": "التنبيهات",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "معرف_المستخدم_اختياري": {
+          "name": "معرف_المستخدم_اختياري",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "معرف_الفرع_اختياري": {
+          "name": "معرف_الفرع_اختياري",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "نوع_التنبيه": {
+          "name": "نوع_التنبيه",
+          "type": "enum('خطر','نجاح','تذكير','معلومات','تحذير')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "عنوان_التنبيه": {
+          "name": "عنوان_التنبيه",
+          "type": "varchar(180)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "نص_التنبيه": {
+          "name": "نص_التنبيه",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "هل_تمت_القراءة": {
+          "name": "هل_تمت_القراءة",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "مفتاح_التنبيه": {
+          "name": "مفتاح_التنبيه",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "حالة_التنبيه": {
+          "name": "حالة_التنبيه",
+          "type": "enum('نشط','تمت_المراجعة','مؤجل','محلول','انتهى')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'نشط'"
+        },
+        "وقت_الإقرار": {
+          "name": "وقت_الإقرار",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "معرف_المقر_اختياري": {
+          "name": "معرف_المقر_اختياري",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "موعد_استئناف_التنبيه": {
+          "name": "موعد_استئناف_التنبيه",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "وقت_الحل": {
+          "name": "وقت_الحل",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "آخر_ظهور_للتنبيه": {
+          "name": "آخر_ظهور_للتنبيه",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "وقت_الإنشاء": {
+          "name": "وقت_الإنشاء",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "التنبيهات_فهرس_01": {
+          "name": "التنبيهات_فهرس_01",
+          "columns": [
+            "معرف_المستخدم_اختياري",
+            "هل_تمت_القراءة"
+          ],
+          "isUnique": false
+        },
+        "التنبيهات_فهرس_02": {
+          "name": "التنبيهات_فهرس_02",
+          "columns": [
+            "معرف_الفرع_اختياري"
+          ],
+          "isUnique": false
+        },
+        "التنبيهات_فهرس_المقر": {
+          "name": "التنبيهات_فهرس_المقر",
+          "columns": [
+            "معرف_المقر_اختياري"
+          ],
+          "isUnique": false
+        },
+        "التنبيهات_فريد_المفتاح": {
+          "name": "التنبيهات_فريد_المفتاح",
+          "columns": [
+            "مفتاح_التنبيه"
+          ],
+          "isUnique": true
+        },
+        "التنبيهات_فهرس_الحالة": {
+          "name": "التنبيهات_فهرس_الحالة",
+          "columns": [
+            "معرف_المستخدم_اختياري",
+            "حالة_التنبيه",
+            "وقت_الإنشاء"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_notification_user": {
+          "name": "fk_notification_user",
+          "tableFrom": "التنبيهات",
+          "tableTo": "المستخدمون",
+          "columnsFrom": [
+            "معرف_المستخدم_اختياري"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_notification_branch": {
+          "name": "fk_notification_branch",
+          "tableFrom": "التنبيهات",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع_اختياري"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_notification_acknowledger": {
+          "name": "fk_notification_acknowledger",
+          "tableFrom": "التنبيهات",
+          "tableTo": "المستخدمون",
+          "columnsFrom": [
+            "معرف_المقر_اختياري"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "التنبيهات_المعرف_الداخلي": {
+          "name": "التنبيهات_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "الأداء_الفعلي": {
+      "name": "الأداء_الفعلي",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "معرف_الفرع": {
+          "name": "معرف_الفرع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "تاريخ_الأداء": {
+          "name": "تاريخ_الأداء",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "الرمز_التقني_للمؤشر": {
+          "name": "الرمز_التقني_للمؤشر",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "القيمة_الفعلية": {
+          "name": "القيمة_الفعلية",
+          "type": "decimal(16,2)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'0'"
+        },
+        "قيمة_الفترة_السابقة": {
+          "name": "قيمة_الفترة_السابقة",
+          "type": "decimal(16,2)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'0'"
+        },
+        "معرف_آخر_من_عدل": {
+          "name": "معرف_آخر_من_عدل",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "وقت_آخر_تحديث": {
+          "name": "وقت_آخر_تحديث",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "الأداء_الفعلي_فهرس_01": {
+          "name": "الأداء_الفعلي_فهرس_01",
+          "columns": [
+            "الرمز_التقني_للمؤشر",
+            "تاريخ_الأداء"
+          ],
+          "isUnique": false
+        },
+        "الأداء_الفعلي_فهرس_02": {
+          "name": "الأداء_الفعلي_فهرس_02",
+          "columns": [
+            "معرف_الفرع",
+            "تاريخ_الأداء"
+          ],
+          "isUnique": false
+        },
+        "الأداء_الفعلي_فهرس_03": {
+          "name": "الأداء_الفعلي_فهرس_03",
+          "columns": [
+            "معرف_الفرع",
+            "تاريخ_الأداء",
+            "الرمز_التقني_للمؤشر"
+          ],
+          "isUnique": true
+        },
+        "الأداء_الفعلي_فهرس_المعدل": {
+          "name": "الأداء_الفعلي_فهرس_المعدل",
+          "columns": [
+            "معرف_آخر_من_عدل"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_performance_branch": {
+          "name": "fk_performance_branch",
+          "tableFrom": "الأداء_الفعلي",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_performance_updater": {
+          "name": "fk_performance_updater",
+          "tableFrom": "الأداء_الفعلي",
+          "tableTo": "المستخدمون",
+          "columnsFrom": [
+            "معرف_آخر_من_عدل"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "الأداء_الفعلي_المعرف_الداخلي": {
+          "name": "الأداء_الفعلي_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "العملاء_المحتملون": {
+      "name": "العملاء_المحتملون",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "اسم_العميل_أو_الجهة": {
+          "name": "اسم_العميل_أو_الجهة",
+          "type": "varchar(180)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "نوع_العميل": {
+          "name": "نوع_العميل",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "القطاع": {
+          "name": "القطاع",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "طبيعة_النشاط": {
+          "name": "طبيعة_النشاط",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "الهاتف": {
+          "name": "الهاتف",
+          "type": "varchar(48)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "البريد_الإلكتروني": {
+          "name": "البريد_الإلكتروني",
+          "type": "varchar(320)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "العنوان": {
+          "name": "العنوان",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "معرف_المربع": {
+          "name": "معرف_المربع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "معرف_الفرع": {
+          "name": "معرف_الفرع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_الموظف_المكلف": {
+          "name": "معرف_الموظف_المكلف",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "تاريخ_أول_تواصل": {
+          "name": "تاريخ_أول_تواصل",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "تاريخ_آخر_متابعة": {
+          "name": "تاريخ_آخر_متابعة",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "موعد_المتابعة_القادمة": {
+          "name": "موعد_المتابعة_القادمة",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "المنتجات_المحتملة": {
+          "name": "المنتجات_المحتملة",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "القيمة_المتوقعة": {
+          "name": "القيمة_المتوقعة",
+          "type": "decimal(16,2)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'0'"
+        },
+        "مرحلة_الاستقطاب": {
+          "name": "مرحلة_الاستقطاب",
+          "type": "enum('جديد','تم_التواصل','تمت_الزيارة','قيد_المتابعة','قيد_التفاوض','تم_الاستقطاب','غير_مهتم','مؤجل')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'جديد'"
+        },
+        "ملاحظات_المتابعة": {
+          "name": "ملاحظات_المتابعة",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "معرف_منشئ_السجل": {
+          "name": "معرف_منشئ_السجل",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "هل_السجل_تجريبي": {
+          "name": "هل_السجل_تجريبي",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "تاريخ_الإنشاء": {
+          "name": "تاريخ_الإنشاء",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "آخر_تحديث": {
+          "name": "آخر_تحديث",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "العملاء_المحتملون_فهرس_01": {
+          "name": "العملاء_المحتملون_فهرس_01",
+          "columns": [
+            "معرف_الفرع"
+          ],
+          "isUnique": false
+        },
+        "العملاء_المحتملون_فهرس_02": {
+          "name": "العملاء_المحتملون_فهرس_02",
+          "columns": [
+            "معرف_الموظف_المكلف"
+          ],
+          "isUnique": false
+        },
+        "العملاء_المحتملون_فهرس_03": {
+          "name": "العملاء_المحتملون_فهرس_03",
+          "columns": [
+            "مرحلة_الاستقطاب"
+          ],
+          "isUnique": false
+        },
+        "العملاء_المحتملون_فهرس_04": {
+          "name": "العملاء_المحتملون_فهرس_04",
+          "columns": [
+            "موعد_المتابعة_القادمة"
+          ],
+          "isUnique": false
+        },
+        "العملاء_المحتملون_فهرس_المربع": {
+          "name": "العملاء_المحتملون_فهرس_المربع",
+          "columns": [
+            "معرف_المربع"
+          ],
+          "isUnique": false
+        },
+        "العملاء_المحتملون_فهرس_المنشئ": {
+          "name": "العملاء_المحتملون_فهرس_المنشئ",
+          "columns": [
+            "معرف_منشئ_السجل"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_prospect_square": {
+          "name": "fk_prospect_square",
+          "tableFrom": "العملاء_المحتملون",
+          "tableTo": "المربعات_الجغرافية",
+          "columnsFrom": [
+            "معرف_المربع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_prospect_branch": {
+          "name": "fk_prospect_branch",
+          "tableFrom": "العملاء_المحتملون",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_prospect_employee": {
+          "name": "fk_prospect_employee",
+          "tableFrom": "العملاء_المحتملون",
+          "tableTo": "الموظفون",
+          "columnsFrom": [
+            "معرف_الموظف_المكلف"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_prospect_creator": {
+          "name": "fk_prospect_creator",
+          "tableFrom": "العملاء_المحتملون",
+          "tableTo": "المستخدمون",
+          "columnsFrom": [
+            "معرف_منشئ_السجل"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "العملاء_المحتملون_المعرف_الداخلي": {
+          "name": "العملاء_المحتملون_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "ملاحظات_الجودة": {
+      "name": "ملاحظات_الجودة",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "معرف_الفرع": {
+          "name": "معرف_الفرع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "نص_الملاحظة": {
+          "name": "نص_الملاحظة",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "درجة_الأهمية": {
+          "name": "درجة_الأهمية",
+          "type": "enum('منخفض','متوسط','مرتفع','حرج')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'متوسط'"
+        },
+        "المسؤول": {
+          "name": "المسؤول",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "تاريخ_الاستحقاق": {
+          "name": "تاريخ_الاستحقاق",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "حالة_المعالجة": {
+          "name": "حالة_المعالجة",
+          "type": "enum('مفتوح','قيد_التنفيذ','تمت_المعالجة','مغلق')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'مفتوح'"
+        },
+        "تاريخ_الإضافة": {
+          "name": "تاريخ_الإضافة",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "ملاحظات_الجودة_فهرس_01": {
+          "name": "ملاحظات_الجودة_فهرس_01",
+          "columns": [
+            "معرف_الفرع"
+          ],
+          "isUnique": false
+        },
+        "ملاحظات_الجودة_فهرس_02": {
+          "name": "ملاحظات_الجودة_فهرس_02",
+          "columns": [
+            "تاريخ_الاستحقاق"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_quality_finding_branch": {
+          "name": "fk_quality_finding_branch",
+          "tableFrom": "ملاحظات_الجودة",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "ملاحظات_الجودة_المعرف_الداخلي": {
+          "name": "ملاحظات_الجودة_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "تقييمات_الجودة": {
+      "name": "تقييمات_الجودة",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "معرف_الفرع": {
+          "name": "معرف_الفرع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "تاريخ_التقييم": {
+          "name": "تاريخ_التقييم",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "تقييم_الاستقبال": {
+          "name": "تقييم_الاستقبال",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "تقييم_سرعة_الخدمة": {
+          "name": "تقييم_سرعة_الخدمة",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "تقييم_دقة_المعاملة": {
+          "name": "تقييم_دقة_المعاملة",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "تقييم_تجربة_العميل": {
+          "name": "تقييم_تجربة_العميل",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "الالتزام_بالإجراءات": {
+          "name": "الالتزام_بالإجراءات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "الالتزام_بالنماذج": {
+          "name": "الالتزام_بالنماذج",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "الالتزام_بمتطلبات_اعرف_عميلك": {
+          "name": "الالتزام_بمتطلبات_اعرف_عميلك",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "الالتزام_بالتعليمات": {
+          "name": "الالتزام_بالتعليمات",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "اسم_المقيم": {
+          "name": "اسم_المقيم",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ملاحظات_التقييم": {
+          "name": "ملاحظات_التقييم",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "تاريخ_الإضافة": {
+          "name": "تاريخ_الإضافة",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "تقييمات_الجودة_فهرس_01": {
+          "name": "تقييمات_الجودة_فهرس_01",
+          "columns": [
+            "معرف_الفرع",
+            "تاريخ_التقييم"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_quality_review_branch": {
+          "name": "fk_quality_review_branch",
+          "tableFrom": "تقييمات_الجودة",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "تقييمات_الجودة_المعرف_الداخلي": {
+          "name": "تقييمات_الجودة_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "التقارير_المحفوظة": {
+      "name": "التقارير_المحفوظة",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "نوع_التقرير": {
+          "name": "نوع_التقرير",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "عنوان_التقرير": {
+          "name": "عنوان_التقرير",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_الفرع_اختياري": {
+          "name": "معرف_الفرع_اختياري",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "بداية_الفترة": {
+          "name": "بداية_الفترة",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "نهاية_الفترة": {
+          "name": "نهاية_الفترة",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "بيانات_التقرير_المجمعة_بصيغة_جيسون": {
+          "name": "بيانات_التقرير_المجمعة_بصيغة_جيسون",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_منشئ_التقرير": {
+          "name": "معرف_منشئ_التقرير",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "وقت_الإنشاء": {
+          "name": "وقت_الإنشاء",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "التقارير_المحفوظة_فهرس_01": {
+          "name": "التقارير_المحفوظة_فهرس_01",
+          "columns": [
+            "نوع_التقرير"
+          ],
+          "isUnique": false
+        },
+        "التقارير_المحفوظة_فهرس_02": {
+          "name": "التقارير_المحفوظة_فهرس_02",
+          "columns": [
+            "بداية_الفترة",
+            "نهاية_الفترة"
+          ],
+          "isUnique": false
+        },
+        "التقارير_المحفوظة_فهرس_03": {
+          "name": "التقارير_المحفوظة_فهرس_03",
+          "columns": [
+            "معرف_الفرع_اختياري"
+          ],
+          "isUnique": false
+        },
+        "التقارير_المحفوظة_فهرس_المنشئ": {
+          "name": "التقارير_المحفوظة_فهرس_المنشئ",
+          "columns": [
+            "معرف_منشئ_التقرير"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_report_branch": {
+          "name": "fk_report_branch",
+          "tableFrom": "التقارير_المحفوظة",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع_اختياري"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_report_creator": {
+          "name": "fk_report_creator",
+          "tableFrom": "التقارير_المحفوظة",
+          "tableTo": "المستخدمون",
+          "columnsFrom": [
+            "معرف_منشئ_التقرير"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "التقارير_المحفوظة_المعرف_الداخلي": {
+          "name": "التقارير_المحفوظة_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "الأدوار": {
+      "name": "الأدوار",
+      "columns": {
+        "رمز_الدور_الثابت": {
+          "name": "رمز_الدور_الثابت",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "اسم_الدور_بالعربية": {
+          "name": "اسم_الدور_بالعربية",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "وصف_الدور": {
+          "name": "وصف_الدور",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "رموز_الصلاحيات": {
+          "name": "رموز_الصلاحيات",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "الأدوار_رمز_الدور_الثابت": {
+          "name": "الأدوار_رمز_الدور_الثابت",
+          "columns": [
+            "رمز_الدور_الثابت"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "إسناد_المربعات": {
+      "name": "إسناد_المربعات",
+      "columns": {
+        "معرف_المربع": {
+          "name": "معرف_المربع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_الفرع": {
+          "name": "معرف_الفرع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_الموظف_اختياري": {
+          "name": "معرف_الموظف_اختياري",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "هل_الإسناد_أساسي": {
+          "name": "هل_الإسناد_أساسي",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "تاريخ_الإسناد": {
+          "name": "تاريخ_الإسناد",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "إسناد_المربعات_فهرس_01": {
+          "name": "إسناد_المربعات_فهرس_01",
+          "columns": [
+            "معرف_الفرع"
+          ],
+          "isUnique": false
+        },
+        "إسناد_المربعات_فهرس_الموظف": {
+          "name": "إسناد_المربعات_فهرس_الموظف",
+          "columns": [
+            "معرف_الموظف_اختياري"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_square_assignment_square": {
+          "name": "fk_square_assignment_square",
+          "tableFrom": "إسناد_المربعات",
+          "tableTo": "المربعات_الجغرافية",
+          "columnsFrom": [
+            "معرف_المربع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_square_assignment_branch": {
+          "name": "fk_square_assignment_branch",
+          "tableFrom": "إسناد_المربعات",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_square_assignment_employee": {
+          "name": "fk_square_assignment_employee",
+          "tableFrom": "إسناد_المربعات",
+          "tableTo": "الموظفون",
+          "columnsFrom": [
+            "معرف_الموظف_اختياري"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "إسناد_المربعات_معرف_المربع_معرف_الفرع_pk": {
+          "name": "إسناد_المربعات_معرف_المربع_معرف_الفرع_pk",
+          "columns": [
+            "معرف_المربع",
+            "معرف_الفرع"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "المستهدفات": {
+      "name": "المستهدفات",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "معرف_الفرع": {
+          "name": "معرف_الفرع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "الرمز_التقني_للمؤشر": {
+          "name": "الرمز_التقني_للمؤشر",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "اسم_المؤشر": {
+          "name": "اسم_المؤشر",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "دورية_المستهدف": {
+          "name": "دورية_المستهدف",
+          "type": "enum('يومي','أسبوعي','شهري','ربع_سنوي','سنوي')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "بداية_الفترة": {
+          "name": "بداية_الفترة",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "القيمة_المستهدفة": {
+          "name": "القيمة_المستهدفة",
+          "type": "decimal(16,2)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_منشئ_السجل": {
+          "name": "معرف_منشئ_السجل",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "تاريخ_الإضافة": {
+          "name": "تاريخ_الإضافة",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "المستهدفات_فهرس_01": {
+          "name": "المستهدفات_فهرس_01",
+          "columns": [
+            "معرف_الفرع",
+            "الرمز_التقني_للمؤشر"
+          ],
+          "isUnique": false
+        },
+        "المستهدفات_فهرس_02": {
+          "name": "المستهدفات_فهرس_02",
+          "columns": [
+            "معرف_الفرع",
+            "الرمز_التقني_للمؤشر",
+            "دورية_المستهدف",
+            "بداية_الفترة"
+          ],
+          "isUnique": true
+        },
+        "المستهدفات_فهرس_المنشئ": {
+          "name": "المستهدفات_فهرس_المنشئ",
+          "columns": [
+            "معرف_منشئ_السجل"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_target_branch": {
+          "name": "fk_target_branch",
+          "tableFrom": "المستهدفات",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_target_creator": {
+          "name": "fk_target_creator",
+          "tableFrom": "المستهدفات",
+          "tableTo": "المستخدمون",
+          "columnsFrom": [
+            "معرف_منشئ_السجل"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "المستهدفات_المعرف_الداخلي": {
+          "name": "المستهدفات_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "الزيارات_الميدانية": {
+      "name": "الزيارات_الميدانية",
+      "columns": {
+        "المعرف_الداخلي": {
+          "name": "المعرف_الداخلي",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "اسم_الجهة": {
+          "name": "اسم_الجهة",
+          "type": "varchar(180)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "نوع_الجهة": {
+          "name": "نوع_الجهة",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_العميل_المحتمل_اختياري": {
+          "name": "معرف_العميل_المحتمل_اختياري",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "معرف_المربع": {
+          "name": "معرف_المربع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "معرف_الفرع": {
+          "name": "معرف_الفرع",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "معرف_الموظف": {
+          "name": "معرف_الموظف",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "تاريخ_ووقت_الزيارة": {
+          "name": "تاريخ_ووقت_الزيارة",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "الموقع": {
+          "name": "الموقع",
+          "type": "varchar(240)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "نوع_الزيارة": {
+          "name": "نوع_الزيارة",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "الشخص_الذي_تمت_مقابلته": {
+          "name": "الشخص_الذي_تمت_مقابلته",
+          "type": "varchar(160)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "نتيجة_الزيارة": {
+          "name": "نتيجة_الزيارة",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "المنتجات_التي_نوقشت": {
+          "name": "المنتجات_التي_نوقشت",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "الفرص_الناتجة": {
+          "name": "الفرص_الناتجة",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ملاحظات": {
+          "name": "ملاحظات",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "الإجراء_التالي": {
+          "name": "الإجراء_التالي",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "تاريخ_المتابعة_القادمة": {
+          "name": "تاريخ_المتابعة_القادمة",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "المرفقات_بصيغة_جيسون": {
+          "name": "المرفقات_بصيغة_جيسون",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "معرف_منشئ_السجل": {
+          "name": "معرف_منشئ_السجل",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "هل_السجل_تجريبي": {
+          "name": "هل_السجل_تجريبي",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "تاريخ_تسجيل_الزيارة": {
+          "name": "تاريخ_تسجيل_الزيارة",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {
+        "الزيارات_الميدانية_فهرس_01": {
+          "name": "الزيارات_الميدانية_فهرس_01",
+          "columns": [
+            "معرف_الفرع"
+          ],
+          "isUnique": false
+        },
+        "الزيارات_الميدانية_فهرس_02": {
+          "name": "الزيارات_الميدانية_فهرس_02",
+          "columns": [
+            "معرف_الموظف"
+          ],
+          "isUnique": false
+        },
+        "الزيارات_الميدانية_فهرس_03": {
+          "name": "الزيارات_الميدانية_فهرس_03",
+          "columns": [
+            "تاريخ_ووقت_الزيارة"
+          ],
+          "isUnique": false
+        },
+        "الزيارات_الميدانية_فهرس_العميل": {
+          "name": "الزيارات_الميدانية_فهرس_العميل",
+          "columns": [
+            "معرف_العميل_المحتمل_اختياري"
+          ],
+          "isUnique": false
+        },
+        "الزيارات_الميدانية_فهرس_المربع": {
+          "name": "الزيارات_الميدانية_فهرس_المربع",
+          "columns": [
+            "معرف_المربع"
+          ],
+          "isUnique": false
+        },
+        "الزيارات_الميدانية_فهرس_المنشئ": {
+          "name": "الزيارات_الميدانية_فهرس_المنشئ",
+          "columns": [
+            "معرف_منشئ_السجل"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "fk_visit_prospect": {
+          "name": "fk_visit_prospect",
+          "tableFrom": "الزيارات_الميدانية",
+          "tableTo": "العملاء_المحتملون",
+          "columnsFrom": [
+            "معرف_العميل_المحتمل_اختياري"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_visit_square": {
+          "name": "fk_visit_square",
+          "tableFrom": "الزيارات_الميدانية",
+          "tableTo": "المربعات_الجغرافية",
+          "columnsFrom": [
+            "معرف_المربع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_visit_branch": {
+          "name": "fk_visit_branch",
+          "tableFrom": "الزيارات_الميدانية",
+          "tableTo": "الفروع",
+          "columnsFrom": [
+            "معرف_الفرع"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_visit_employee": {
+          "name": "fk_visit_employee",
+          "tableFrom": "الزيارات_الميدانية",
+          "tableTo": "الموظفون",
+          "columnsFrom": [
+            "معرف_الموظف"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "fk_visit_creator": {
+          "name": "fk_visit_creator",
+          "tableFrom": "الزيارات_الميدانية",
+          "tableTo": "المستخدمون",
+          "columnsFrom": [
+            "معرف_منشئ_السجل"
+          ],
+          "columnsTo": [
+            "المعرف_الداخلي"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "الزيارات_الميدانية_المعرف_الداخلي": {
+          "name": "الزيارات_الميدانية_المعرف_الداخلي",
+          "columns": [
+            "المعرف_الداخلي"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    }
+  },
+  "views": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "tables": {},
+    "indexes": {}
+  }
+}
