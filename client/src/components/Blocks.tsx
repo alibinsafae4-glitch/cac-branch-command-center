@@ -7,7 +7,7 @@ export function PageHeading({ eyebrow, title, description, actions, variant = "d
 }
 
 export function Panel({ title, description, action, children, className = "" }: { title?: string; description?: string; action?: React.ReactNode; children: React.ReactNode; className?: string }) {
-  return <section className={`rounded-2xl border border-[#dce2ef] bg-white shadow-[0_6px_24px_rgba(32,40,109,.045)] ${className}`}><div className="flex items-start justify-between gap-4 px-5 pt-5">{(title || description) && <div>{title && <h2 className="text-[15px] font-semibold text-[#172544]">{title}</h2>}{description && <p className="mt-1 text-xs leading-6 text-[#68748f]">{description}</p>}</div>}{action}</div><div className="p-5">{children}</div></section>;
+  return <section className={`rounded-2xl border border-[#dce2ef] bg-white shadow-[0_6px_24px_rgba(32,40,109,.045)] ${className}`}><div className="flex items-start justify-between gap-4 px-5 pt-5">{(title || description) && <div>{title && <h2 className="text-base font-bold leading-7 text-[#172544]">{title}</h2>}{description && <p className="mt-1 text-xs leading-6 text-[#68748f]">{description}</p>}</div>}{action}</div><div className="p-5">{children}</div></section>;
 }
 
 export function AppButton({ children, variant = "primary", className = "", ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "ghost" | "danger" }) {
