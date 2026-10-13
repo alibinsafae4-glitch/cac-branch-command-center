@@ -3,17 +3,17 @@ import { useEffect } from "react";
 
 export function PageHeading({ eyebrow, title, description, actions, variant = "default", className = "mb-6" }: { eyebrow?: string; title: string; description?: string; actions?: React.ReactNode; variant?: "default" | "hero"; className?: string }) {
   const hero = variant === "hero";
-  return <div className={`${className} flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between`}><div>{eyebrow && <div className={`brand-eyebrow mb-2 text-xs font-semibold uppercase tracking-[.16em] ${hero ? "text-[#ead8ab]" : "text-primary"}`}>{eyebrow}</div>}<h1 className={`text-2xl font-bold tracking-[-.035em] sm:text-[30px] ${hero ? "text-white" : "text-[#193037]"}`}>{title}</h1>{description && <p className={`mt-2 max-w-3xl text-sm leading-7 ${hero ? "text-white/75" : "text-[#65736f]"}`}>{description}</p>}</div>{actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}</div>;
+  return <div className={`${className} flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between`}><div>{eyebrow && <div className={`brand-eyebrow mb-2 text-xs font-semibold uppercase tracking-[.16em] ${hero ? "text-[#ffe28a]" : "text-primary"}`}>{eyebrow}</div>}<h1 className={`text-2xl font-bold tracking-[-.035em] sm:text-[30px] ${hero ? "text-white" : "text-[#172544]"}`}>{title}</h1>{description && <p className={`mt-2 max-w-3xl text-sm leading-7 ${hero ? "text-white/75" : "text-[#68748f]"}`}>{description}</p>}</div>{actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}</div>;
 }
 
 export function Panel({ title, description, action, children, className = "" }: { title?: string; description?: string; action?: React.ReactNode; children: React.ReactNode; className?: string }) {
-  return <section className={`rounded-2xl border border-[#dbe4de] bg-white shadow-[0_6px_24px_rgba(16,59,66,.045)] ${className}`}><div className="flex items-start justify-between gap-4 px-5 pt-5">{(title || description) && <div>{title && <h2 className="text-[15px] font-semibold text-[#193037]">{title}</h2>}{description && <p className="mt-1 text-xs leading-6 text-[#65736f]">{description}</p>}</div>}{action}</div><div className="p-5">{children}</div></section>;
+  return <section className={`rounded-2xl border border-[#dce2ef] bg-white shadow-[0_6px_24px_rgba(32,40,109,.045)] ${className}`}><div className="flex items-start justify-between gap-4 px-5 pt-5">{(title || description) && <div>{title && <h2 className="text-[15px] font-semibold text-[#172544]">{title}</h2>}{description && <p className="mt-1 text-xs leading-6 text-[#68748f]">{description}</p>}</div>}{action}</div><div className="p-5">{children}</div></section>;
 }
 
 export function AppButton({ children, variant = "primary", className = "", ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "ghost" | "danger" }) {
   const styles = {
     primary: "bg-primary text-white shadow-sm hover:bg-[#0d4d46] disabled:bg-slate-300",
-    secondary: "border border-[#dbe4de] bg-white text-[#31474b] hover:bg-[#f2f6f2] disabled:opacity-50",
+    secondary: "border border-[#dce2ef] bg-white text-[#31474b] hover:bg-[#f2f6f2] disabled:opacity-50",
     ghost: "text-slate-600 hover:bg-slate-100 disabled:opacity-50",
     danger: "bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-50",
   };

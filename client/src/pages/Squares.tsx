@@ -7,7 +7,7 @@ import { MapPinned, Plus, RefreshCw, TriangleAlert } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 import { useState } from "react";
 
-const colors = ["#0f766e", "#2563eb", "#7c3aed", "#d4a72c", "#e11d48", "#0891b2"];
+const colors = ["#022554", "#0088ff", "#4b5da2", "#ffc734", "#7186b8", "#3e68ad"];
 
 export default function SquaresPage() {
   const { user } = useAuth();

@@ -51,83 +51,87 @@
 }
 
 :root {
-  --primary: #125b53;
+  --brand-navy: #022554;
+  --brand-blue: #20286d;
+  --brand-gold: #ffc734;
+  --brand-signal-blue: #0088ff;
+  --primary: #20286d;
   --primary-foreground: #ffffff;
-  --sidebar-primary: #d9bd7e;
-  --sidebar-primary-foreground: #173b3c;
-  --chart-1: #125b53;
-  --chart-2: #496e83;
-  --chart-3: #c39a4e;
-  --chart-4: #b65e51;
-  --chart-5: #766292;
+  --sidebar-primary: #ffc734;
+  --sidebar-primary-foreground: #022554;
+  --chart-1: #022554;
+  --chart-2: #20286d;
+  --chart-3: #ffc734;
+  --chart-4: #0088ff;
+  --chart-5: #687fae;
   --radius: 0.8rem;
-  --background: #f3f6f1;
-  --foreground: #193037;
+  --background: #f4f6fb;
+  --foreground: #172544;
   --card: #ffffff;
-  --card-foreground: #1b3035;
+  --card-foreground: #1e2b4c;
   --popover: #ffffff;
-  --popover-foreground: #1b3035;
-  --secondary: #edf3ee;
-  --secondary-foreground: #344b4d;
-  --muted: #edf2ed;
-  --muted-foreground: #61716e;
-  --accent: #e7f0ea;
-  --accent-foreground: #153f3b;
+  --popover-foreground: #1e2b4c;
+  --secondary: #edf1fa;
+  --secondary-foreground: #334267;
+  --muted: #eef2fa;
+  --muted-foreground: #64718c;
+  --accent: #fff5d7;
+  --accent-foreground: #20286d;
   --destructive: #b54748;
   --destructive-foreground: #ffffff;
-  --border: #dbe4de;
-  --input: #d7e0da;
-  --ring: #c39a4e;
-  --sidebar: #103b42;
-  --sidebar-foreground: #f4f7f4;
-  --sidebar-accent: #1b5054;
+  --border: #dce2ef;
+  --input: #d7deec;
+  --ring: #ffc734;
+  --sidebar: #022554;
+  --sidebar-foreground: #f7f8fc;
+  --sidebar-accent: #20286d;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #28545a;
-  --sidebar-ring: #d9bd7e;
+  --sidebar-border: #304577;
+  --sidebar-ring: #ffc734;
 }
 
 .dark {
-  --primary: #54b5a7;
-  --primary-foreground: #092c2f;
-  --sidebar-primary: #d9bd7e;
-  --sidebar-primary-foreground: #173b3c;
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.85 0.005 65);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.85 0.005 65);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.85 0.005 65);
-  --secondary: oklch(0.24 0.006 286.033);
-  --secondary-foreground: oklch(0.7 0.005 65);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground:  oklch(0.92 0.005 65);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: #d9bd7e;
-  --chart-1: #54b5a7;
-  --chart-2: #7aabc1;
-  --chart-3: #d9bd7e;
-  --chart-4: #e17f72;
-  --chart-5: #a28bb9;
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.85 0.005 65);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground:  oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
+  --primary: #ffc734;
+  --primary-foreground: #022554;
+  --sidebar-primary: #ffc734;
+  --sidebar-primary-foreground: #022554;
+  --background: oklch(0.17 0.03 270);
+  --foreground: oklch(0.92 0.01 270);
+  --card: oklch(0.22 0.035 270);
+  --card-foreground: oklch(0.92 0.01 270);
+  --popover: oklch(0.22 0.035 270);
+  --popover-foreground: oklch(0.92 0.01 270);
+  --secondary: oklch(0.27 0.035 270);
+  --secondary-foreground: oklch(0.84 0.015 270);
+  --muted: oklch(0.27 0.035 270);
+  --muted-foreground: oklch(0.74 0.02 270);
+  --accent: oklch(0.3 0.04 270);
+  --accent-foreground: oklch(0.95 0.01 270);
+  --destructive: oklch(0.62 0.19 25);
+  --destructive-foreground: oklch(0.97 0.01 270);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: #ffc734;
+  --chart-1: #5e77c2;
+  --chart-2: #83a9e8;
+  --chart-3: #ffc734;
+  --chart-4: #4d94ff;
+  --chart-5: #a2acd0;
+  --sidebar: oklch(0.2 0.04 270);
+  --sidebar-foreground: oklch(0.92 0.01 270);
+  --sidebar-accent: oklch(0.3 0.04 270);
+  --sidebar-accent-foreground: oklch(0.95 0.01 270);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: #ffc734;
 }
 
 html, body, #root { min-height: 100%; }
 body { font-family: "IBM Plex Sans Arabic", Inter, "Segoe UI", Tahoma, sans-serif; font-feature-settings: "kern" 1; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; }
 .leaflet-container { font-family: "IBM Plex Sans Arabic", Inter, "Segoe UI", sans-serif; }
-.dashboard-hero { background-color: #103b42; box-shadow: 0 16px 48px -28px rgba(16, 59, 66, .44); }
-.dashboard-hero-overlay { background: linear-gradient(270deg, rgba(13, 48, 54, .97) 0%, rgba(16, 59, 66, .88) 46%, rgba(16, 59, 66, .2) 100%); }
+.dashboard-hero { background-color: #20286d; box-shadow: 0 16px 48px -28px rgba(32, 40, 109, .30); }
+.dashboard-hero-overlay { background: linear-gradient(270deg, rgba(2, 37, 84, .97) 0%, rgba(32, 40, 109, .88) 46%, rgba(16, 59, 66, .2) 100%); }
 .brand-eyebrow { position: relative; padding-right: .8rem; }
-.brand-eyebrow::before { position: absolute; right: 0; top: 50%; width: .35rem; height: .35rem; border-radius: 9999px; background: #d9bd7e; content: ""; transform: translateY(-50%); }
+.brand-eyebrow::before { position: absolute; right: 0; top: 50%; width: .35rem; height: .35rem; border-radius: 9999px; background: #ffc734; content: ""; transform: translateY(-50%); }
 
 @media print {
   .no-print, aside, header, nav, button, [role="button"] { display: none !important; }
@@ -135,7 +139,7 @@ body { font-family: "IBM Plex Sans Arabic", Inter, "Segoe UI", Tahoma, sans-seri
   main { margin: 0 !important; padding: 0 !important; max-width: none !important; }
   section, article, table { break-inside: avoid; }
   table { font-size: 9pt !important; }
-  body.cbcc-printing-demo::before { content: "بيانات تجريبية — CAC BANK"; position: fixed; inset: 42% 0 auto; z-index: 9999; color: rgba(15, 118, 110, .13); font-size: 42pt; font-weight: 800; text-align: center; transform: rotate(-24deg); pointer-events: none; }
+  body.cbcc-printing-demo::before { content: "بيانات تجريبية — CAC BANK"; position: fixed; inset: 42% 0 auto; z-index: 9999; color: rgba(32, 40, 109, .13); font-size: 42pt; font-weight: 800; text-align: center; transform: rotate(-24deg); pointer-events: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
