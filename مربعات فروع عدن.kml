@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:ex="http://earth.google.com/kml/ext">
+<Document id="1al_AoTS3BPzZpJGsWPrFDG9aDe6Rc2eR">
+	<ex:extension>base64;Co4BCoEBCn8KAggBEnkKdwokCiAKAwjQDxoHCNLtZRD_ASEAAAAAAADwPykAAAAAAAAAABgAEg8KCAitgO8HEP8BEKAfGAAaGgoHCP___wcQQBIICK2A7wcQ_wEYoB8gACgAIgkIARIFCP___wcqFwgBEggI____BxD_ARkAAAAAAADwPyAAEgQIARAAGgIIAA</ex:extension>
+	<name>مربعات فروع عدن</name>
+	<gx:CascadingStyle kml:id="__managed_style_007E922AB542A1AD0337_normal">
+		<ex:extension>base64;Eq4BGAEiqQEKpgEKT2h0dHBzOi8vZWFydGguZ29vZ2xlLmNvbS9iYWxsb29uX2NvbXBvbmVudHMvYmFzZS8xLjEuMC4wL2NhcmRfdGVtcGxhdGUua21sI21haW4SUwpPaHR0cHM6Ly9lYXJ0aC5nb29nbGUuY29tL2JhbGxvb25fY29tcG9uZW50cy9iYXNlL2N1cnJlbnQvY2FyZF90ZW1wbGF0ZS5rbWwjbWFpbhgA</ex:extension>
+		<styleUrl>https://earth.google.com/balloon_components/base/1.1.0.0/card_template.kml#main</styleUrl>
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>1.6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>806b7900</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_007E922AB542A1AD0337_highlight">
+		<ex:extension>base64;Eq4BGAEiqQEKpgEKT2h0dHBzOi8vZWFydGguZ29vZ2xlLmNvbS9iYWxsb29uX2NvbXBvbmVudHMvYmFzZS8xLjEuMC4wL2NhcmRfdGVtcGxhdGUua21sI21haW4SUwpPaHR0cHM6Ly9lYXJ0aC5nb29nbGUuY29tL2JhbGxvb25fY29tcG9uZW50cy9iYXNlL2N1cnJlbnQvY2FyZF90ZW1wbGF0ZS5rbWwjbWFpbhgA</ex:extension>
+		<styleUrl>https://earth.google.com/balloon_components/base/1.1.0.0/card_template.kml#main</styleUrl>
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>2.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>806b7900</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_09F845F67C42A1A37E66_highlight">
+		<ex:extension>base64;EgIYAQ</ex:extension>
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>2.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>806b7900</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_01E235532242A1A07C5B_normal">
+		<ex:extension>base64;Eq4BGAEiqQEKpgEKT2h0dHBzOi8vZWFydGguZ29vZ2xlLmNvbS9iYWxsb29uX2NvbXBvbmVudHMvYmFzZS8xLjEuMC4wL2NhcmRfdGVtcGxhdGUua21sI21haW4SUwpPaHR0cHM6Ly9lYXJ0aC5nb29nbGUuY29tL2JhbGxvb25fY29tcG9uZW50cy9iYXNlL2N1cnJlbnQvY2FyZF90ZW1wbGF0ZS5rbWwjbWFpbhgA</ex:extension>
+		<styleUrl>https://earth.google.com/balloon_components/base/1.1.0.0/card_template.kml#main</styleUrl>
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>1.6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>802f2fd3</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_09F845F67C42A1A37E66_normal">
+		<ex:extension>base64;EgIYAQ</ex:extension>
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>1.6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>806b7900</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_01E235532242A1A07C5B">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_01E235532242A1A07C5B_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_01E235532242A1A07C5B_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="__managed_style_09F845F67C42A1A37E66">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_09F845F67C42A1A37E66_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_09F845F67C42A1A37E66_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<gx:CascadingStyle kml:id="__managed_style_0A6071F7C742A1ADB221_highlight">
+		<ex:extension>base64;EgIYAQ</ex:extension>
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>2.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>80bc47ab</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_031F9CE7C042A1A13C34_highlight">
+		<ex:extension>base64;Eq4BGAEiqQEKpgEKT2h0dHBzOi8vZWFydGguZ29vZ2xlLmNvbS9iYWxsb29uX2NvbXBvbmVudHMvYmFzZS8xLjEuMC4wL2NhcmRfdGVtcGxhdGUua21sI21haW4SUwpPaHR0cHM6Ly9lYXJ0aC5nb29nbGUuY29tL2JhbGxvb25fY29tcG9uZW50cy9iYXNlL2N1cnJlbnQvY2FyZF90ZW1wbGF0ZS5rbWwjbWFpbhgA</ex:extension>
+		<styleUrl>https://earth.google.com/balloon_components/base/1.1.0.0/card_template.kml#main</styleUrl>
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>2.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>809f3f30</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_007E922AB542A1AD0337">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_007E922AB542A1AD0337_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_007E922AB542A1AD0337_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="__managed_style_0A6071F7C742A1ADB221">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_0A6071F7C742A1ADB221_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_0A6071F7C742A1ADB221_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<gx:CascadingStyle kml:id="__managed_style_031F9CE7C042A1A13C34_normal">
+		<ex:extension>base64;Eq4BGAEiqQEKpgEKT2h0dHBzOi8vZWFydGguZ29vZ2xlLmNvbS9iYWxsb29uX2NvbXBvbmVudHMvYmFzZS8xLjEuMC4wL2NhcmRfdGVtcGxhdGUua21sI21haW4SUwpPaHR0cHM6Ly9lYXJ0aC5nb29nbGUuY29tL2JhbGxvb25fY29tcG9uZW50cy9iYXNlL2N1cnJlbnQvY2FyZF90ZW1wbGF0ZS5rbWwjbWFpbhgA</ex:extension>
+		<styleUrl>https://earth.google.com/balloon_components/base/1.1.0.0/card_template.kml#main</styleUrl>
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>1.6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>809f3f30</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_0A6071F7C742A1ADB221_normal">
+		<ex:extension>base64;EgIYAQ</ex:extension>
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>1.6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>80bc47ab</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_031F9CE7C042A1A13C34">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_031F9CE7C042A1A13C34_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_031F9CE7C042A1A13C34_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<gx:CascadingStyle kml:id="__managed_style_01E235532242A1A07C5B_highlight">
+		<ex:extension>base64;Eq4BGAEiqQEKpgEKT2h0dHBzOi8vZWFydGguZ29vZ2xlLmNvbS9iYWxsb29uX2NvbXBvbmVudHMvYmFzZS8xLjEuMC4wL2NhcmRfdGVtcGxhdGUua21sI21haW4SUwpPaHR0cHM6Ly9lYXJ0aC5nb29nbGUuY29tL2JhbGxvb25fY29tcG9uZW50cy9iYXNlL2N1cnJlbnQvY2FyZF90ZW1wbGF0ZS5rbWwjbWFpbhgA</ex:extension>
+		<styleUrl>https://earth.google.com/balloon_components/base/1.1.0.0/card_template.kml#main</styleUrl>
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>2.4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>802f2fd3</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<Placemark id="04D0B3810642A082194D">
+		<name>مربع (2)</name>
+		<description><![CDATA[<div><span><span><span><span><span><span><span><span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">تم التحقق من الصورة - شارع التسعين من مفرق كابوتا حتى جولة السفينة.</font></font></span></span></span></span></span></span></span></span><br></div>]]></description>
+		<LookAt>
+			<longitude>44.97878893440194</longitude>
+			<latitude>12.86042194573858</latitude>
+			<altitude>11.4972090742637</altitude>
+			<heading>301.1334627187529</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>7372.27369475062</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_01E235532242A1A07C5B</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						44.97460773697595,12.85086103155686,0 44.97423357661174,12.85335954291086,0 44.97379717468207,12.85575801427819,0 44.97297778214529,12.85918066925404,0 44.97235760405874,12.86266035112143,0 44.97140690671827,12.86633532546442,0 44.97131086979673,12.86712107001061,0 44.97134638438121,12.86758884215756,0 44.97213088965241,12.8692426040985,0 44.97389872565954,12.87204663828624,0 44.97529400491503,12.87340863033119,0 44.97919945417052,12.87710390557966,0 44.97802867839368,12.87814052639168,0 44.97667305267905,12.87695560555903,0 44.97506939299445,12.87549352343216,0 44.97372726764323,12.87407256241033,0 44.97230153565772,12.87161105352194,0 44.97093492549245,12.86999947997639,0 44.97034540543824,12.86920769763079,0 44.97024131440286,12.8686786664092,0 44.9702611882427,12.8679174910308,0 44.9703731932487,12.86682341496458,0 44.97073401189971,12.86554345472026,0 44.97108743537581,12.8638826655976,0 44.97140747083237,12.86250908975274,0 44.97162034044458,12.86098129627114,0 44.97201560411975,12.85931872630483,0 44.97225102910278,12.85837840558865,0 44.97261801112613,12.85696109346407,0 44.97290770129045,12.85558555224503,0 44.97314971589954,12.85393507927201,0 44.9733408505007,12.85275040736603,0 44.97388752107821,12.85049844703548,0 44.97460773697595,12.85086103155686,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="0B7B3A6DA342A08C9845">
+		<name>مربع (4)</name>
+		<description><![CDATA[<div><span><span><span><span><span><span><span><span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">الصورة الثانية - من تقاطع شارع التسعين (الشرق) مع اتجاه شارع التسعين مروراً بشارع الخمسين والبيرق مول حتى تقاطع شارع الخمسين مع خط البريقة (معرض القطيبي).</font></font></span></span></span></span></span></span></span></span><br></div>]]></description>
+		<LookAt>
+			<longitude>44.97042042519364</longitude>
+			<latitude>12.86756595162029</latitude>
+			<altitude>13.98945272688282</altitude>
+			<heading>328.7518020627313</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>1904.609956349304</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_01E235532242A1A07C5B</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						44.97014661154243,12.86733118829784,0 44.96995417492815,12.86871523612002,0 44.96832245288752,12.86790985881918,0 44.96671899996055,12.86706443655571,0 44.96503036974904,12.86630478830422,0 44.96397251889735,12.86572457145568,0 44.96382232765619,12.86518283990582,0 44.963924103103,12.86482260524406,0 44.96430697588789,12.86463396147946,0 44.9644973788069,12.86421377067605,0 44.96500002152301,12.86318423628016,0 44.96564921407349,12.86172683260692,0 44.96631923244895,12.86045412567396,0 44.96605942754172,12.85991808137948,0 44.96624935343871,12.85929232670827,0 44.96657015564244,12.85921130272112,0 44.96671112605063,12.85876292602616,0 44.96694111636538,12.85766891363036,0 44.96689876296627,12.85670779244796,0 44.96669964430405,12.85475933944794,0 44.96657952821751,12.85331551221483,0 44.96647498951168,12.85196794710459,0 44.96597430541476,12.85167293386534,0 44.9663610607867,12.85085034155204,0 44.96799744160685,12.84754668844657,0 44.9689734584962,12.84585331191571,0 44.96994544175296,12.84673403930146,0 44.96929481575489,12.84834084586853,0 44.96859751138836,12.84989135301212,0 44.96798380857631,12.85099138357928,0 44.96767721939599,12.85138465037982,0 44.96757460880624,12.85219489205034,0 44.96746726639743,12.85306991851667,0 44.96756413524878,12.85413834526943,0 44.96770134213128,12.85520727457601,0 44.96785322688637,12.85606096764198,0 44.96793042796639,12.85775642627715,0 44.96763961228758,12.85933433496018,0 44.96789822112532,12.85962006050331,0 44.96769558714177,12.86031945711935,0 44.96717227020926,12.8607832958973,0 44.96646253348072,12.86225931514849,0 44.96572404414523,12.86368599061489,0 44.96520092299137,12.86472187324446,0 44.96527233945707,12.86512569657465,0 44.96592901364043,12.86541057599615,0 44.96816366915474,12.86647141351983,0 44.97014661154243,12.86733118829784,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="057325E26642A094D686">
+		<name>مربع (5)</name>
+		<description><![CDATA[<div><span><span><span><span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">المنصورة - من تقاطع شارع العين الى سوق عدن المركزي للخضار والفواكه ومروراً بسوق القات الصورة والحياء المجاورة لمستشفى الوالي.</font></font></span></span></span></span><br></div>]]></description>
+		<LookAt>
+			<longitude>44.98119038866129</longitude>
+			<latitude>12.85404896556647</latitude>
+			<altitude>6.677622518781181</altitude>
+			<heading>342.1309164884531</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>7885.445028338583</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_01E235532242A1A07C5B</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						44.97230386522865,12.86407183949927,0 44.97263953105695,12.86414341411303,0 44.97387741148172,12.86435666833984,0 44.97522879822108,12.86464199267052,0 44.97543781283228,12.86375773691487,0 44.97563780617793,12.86278309223287,0 44.97567517316965,12.86279751918963,0 44.97611700074823,12.86288154964143,0 44.97626482913122,12.86290565042839,0 44.97634150646691,12.86290172646436,0 44.97757061201137,12.8631957951592,0 44.97738681163641,12.86442483670531,0 44.98030527254991,12.86504378294842,0 44.98105269415232,12.86519853340624,0 44.98145472277083,12.86398662662749,0 44.98410856469691,12.86452186468078,0 44.9838060668435,12.86554037484143,0 44.98244288615483,12.86661083575579,0 44.98206454243314,12.86659058250624,0 44.98100294110589,12.86637397406223,0 44.97916389547695,12.86599170218168,0 44.97695888257173,12.86560244400492,0 44.97537753054004,12.86528681229449,0 44.97371102007704,12.86488992286908,0 44.97228114448073,12.86459375930465,0 44.97215117101462,12.86456479932743,0 44.97223951035563,12.86430813805518,0 44.97230386522865,12.86407183949927,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="01150A310342A0A93458">
+		<name>مربع (٦)</name>
+		<description><![CDATA[<div><span><span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">الموقع: الشيخ عثمان - شارع السيلة من جولة دار سعد حتى جولة السيلة.&nbsp;</font></font></span></span><br></div>]]></description>
+		<LookAt>
+			<longitude>44.98927571110032</longitude>
+			<latitude>12.88557616780499</latitude>
+			<altitude>12.15324178507328</altitude>
+			<heading>346.695169361646</heading>
+			<tilt>0</tilt>
+			<gx:fovy>30.00032767277038</gx:fovy>
+			<range>3049.495846106729</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_031F9CE7C042A1A13C34</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						44.9892695219082,12.88555607661381,0 44.99042287655471,12.87891052207955,0 44.99261507964994,12.87370359728021,0 44.99328052506805,12.87373575867465,0 44.99372240612735,12.87414641866776,0 44.99268606059698,12.87644115481889,0 44.99201798228613,12.8777951012742,0 44.99144988540493,12.87901923644378,0 44.99110858508788,12.88075788096946,0 44.99072886828334,12.88274264481725,0 44.9901789532156,12.88615199630975,0 44.98918590544326,12.88609235354379,0 44.9892695219082,12.88555607661381,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="0E14B8446242A0B232B3">
+		<name>مربع (7)</name>
+		<description><![CDATA[<div><span><span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">الموقع: الشيخ عثمان - المنطقة التي تقع بين جولة الغزل والنسيج (ظمران) + جولة تانك + ملعب الوحدة الرياضي + المجلس المحلي + القاهرة.</font></font></span></span><br></div>]]></description>
+		<LookAt>
+			<longitude>44.98227814206696</longitude>
+			<latitude>12.86009833130293</latitude>
+			<altitude>16.68125276981561</altitude>
+			<heading>25.1971531648454</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>16410.99527465646</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_031F9CE7C042A1A13C34</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						44.99066912080418,12.86548632560445,0 44.99099406401402,12.86539573972012,0 44.99134155442654,12.86541196620852,0 44.99186070752282,12.86555104851692,0 44.9926612073277,12.86575027010855,0 44.99290361392583,12.86551865550409,0 44.99478944663942,12.86578385718489,0 44.99816088743344,12.86673277450735,0 45.00078151045639,12.86981719046757,0 44.99477087904358,12.87470778174639,0 44.99173089863016,12.87200057689203,0 44.98966404208944,12.86957871707072,0 44.98993617938914,12.86897537489169,0 44.99066912080418,12.86548632560445,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="077F5B7B8442A0BD7F33">
+		<name>مربع (٨)</name>
+		<description><![CDATA[<div><span><span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">الموقع: الشيخ عثمان - المنطقة التي تقع بين كل من (جولة الخزان + تقاطع شارع الدرين مع كورنيش + جولة سوزوكي + جولة المشروع + محطة الممدارة).</font></font></span></span><br></div>]]></description>
+		<LookAt>
+			<longitude>44.99995733017001</longitude>
+			<latitude>12.85112502511847</latitude>
+			<altitude>5.700657916257345</altitude>
+			<heading>2.143634561927519e-19</heading>
+			<tilt>0</tilt>
+			<gx:fovy>30.00026545119536</gx:fovy>
+			<range>37016.1466280697</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_031F9CE7C042A1A13C34</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						44.99832128354767,12.86642357367532,0 45.0023912905385,12.85826541073444,0 45.01358925005179,12.86013378575279,0 45.01820755298345,12.86194705108672,0 45.02135111988783,12.86373196830539,0 45.02248167691994,12.86603427910898,0 45.01474652607233,12.87200270289663,0 45.00787078626053,12.87719925158786,0 44.99832128354767,12.86642357367532,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="0067196A4642A0C5546C">
+		<name>مربع (٩)</name>
+		<description><![CDATA[<div><span><span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">الموقع: الشيخ عثمان - من جولة السفينة الى جولة الكراع المركز التجاري للسيارات، تويوتا. [خطعد/تعز].</font></font></span></span><br></div>]]></description>
+		<LookAt>
+			<longitude>44.98882412800862</longitude>
+			<latitude>12.89666372043371</latitude>
+			<altitude>16.87656227812393</altitude>
+			<heading>340.5340607209653</heading>
+			<tilt>0</tilt>
+			<gx:fovy>30.00026545119536</gx:fovy>
+			<range>13960.75588915497</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_031F9CE7C042A1A13C34</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						44.9801814517461,12.87929351598689,0 44.98042937738016,12.88217792804284,0 44.98031448525467,12.88640554478258,0 44.97954450732711,12.89006023318854,0 44.97917386218407,12.89296137980832,0 44.97987646280122,12.89423147053133,0 44.98268123634302,12.89651758552255,0 44.98410832088887,12.89767934202158,0 44.98297182775897,12.90172730838031,0 44.98202183107729,12.9049835717504,0 44.97933400533619,12.91166156210768,0 44.97644850579339,12.91933779988406,0 44.97080464376006,12.92757142235869,0 44.96969752802617,12.92671633322731,0 44.97237682956774,12.92229659284775,0 44.97511798339755,12.91768450515547,0 44.97739167985328,12.91286188063174,0 44.97906187992179,12.9083457840763,0 44.98124476098408,12.902292770369,0 44.98203016372768,12.89821896665423,0 44.9792173051631,12.8960931249403,0 44.97790468559518,12.89421842164118,0 44.97729251223446,12.89233964111718,0 44.97813641025493,12.88732387995409,0 44.97869966851366,12.88390386072191,0 44.97870236338339,12.87933956299637,0 44.9801814517461,12.87929351598689,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="0CCB54AF5D42A0D96884">
+		<name>مربع (٣)</name>
+		<description><![CDATA[<div><span><span><span><span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">تصحيح الصورة - تقاطع شارع الخمسين مع الفتحة المؤدية إلى جولة السلام (الاخوان) ومروراً شبكة السلام (الاخوان) الى شارع السجن حتى جولة الغزل والنسيج (ظمران).</font></font></span></span></span></span><br></div>]]></description>
+		<LookAt>
+			<longitude>44.96821878356791</longitude>
+			<latitude>12.85578075480492</latitude>
+			<altitude>10.31997750353567</altitude>
+			<heading>337.4000451179605</heading>
+			<tilt>0</tilt>
+			<gx:fovy>30.00026545119536</gx:fovy>
+			<range>943.039130213001</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_01E235532242A1A07C5B</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						44.96825902320644,12.85575556595247,0 44.96894337705147,12.85635141910048,0 44.96996476372762,12.85699022412159,0 44.97125066844641,12.85799041435853,0 44.97326824274286,12.85906787501172,0 44.97473913260038,12.85993621122399,0 44.97606412257068,12.86095444686364,0 44.97734913743861,12.86171139352704,0 44.97850522881544,12.86204123617161,0 44.97983584321426,12.86234619927284,0 44.98127196490528,12.86273275925171,0 44.98241645700097,12.86294970980568,0 44.9840970993451,12.86333794845591,0 44.98587644023069,12.86370319409829,0 44.98706600692762,12.86393513268476,0 44.9876207256163,12.8641411300694,0 44.98803933324139,12.86415950841153,0 44.9878247841135,12.86472237769788,0 44.98383734166843,12.86401382210708,0 44.98249308102401,12.86380104315224,0 44.98167508462198,12.86355517268625,0 44.98088660601174,12.86332386895419,0 44.979736320869,12.8630755040201,0 44.97772185295504,12.86258502457662,0 44.97669291846359,12.86219608546773,0 44.97612725187694,12.86176975834875,0 44.97448112628212,12.8606016117531,0 44.9735455476801,12.86005279500689,0 44.97193548519819,12.85911618307115,0 44.97088621626206,12.85854758485331,0 44.96977040694298,12.85776053845621,0 44.96916435081285,12.85725453876406,0 44.96849031495025,12.85671210512018,0 44.96809946794491,12.85635234340649,0 44.96825902320644,12.85575556595247,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="058BBB5B2542A106A2E6">
+		<name>مربع (١٠)</name>
+		<description><![CDATA[<div><span><span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">الموقع: البريقة - منطقة إنماء القديمة + الجديدة (ومابينهم).</font></font></span></span><br></div>]]></description>
+		<LookAt>
+			<longitude>44.96552935978192</longitude>
+			<latitude>12.83708126187495</latitude>
+			<altitude>4.113339040922903</altitude>
+			<heading>311.9051767617452</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>2776.416443345952</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_031F9CE7C042A1A13C34</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						44.96506042875695,12.83685187775205,0 44.9603341357781,12.84189046138952,0 44.95972810005895,12.8412998164946,0 44.96364473413372,12.83673731672405,0 44.96089051153351,12.83627074618366,0 44.95853106182402,12.83605433873459,0 44.95573759722227,12.8359863413454,0 44.95544820239011,12.83545267640197,0 44.95334066762099,12.83590119228256,0 44.95248589109197,12.83586361945152,0 44.95077160801296,12.83563997732708,0 44.95068773501589,12.83521734219903,0 44.94945159649635,12.83456091394331,0 44.94736104673852,12.83378193496336,0 44.94562573050577,12.83271005333153,0 44.94475204449461,12.83247055725697,0 44.94340792491138,12.83242765489838,0 44.94214825724855,12.83318133060096,0 44.94111659697572,12.83388311410698,0 44.94050744613084,12.83289058276581,0 44.94211300872412,12.83176554568593,0 44.94371866937122,12.83129484696044,0 44.94421070396111,12.83051121021405,0 44.94678000767254,12.83136068278239,0 44.94954540044713,12.83270300344367,0 44.94897162796914,12.83425319490727,0 44.9489599099593,12.83431673174116,0 44.94937780350021,12.83449181201114,0 44.94983247571541,12.83471179848179,0 44.95020738433753,12.83492210285975,0 44.95064524152568,12.8351338144054,0 44.95186555022043,12.83533421943374,0 44.95236318703581,12.83546570769898,0 44.95316491340576,12.83555234745866,0 44.9539788840384,12.83557555322168,0 44.95444374621759,12.83561990056528,0 44.95477288025883,12.83557032605228,0 44.95530472942048,12.83543987350163,0 44.95550432057405,12.83539837167821,0 44.9562476511197,12.8352429218985,0 44.95744120159704,12.835251051327,0 44.95847102135894,12.83532537752996,0 44.95976030735294,12.83542988744507,0 44.96090840222586,12.83554809854784,0 44.96189943111465,12.8356852380416,0 44.96315429513604,12.83590979248597,0 44.96409692122749,12.83614931201424,0 44.96455515357857,12.83637733805468,0 44.96506042875695,12.83685187775205,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="03DFD0DADB42A10BFDE5">
+		<name>مربع (11)</name>
+		<description><![CDATA[<div><span><span><span><span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">التالي - من بداية الطريق البحري إلى السوق والحي الشعبي المجاورة للعب الشعلة إلى الرئيسي (سوق بانافع) الوصول إلى ساحل كود النمر.</font></font></span></span></span></span><br></div>]]></description>
+		<LookAt>
+			<longitude>44.89086516260875</longitude>
+			<latitude>12.77279796193578</latitude>
+			<altitude>3.030558383120248</altitude>
+			<heading>186.6293384131422</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>987.0093539584195</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_031F9CE7C042A1A13C34</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						44.89083029933125,12.77272521448707,0 44.8900145404562,12.77272272048402,0 44.89037504436578,12.76893010219534,0 44.89085172667619,12.76529470727488,0 44.89052330646674,12.76516748972227,0 44.89042308930217,12.76421505059988,0 44.89068113338751,12.76230495135653,0 44.88997705873947,12.76112099569869,0 44.88898484032132,12.76094748457743,0 44.88663219981066,12.76080670333805,0 44.88559263288487,12.76076055522781,0 44.88570518962047,12.75999178841758,0 44.88818784985112,12.75987809300381,0 44.88971181694362,12.76004180561381,0 44.89053679184295,12.76057332041309,0 44.89127717590785,12.76082028946372,0 44.89120868662788,12.75920569269487,0 44.89079859229323,12.75834813910691,0 44.8904416251788,12.75749512914926,0 44.89030446918024,12.75737692768487,0 44.88976115253439,12.75739412507196,0 44.88983957403075,12.75453023499757,0 44.89001081809134,12.74908175517732,0 44.89124544546678,12.75024742283172,0 44.89110019462204,12.75289720219297,0 44.891085093411,12.75520110787868,0 44.89095398846052,12.75727634800297,0 44.89110326810791,12.75796277268437,0 44.89142745537526,12.75901678058858,0 44.89149573550993,12.76080141887565,0 44.89188513383607,12.76244894152214,0 44.8918065502208,12.76398378806158,0 44.89152142906156,12.76523308620491,0 44.89096245300663,12.76612020737752,0 44.89063772573696,12.76761565505402,0 44.89048033811792,12.76877734519398,0 44.89090644494279,12.76959124829962,0 44.89112072439445,12.77086064485343,0 44.89083029933125,12.77272521448707,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="091FA4324242A10E13ED">
+		<name>مربع (12)</name>
+		<LookAt>
+			<longitude>45.04916954452548</longitude>
+			<latitude>12.77749014250474</latitude>
+			<altitude>13.85180778854902</altitude>
+			<heading>310.6138455089132</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>6572.15403920738</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0A6071F7C742A1ADB221</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						45.0426997267037,12.78496221675696,0 45.04039591222698,12.78246250292418,0 45.04185679009462,12.78040029787033,0 45.04348299497467,12.7788675248495,0 45.04517349696972,12.77697391103536,0 45.0457750177566,12.77663976925364,0 45.04756709588256,12.77798393071201,0 45.04881618151601,12.78028355176059,0 45.0484236249501,12.78125728375357,0 45.0426997267037,12.78496221675696,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="00A455308642A19C4B7C">
+		<name>مربع (1)</name>
+		<description><![CDATA[<div><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">الموقع: الصورة المرئية - الشارع الرئيسي من جولة كالتكس حتى جولة الغزل والنسيج (ظمران).</font></font><br></div>]]></description>
+		<LookAt>
+			<longitude>44.9869374408447</longitude>
+			<latitude>12.85196659838532</latitude>
+			<altitude>6.473597746474537</altitude>
+			<heading>328.7576224092418</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>4604.705160894664</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_01E235532242A1A07C5B</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						44.99222869849611,12.84932383569289,0 44.98901813726476,12.85167308416909,0 44.9908746357416,12.86469436608277,0 44.9890995904411,12.8646267587872,0 44.98825905230511,12.85833153540562,0 44.98737545004435,12.85186423431317,0 44.98261866746512,12.85293023453725,0 44.98085654654034,12.85301228629848,0 44.975209105541,12.85139709112451,0 44.9756789511155,12.85027522608085,0 44.9814427942041,12.85170368622527,0 44.98685466714505,12.85048266419941,0 44.99154325249923,12.84821175926281,0 44.99222869849611,12.84932383569289,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="0B14A47FE242A1A6B1FC">
+		<name>مربع (13)</name>
+		<LookAt>
+			<longitude>45.0362061110019</longitude>
+			<latitude>12.77869997191341</latitude>
+			<altitude>16.89864877756442</altitude>
+			<heading>354.3940757917918</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>2579.635658048792</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_09F845F67C42A1A37E66</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						45.03843515981385,12.77989732243361,0 45.03516447725728,12.78331503532254,0 45.03385517692561,12.78461509403478,0 45.03325874993907,12.78401358309469,0 45.03405758693706,12.78308070191477,0 45.03281998780754,12.78175460274268,0 45.03252294833175,12.78142492635017,0 45.03349773663866,12.78004569894532,0 45.03193189303796,12.77822078782754,0 45.03433616456019,12.77647413176685,0 45.03589356955484,12.77262984398359,0 45.04180778172266,12.77724326438861,0 45.03843515981385,12.77989732243361,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="0AAB72D0FD42A1AB22EB">
+		<name>مربع (15)</name>
+		<description><![CDATA[<div><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">الموقع: خورمكسر - من جولة العاقل الى جولة الرحاباً بساحل ابين مرور.</font></font></div>]]></description>
+		<LookAt>
+			<longitude>45.03843116129224</longitude>
+			<latitude>12.79325874249328</latitude>
+			<altitude>1.946371860471074</altitude>
+			<heading>281.1639952118947</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>1093.48325887011</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_007E922AB542A1AD0337</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						45.03843961419346,12.79381096913394,0 45.03954251446793,12.80153703794299,0 45.04024071601576,12.80565537593762,0 45.04072926564541,12.80820451190877,0 45.04215735159239,12.8078433820338,0 45.04330533059127,12.81112240635967,0 45.04338303866159,12.81418861548826,0 45.04289461647154,12.815286569755,0 45.04421478610849,12.82009241720266,0 45.04551012712442,12.82483326065939,0 45.04694215465695,12.82958913887879,0 45.04750360204393,12.83201292759548,0 45.04587403951086,12.83109685151167,0 45.04615411512388,12.830290935714,0 45.04540021852655,12.82736638840764,0 45.04437825675255,12.82386478131346,0 45.04389235594086,12.8219558858777,0 45.04300211793027,12.81887955390011,0 45.04220724959688,12.81589638578782,0 45.04164045900139,12.81337232820374,0 45.04102626989683,12.81104564165541,0 45.04055686077675,12.80995769152,0 45.03993622978102,12.80870663901229,0 45.03967660277762,12.80720472664703,0 45.03926613027426,12.80469686464174,0 45.0384744696043,12.80025850863729,0 45.03807422458703,12.79688156502022,0 45.03758894770517,12.79385627179118,0 45.03713719771164,12.79225461085109,0 45.0376088231511,12.79123210274497,0 45.03860690400546,12.79243668917015,0 45.03843961419346,12.79381096913394,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="0284DE443E42A1B0FA03">
+		<name>مربع (14)</name>
+		<description><![CDATA[<div><span><span><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">الموقع: المعلاء - المنطقة الواقعة بين جولة (هائل سعيد) إلى جولة (حجيف).</font></font></span></span><br></div>]]></description>
+		<LookAt>
+			<longitude>45.0230848975724</longitude>
+			<latitude>12.78965466347812</latitude>
+			<altitude>26.35011065906379</altitude>
+			<heading>-88.48184501724346</heading>
+			<tilt>3.694795038769892</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>1959.466883934801</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_007E922AB542A1AD0337</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						45.02412055458385,12.78947024274908,0 45.02447127905862,12.79494714274029,0 45.0186463151128,12.79253876963485,0 45.0109310135489,12.79275516029355,0 45.00291062106313,12.79292932980888,0 44.99844403158389,12.79288180341099,0 44.99825185454231,12.79090161431245,0 45.00316786117666,12.79033801182053,0 45.00722380748613,12.79011042630551,0 45.01276868105872,12.79004550864606,0 45.01889600849973,12.78945657709927,0 45.02412055458385,12.78947024274908,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+</Document>
+</kml>
